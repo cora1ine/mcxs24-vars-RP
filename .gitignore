@@ -9,4 +9,4 @@
 .httr-oauth
 .DS_Store
 *.Rproj
-tmp/tmpcnd
+tmp/

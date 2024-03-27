@@ -1,0 +1,2 @@
+library(vars)
+data(Canada)

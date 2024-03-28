@@ -7,11 +7,18 @@
     "text": "Abstract. This is a suggested formatting for your abstract. This quarto document is a template for your report. It includes some basic ways of working with such documents. You are invited to learn more about developing online reports with this technology.\nKeywords. bsvars, quarto, R,"
   },
   {
-    "objectID": "index.html#a-simple-example",
-    "href": "index.html#a-simple-example",
+    "objectID": "index.html#the-question-objective-and-motivation",
+    "href": "index.html#the-question-objective-and-motivation",
     "title": "RP1",
-    "section": "A Simple Example",
-    "text": "A Simple Example"
+    "section": "The question objective, and motivation",
+    "text": "The question objective, and motivation\nObjective: The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years.\nQuestion: Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025, and will it reach 2.5% in 2026?\nThe Reserve Bank of Australia (RBA) forecasts that inflation will fall back to the target range of 2% to 3% by 2025 and reach the midpoint of this range in 2026. The purpose of the study is to forecast inflation over the next two years and assess the reasonableness of the RBA’s forecast. This is because we have observed a sharp rise in inflation to 7.8% during COVID-19, and in response the RBA implemented tightening monetary policy and increased interest rates starting in late 2022. Entering mid-to-late 2023, the pace of interest rate increases has slowed down. This research will help determine whether the RBA correctly assumed that its monetary policy measures have effectively suppressed inflation and expected that inflation will fall back to the target range over the next year. ## Data and their properties #"
+  },
+  {
+    "objectID": "index.html#the-model-and-hypothesis",
+    "href": "index.html#the-model-and-hypothesis",
+    "title": "RP1",
+    "section": "The model and hypothesis",
+    "text": "The model and hypothesis"
   },
   {
     "objectID": "index.html#references",

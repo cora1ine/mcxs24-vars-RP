@@ -128,6 +128,10 @@ exr_data        = apply.quarterly(exr_data, mean)
 ```
 
 ```{r Data combine fig.pos="H"}
+#| echo: false
+#| message: false
+#| warning: false
+
 ### Data plot
 # All Variables
 all_data             = na.omit(merge(cpi_data, gdp_data, crt_data, unemp_data, export_data, import_data, nloan_data,  gold_data, aord_data, exr_data ))
@@ -135,7 +139,11 @@ colnames(all_data)   = c("cpi_data", "gdp_dat", "crt_data", "unemp_data", "expor
 ```
 
 
-```{r Data plot, fig.pos="H"}
+```{r Data plot, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
 ## Line plot
 par(mfcol = c(5, 2), mar = c(2, 2, 2, 2))
 
@@ -146,7 +154,11 @@ for (i in 1:10) {
 ```
 
 
-```{r ACF plot, fig.pos="H"}
+```{r ACF plot, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
 ## ACF plot
 par(mfcol = c(5, 2), mar=c(2,2,2,2))
 for (i in 1:10){

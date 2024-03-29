@@ -102,6 +102,7 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#data-selection-and-rationale" id="toc-data-selection-and-rationale" class="nav-link" data-scroll-target="#data-selection-and-rationale">Data Selection and Rationale</a></li>
   <li><a href="#data-transformation" id="toc-data-transformation" class="nav-link" data-scroll-target="#data-transformation">Data Transformation</a></li>
+  <li><a href="#importance-of-key-variables-analysis" id="toc-importance-of-key-variables-analysis" class="nav-link" data-scroll-target="#importance-of-key-variables-analysis">Importance of Key Variables Analysis</a></li>
   </ul></li>
   <li><a href="#the-model-and-hypothesis" id="toc-the-model-and-hypothesis" class="nav-link" data-scroll-target="#the-model-and-hypothesis">The model and hypothesis</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
@@ -146,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Objective:</strong></p>
 <p>The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years.</p>
 <p><strong>Question:</strong></p>
-<p>Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025, and will it reach 2.5% in 2026?</p>
+<p>Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025?</p>
 <p>The Reserve Bank of Australia (RBA) forecasts that inflation will fall back to the target range of 2% to 3% by 2025 and reach the midpoint of this range in 2026. The purpose of the study is to forecast inflation over the next two years and assess the reasonableness of the RBA’s forecast. This is because we have observed a sharp rise in inflation to 7.8% during COVID-19, and in response the RBA implemented tightening monetary policy and increased interest rates starting in late 2022. Entering mid-to-late 2023, the pace of interest rate increases has slowed down. This research will help determine whether the RBA correctly assumed that its monetary policy measures have effectively suppressed inflation and expected that inflation will fall back to the target range over the next year.</p>
 </section>
 <section id="data-and-their-properties" class="level2">
@@ -155,19 +156,193 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="data-selection-and-rationale">Data Selection and Rationale</h3>
 <ul>
 <li><p><strong>Direct Inflationary Indicators:</strong></p>
-<p>1.<span class="math inline">\(cpi_i\)</span>: Consumer Price Index (CPI): Direct measure of inflation (from ABS)</p>
-<p>2.<span class="math inline">\(gold_i\)</span>: Gold price, indicate inflationary expectations (from yahoo finance)</p></li>
+<p>1.<span class="math inline">\(cpi_i\)</span>: Consumer Price Index (CPI) from ABS.</p>
+<p>CPI directly measure inflation by follow formula:</p>
+<p><span id="eq-1"><span class="math display">\[Inflation  = \frac{CPI_{Quarter \ of \ These \ Year}}{CPI_{Quarter \ of \ Previous \ Year} )}\times 100 \tag{1}\]</span></span></p>
+<p>2.<span class="math inline">\(gold_i\)</span>: Gold price from yahoo finance.</p>
+<p>Gold is widely viewed as a safe-haven asset, meaning investors are likely to buy it as a store of value during s of economic uncertainty and rising inflation expectations. Such purchases will increase the price of gold.</p></li>
 <li><p><strong>Economic Activity and Policy Indicators:</strong></p>
-<p>3.<span class="math inline">\(gdp_i\)</span>: Gross Domestic Product (GDP), reflect economic growth and demand-pull inflation (from ABS)</p>
-<p>4.<span class="math inline">\(crt_i\)</span>: Cash rate target, Indicate monetary policy stance which affects inflation (from RBA)</p>
-<p>5.<span class="math inline">\(unemp_i\)</span>: Unemployment rate, indicate the level of slack in the labor market, influencing wage-push inflation (from ABS)</p></li>
+<ol start="3" type="1">
+<li><span class="math inline">\(gdp_i\)</span>: Gross Domestic Product (GDP) from ABS.</li>
+</ol>
+<p>GDP reflects the size and growth rate of a country’s economy. When GDP increases, it indicates increased economic activity, which can lead to demand-pull inflation because increased demand may exceed current production capacity, pushing up prices.</p>
+<ol start="4" type="1">
+<li><span class="math inline">\(crt_i\)</span>: Cash rate target publsh by RBA.</li>
+</ol>
+<p>This is the main tool used by the RBA to influence economic activity. Raising the cash rate is usually aimed at reducing borrowing and spending, thereby reducing inflationary pressures.</p>
+<ol start="5" type="1">
+<li><span class="math inline">\(unemp_i\)</span>: Unemployment rate from ABS.</li>
+</ol>
+<p>It indicate the level of slack in the labor market, influencing wage-push inflation.</p></li>
 <li><p><strong>Market and External Trade Indicators:</strong></p>
-<p>6.<span class="math inline">\(nloan_i\)</span>: New loan commitments, reflect credit growth which can fuel economic activity and inflation (from ABS)</p>
-<p>7.<span class="math inline">\(export_i\)</span>: International exports, affect trade balance and currency strength, influencing imported inflation (from ABS)</p>
-<p>8.<span class="math inline">\(import_i\)</span>: International imports: Directly affect inflation through the cost of imported goods (from ABS)</p>
-<p>9.<span class="math inline">\(aord_i\)</span>: All Ordinaries Index (AORD), reflects investor confidence and economic activity which can be pre-emptive indicators of inflation (from yahoo finance)</p>
-<p>10.<span class="math inline">\(exr_i\)</span>: AUD/USD exchange rate, affects the price of imports and exports, contributing to inflation (from yahoo finance)</p></li>
+<ol start="6" type="1">
+<li><span class="math inline">\(nloan_i\)</span>: New loan commitments from ABS.</li>
+</ol>
+<p>Credit growth is often accompanied by rising asset prices such as real estate and stocks. While these direct price changes are not necessarily reflected in CPI, increases in asset prices may affect the CPI indirectly through construction costs and rents.</p>
+<ol start="7" type="1">
+<li><span class="math inline">\(export_i\)</span>: International exports from ABS.</li>
+</ol>
+<p>It affects trade balance and currency strength, influencing imported inflation.</p>
+<ol start="8" type="1">
+<li><span class="math inline">\(import_i\)</span>: International imports from ABS.</li>
+</ol>
+<p>Directly affect inflation through the cost of imported goods.</p>
+<ol start="9" type="1">
+<li><span class="math inline">\(aord_i\)</span>: All Ordinaries Index (AORD) from yahoo finance.</li>
+</ol>
+<p>It reflects investor confidence and economic activity which can be pre-emptive indicators of inflation.</p>
+<ol start="10" type="1">
+<li><span class="math inline">\(exr_i\)</span>: AUD/USD exchange rate from yahoo finance.</li>
+</ol>
+<p>It affects the price of imports and exports, contributing to inflation.</p></li>
 </ul>
+<div class="cell">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">cpi_data</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">gold_data</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">gdp_data</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">crt_data</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">unemp_data</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">nloan_data</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">export_data</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">import_data</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">aord_data</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">exr_data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1.0000</td>
+<td style="text-align: center;">0.5865</td>
+<td style="text-align: center;">0.9300</td>
+<td style="text-align: center;">-0.4067</td>
+<td style="text-align: center;">-0.5474</td>
+<td style="text-align: center;">0.7767</td>
+<td style="text-align: center;">0.9682</td>
+<td style="text-align: center;">0.9236</td>
+<td style="text-align: center;">0.9274</td>
+<td style="text-align: center;">-0.7998</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.5865</td>
+<td style="text-align: center;">1.0000</td>
+<td style="text-align: center;">0.4489</td>
+<td style="text-align: center;">-0.0597</td>
+<td style="text-align: center;">-0.4514</td>
+<td style="text-align: center;">0.4537</td>
+<td style="text-align: center;">0.6199</td>
+<td style="text-align: center;">0.6781</td>
+<td style="text-align: center;">0.5084</td>
+<td style="text-align: center;">-0.1096</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.9300</td>
+<td style="text-align: center;">0.4489</td>
+<td style="text-align: center;">1.0000</td>
+<td style="text-align: center;">-0.5150</td>
+<td style="text-align: center;">-0.5516</td>
+<td style="text-align: center;">0.8356</td>
+<td style="text-align: center;">0.9239</td>
+<td style="text-align: center;">0.8701</td>
+<td style="text-align: center;">0.9145</td>
+<td style="text-align: center;">-0.7645</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.4067</td>
+<td style="text-align: center;">-0.0597</td>
+<td style="text-align: center;">-0.5150</td>
+<td style="text-align: center;">1.0000</td>
+<td style="text-align: center;">-0.2892</td>
+<td style="text-align: center;">-0.6537</td>
+<td style="text-align: center;">-0.3195</td>
+<td style="text-align: center;">-0.3125</td>
+<td style="text-align: center;">-0.5715</td>
+<td style="text-align: center;">0.6235</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.5474</td>
+<td style="text-align: center;">-0.4514</td>
+<td style="text-align: center;">-0.5516</td>
+<td style="text-align: center;">-0.2892</td>
+<td style="text-align: center;">1.0000</td>
+<td style="text-align: center;">-0.3473</td>
+<td style="text-align: center;">-0.6836</td>
+<td style="text-align: center;">-0.7121</td>
+<td style="text-align: center;">-0.4688</td>
+<td style="text-align: center;">0.1790</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.7767</td>
+<td style="text-align: center;">0.4537</td>
+<td style="text-align: center;">0.8356</td>
+<td style="text-align: center;">-0.6537</td>
+<td style="text-align: center;">-0.3473</td>
+<td style="text-align: center;">1.0000</td>
+<td style="text-align: center;">0.7540</td>
+<td style="text-align: center;">0.7573</td>
+<td style="text-align: center;">0.8837</td>
+<td style="text-align: center;">-0.6727</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.9682</td>
+<td style="text-align: center;">0.6199</td>
+<td style="text-align: center;">0.9239</td>
+<td style="text-align: center;">-0.3195</td>
+<td style="text-align: center;">-0.6836</td>
+<td style="text-align: center;">0.7540</td>
+<td style="text-align: center;">1.0000</td>
+<td style="text-align: center;">0.9695</td>
+<td style="text-align: center;">0.8897</td>
+<td style="text-align: center;">-0.7070</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.9236</td>
+<td style="text-align: center;">0.6781</td>
+<td style="text-align: center;">0.8701</td>
+<td style="text-align: center;">-0.3125</td>
+<td style="text-align: center;">-0.7121</td>
+<td style="text-align: center;">0.7573</td>
+<td style="text-align: center;">0.9695</td>
+<td style="text-align: center;">1.0000</td>
+<td style="text-align: center;">0.8916</td>
+<td style="text-align: center;">-0.6392</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.9274</td>
+<td style="text-align: center;">0.5084</td>
+<td style="text-align: center;">0.9145</td>
+<td style="text-align: center;">-0.5715</td>
+<td style="text-align: center;">-0.4688</td>
+<td style="text-align: center;">0.8837</td>
+<td style="text-align: center;">0.8897</td>
+<td style="text-align: center;">0.8916</td>
+<td style="text-align: center;">1.0000</td>
+<td style="text-align: center;">-0.7927</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.7998</td>
+<td style="text-align: center;">-0.1096</td>
+<td style="text-align: center;">-0.7645</td>
+<td style="text-align: center;">0.6235</td>
+<td style="text-align: center;">0.1790</td>
+<td style="text-align: center;">-0.6727</td>
+<td style="text-align: center;">-0.7070</td>
+<td style="text-align: center;">-0.6392</td>
+<td style="text-align: center;">-0.7927</td>
+<td style="text-align: center;">1.0000</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<p>Table 1 Correlation Matrix</p>
 </section>
 <section id="data-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="data-transformation">Data Transformation</h3>
@@ -184,7 +359,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Figure 1 Line graph of original data</p>
+<p>Figure 1 Line plot of original data</p>
 <ul>
 <li><strong>Integration transformation</strong></li>
 </ul>
@@ -200,12 +375,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Figure 2 ACF Plot for all data</p>
 <p>Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).</p>
-<p>According to Table 1, we can see that <span class="math inline">\(cpi_i\)</span>, <span class="math inline">\(crt_i\)</span>, <span class="math inline">\(nloan_i\)</span> and <span class="math inline">\(limport_i\)</span> require more than second-order integration, while <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(unemp_i\)</span>, <span class="math inline">\(lexport_i\)</span> require sencond-order integration, other variables require first-order integration (under 10% level of confidence and n in the table means larger than 2).</p>
+<p>According to Table 2, we can see that <span class="math inline">\(cpi_i\)</span>, <span class="math inline">\(crt_i\)</span>, <span class="math inline">\(nloan_i\)</span> and <span class="math inline">\(limport_i\)</span> require more than second-order integration, while <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(unemp_i\)</span>, <span class="math inline">\(lexport_i\)</span> require sencond-order integration, other variables require first-order integration (under 10% level of confidence and n in the table means larger than 2).</p>
 <div class="cell" data-layout-align="center">
-<div class="cell-output cell-output-stdout">
-<pre><code>          
-0.2378902 </code></pre>
-</div>
 <div class="cell-output-display">
 <div class="table-responsive">
 <table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
@@ -296,8 +467,70 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 </div>
-<p>Table 1 Unit root test for all data</p>
+<p>Table 2 Unit root test for all data</p>
 <p>Since the second-order difference may remove part of the long-term information (such as trends) in the data, this may be detrimental to time series data such as <span class="math inline">\(cpi_i\)</span> and <span class="math inline">\(crt_i\)</span> that contain important trend information. Therefore, only first-order differences are used for all data.</p>
+<p>After first-order difference processing of the data and logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 3): Although the fluctuation amplitude cannot be directly compared due to the different proportions on the y-axis, from Looking at the trend of fluctuations, <span class="math inline">\(gold_i\)</span> are negatively correlated with <span class="math inline">\(lcpi_i\)</span>, and <span class="math inline">\(gdp_i\)</span> and <span class="math inline">\(crt_i\)</span> are positively correlated. This finding is consistent with the data presented in the matrix of correlations.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Data Plot 2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 3 Line plot of adjusted data</p>
+</section>
+<section id="importance-of-key-variables-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="importance-of-key-variables-analysis">Importance of Key Variables Analysis</h3>
+<p>The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation are CPI and gold price. Meanwhile, since this study is to explore whether the RBA’s recent suspension of raising the cash rate target has deemed the previous deflationary measures to be effective. So the cash rate target becomes one of the key variables. Below we focus on analyzing these three variables:</p>
+<ul>
+<li>CPI: As Table 3 shows, Using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/03</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/06</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/09</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/12</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Inflation rate</td>
+<td style="text-align: center;">7.02</td>
+<td style="text-align: center;">6.03</td>
+<td style="text-align: center;">5.37</td>
+<td style="text-align: center;">4.05</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<ul>
+<li>Gold price:</li>
+</ul>
+<p>Observing the trend charts of gold prices and cpi in the past three years, we can see that the trends of the two are almost consistent, so we believe that it is reasonable to use international gold prices as inflation expectations (gold price reduced by tenfold). Although the gold price is denominated in US dollars, the inclusion of the Australian dollar against the US dollar exchange rate in the data set makes it feasible to convert the gold price into a measure of its impact on the Australian market.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/gold compute-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Cash rate target:</li>
+</ul>
 </section>
 </section>
 <section id="the-model-and-hypothesis" class="level2">

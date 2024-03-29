@@ -101,7 +101,9 @@ colnames(all_data)   = c("cpi_data", "gdp_data", "crt_data", "unemp_data", "expo
 ## plot corr table
 cor_matrix <- round(cor(all_data), 4)
 
-cor_results_table <- as_tibble(cor_matrix)
+cor_first_row <- as_tibble(t(cor_matrix[1, , drop = FALSE]))
+
+cor_results_table <- add_column(cor_first_row, Variable = colnames(cor_matrix), .before = 1)
 
 kable(cor_results_table, align = "c") %>% 
   kable_styling(font_size = 8, 
@@ -304,15 +306,57 @@ kable(inflation_table, align = "c") %>%
 
 
 ## gold data
-cpi_last_12 <- tail(all_data$cpi_data, 12)
-gold_last_12 <- tail(all_data$gold_data, 12)/10 
+cpi_last_12 <- tail(cpi_data, 12)
+gold_last_12 <- tail(gold_data, 12)
 
+par(mfcol = c(2, 1), mar=c(2,2,2,2))
 
+plot(cpi_last_12, type="l", col="blue", xlab="Date", ylab="CPI Value", xlim=range(common_time_index))
+title(main = "CPI last 3yrs", line = 0.5)
 
-plot(cpi_last_12, type="l", col="blue", xlab="Date", ylab="CPI (blue)", ylim=range(c(100,200)))
-lines(gold_last_12, col="red")
-title("CPI and Gold Data Over the Last 12 Months")
-legend("topleft", legend=c("CPI Data", "Gold Data"), col=c("blue", "red"), lty=5)
+plot(gold_last_12, type="l", col="red", xlab="Date", ylab="Gold Price", xlim=range(common_time_index))
+title(main = "Gold price 3yrs", line = 0.5)
 
+## cash rate data
 
+final2021.inf = (all_data[nrow(all_data) - 8, 1][[1]]/all_data[nrow(all_data) - 12, 1][[1]] -1 )*100
+final2022.inf = (all_data[nrow(all_data) - 4, 1][[1]]/all_data[nrow(all_data) - 8, 1][[1]] -1 )*100
+final2023.inf = (all_data[nrow(all_data), 1][[1]]/all_data[nrow(all_data) - 4, 1][[1]] -1 )*100
 
+final2021.crt = (all_data[nrow(all_data) - 8, 3][[1]])
+final2022.crt = (all_data[nrow(all_data) - 4, 3][[1]])
+final2023.crt = (all_data[nrow(all_data), 3][[1]])
+
+cash_rate_table <-
+  tibble( " " = c("Inflation rate","Cash rate target"),
+          "2021/12" = c(round((all_data[nrow(all_data) - 8, 1][[1]]/all_data[nrow(all_data) - 12, 1][[1]] -1 )*100, 2),
+                        round((all_data[nrow(all_data) - 8, 3][[1]]), 2)),
+          "2022/03" = c(round((all_data[nrow(all_data) - 7, 1][[1]]/all_data[nrow(all_data) - 11, 1][[1]] -1 )*100, 2),
+                        round((all_data[nrow(all_data) - 7, 3][[1]]), 2)),
+          "2022/06" = c(round((all_data[nrow(all_data) - 6, 1][[1]]/all_data[nrow(all_data) - 10, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 6, 3][[1]]), 2)),
+          "2022/09" = c(round((all_data[nrow(all_data) - 5, 1][[1]]/all_data[nrow(all_data) - 9, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 5, 3][[1]]), 2)),
+          "2022/12" = c(round((all_data[nrow(all_data) - 4, 1][[1]]/all_data[nrow(all_data) - 8, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 4, 3][[1]]), 2)),
+          "2022 annual change" = c(round((final2022.inf - final2021.inf)/final2021.inf ,2),
+                                   round((final2022.crt - final2021.crt)/final2021.crt ,2)),
+          "2023/03" = c(round((all_data[nrow(all_data) - 3, 1][[1]]/all_data[nrow(all_data) - 7, 1][[1]] -1 )*100, 2),
+                        round((all_data[nrow(all_data) - 3, 3][[1]]), 2)),
+          "2023/06" = c(round((all_data[nrow(all_data) - 2, 1][[1]]/all_data[nrow(all_data) - 6, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 2, 3][[1]]), 2)),
+          "2023/09" = c(round((all_data[nrow(all_data) - 1, 1][[1]]/all_data[nrow(all_data) - 5, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 1, 3][[1]]), 2)),
+          "2023/12" = c(round((all_data[nrow(all_data), 1][[1]]/all_data[nrow(all_data) - 4, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data), 3][[1]]), 2)),
+          "2023 annual change" = c(round((final2023.inf - final2022.inf)/final2022.inf ,2),
+                                   round((final2023.crt - final2022.crt)/final2022.crt ,2)),
+  )
+
+kable(cash_rate_table, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))

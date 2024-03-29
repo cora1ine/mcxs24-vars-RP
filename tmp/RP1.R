@@ -87,3 +87,50 @@ colnames(exr_data) = c('date', 'exr')
 exr_data$date   = as.Date(as.character(exr_data$date),format="%Y-%m-%d") 
 exr_data        = xts(exr_data$exr, exr_data$date)
 exr_data        = apply.quarterly(exr_data, mean)
+
+### Data plot
+# All Variables
+all_data             = na.omit(merge(cpi_data, gdp_data, crt_data, unemp_data, export_data, import_data, nloan_data,  gold_data, aord_data, exr_data ))
+colnames(all_data)   = c("cpi_data", "gdp_dat", "crt_data", "unemp_data", "export_data", "import_data","nloan_data", "gold_data", "aord_data", "exr_data")
+
+## Line plot
+par(mfcol = c(5, 2), mar = c(2, 2, 2, 2))
+
+for (i in 1:10) {
+  ts.plot(all_data[, i], main = colnames(all_data)[i], 
+          ylab = "", xlab = "", col = "darkblue")
+}
+
+
+## ACF plot
+par(mfcol = c(5, 2), mar=c(2,2,2,2))
+for (i in 1:10){
+  acf = acf(all_data[,i], plot = FALSE)[1:20]
+  plot(acf, main = "")
+  title(main = paste(colnames(all_data)[i]), line = 0.5)
+}
+
+## ADF test
+library(fUnitRoots)   # ADF test - adfTest
+
+adf.cpi = adfTest(cpi_data, lags=10, type="c")              # don't reject -> non-stationary
+adf.cpi = adfTest(diff(cpi_data), lags=9, type="nc")        # don't reject -> non-stationary
+adf.cpi = adfTest(diff(diff(cpi_data)), lags=8, type="nc")  # reject -> (I2 is stationary)
+# adf.cpi@test$p.value
+#-> integration order = 2
+
+adf.gdp = adfTest(gdp_data, lags=11, type="c")              # don't reject -> non-stationary
+adf.gdp = adfTest(diff(gdp_data), lags=10, type="nc")       # don't reject -> non-stationary
+adf.gdp = adfTest(diff(diff(gdp_data)), lags=9, type="nc")  # reject -> (I2 is stationary)
+# adf.gdp@test$p.value
+#-> integration order = 2
+
+adf.crt = adfTest(crt_data, lags=7, type="c")               # don't reject -> non-stationary
+adf.crt = adfTest(diff(crt_data), lags=6, type="nc")        # reject -> (I1 is stationary)
+# adf.crt@test$p.value
+#-> integration order = 1
+
+adf.unemp = adfTest(unemp_data, lags=4, type="c")           # don't reject -> non-stationary
+adf.unemp = adfTest(diff(unemp_data), lags=3, type="nc")    # reject -> (I1 is stationary)
+# adf.unemp@test$p.value
+#-> integration order = 1

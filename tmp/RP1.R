@@ -107,6 +107,24 @@ for (i in 1:10) {
           ylab = "", xlab = "", col = "darkblue")
 }
 
+## log transformation for cpi and gdp
+cpi_data  =  log(cpi_data)
+gdp_data  =  log(gdp_data)
+
+
+# All Variables after log
+all_data             = na.omit(merge(lcpi_data,    gold_data, 
+                                     lgdp_data,    crt_data, 
+                                     unemp_data,   nloan_data,  
+                                     export_data,  import_data, 
+                                     aord_data,    exr_data ))
+
+colnames(all_data)   = c("lcpi_data",    "gold_data", 
+                         "lgdp_data",    "crt_data", 
+                         "unemp_data",   "nloan_data", 
+                         "export_data",  "import_data",
+                         "aord_data",    "exr_data")
+
 
 ## ACF plot
 par(mfcol = c(5, 2), mar=c(2,2,2,2))
@@ -120,8 +138,8 @@ for (i in 1:10){
 ## AR
 
 #check the optimal lag 
-ol.cpi.aic.ar    = (ar(cpi_data, order.max=20, aic=TRUE, method="ols"))
-ol.gdp.aic.ar    = (ar(gdp_data, order.max=20, aic=TRUE, method="ols"))
+ol.cpi.aic.ar    = (ar(lcpi_data, order.max=20, aic=TRUE, method="ols"))
+ol.gdp.aic.ar    = (ar(lgdp_data, order.max=20, aic=TRUE, method="ols"))
 ol.crt.aic.ar    = (ar(crt_data, order.max=20, aic=TRUE, method="ols"))
 ol.unemp.aic.ar  = (ar(unemp_data, order.max=20, aic=TRUE, method="ols"))
 ol.export.aic.ar = (ar(export_data, order.max=20, aic=TRUE, method="ols"))
@@ -137,16 +155,16 @@ ol.exr.aic.ar    = (ar(exr_data, order.max=20, aic=TRUE, method="ols"))
 
 
 # ol.cpi.aic.ar$order
-adf.cpi = adfTest(cpi_data, lags=5, type="c")              # don't reject -> non-stationary
-dadf.cpi = adfTest(diff(cpi_data), lags=4, type="nc")        # don't reject -> non-stationary
-d2adf.cpi = adfTest(diff(diff(cpi_data)), lags=3, type="nc")  # reject -> (I2 is stationary)
+adf.cpi = adfTest(lcpi_data, lags=5, type="c")              # don't reject -> non-stationary
+dadf.cpi = adfTest(diff(lcpi_data), lags=4, type="nc")        # don't reject -> non-stationary
+d2adf.cpi = adfTest(diff(diff(lcpi_data)), lags=3, type="nc")  # reject -> (I2 is stationary)
 adf.cpi@test$p.value
 #-> integration order = 2
 
 # ol.gdp.aic.ar$order
-adf.gdp = adfTest(gdp_data, lags=5, type="c")              # don't reject -> non-stationary
-dadf.gdp = adfTest(diff(gdp_data), lags=4, type="nc")       # don't reject -> non-stationary
-d2adf.gdp = adfTest(diff(diff(gdp_data)), lags=3, type="nc")  # reject -> (I2 is stationary)
+adf.gdp = adfTest(lgdp_data, lags=5, type="c")              # don't reject -> non-stationary
+dadf.gdp = adfTest(diff(lgdp_data), lags=4, type="nc")       # don't reject -> non-stationary
+d2adf.gdp = adfTest(diff(diff(lgdp_data)), lags=3, type="nc")  # reject -> (I2 is stationary)
 # adf.gdp@test$p.value
 #-> integration order = 2
 
@@ -202,7 +220,7 @@ d2adf.exr = adfTest(diff(diff(exr_data)), lags=18, type="nc")  # reject -> (I2 i
 # #-> integration order = 2
 
 Unit_Root_Test_table <- 
-  tibble( " " = c("cpi", "gold", "gdp", "crt", "unemp", "nloan", "export","import", "aord", "exr"),
+  tibble( " " = c("lcpi", "gold", "lgdp", "crt", "unemp", "nloan", "export","import", "aord", "exr"),
           "p value of ADF test of AR" 
           = round(c(adf.cpi@test$p.value,    adf.gold@test$p.value,
                     adf.gdp@test$p.value,    adf.crt@test$p.value,    
@@ -221,8 +239,8 @@ Unit_Root_Test_table <-
                     NA, NA, NA, NA, NA,
                     d2adf.aord@test$p.value,   d2adf.exr@test$p.value),4),
           "conclusion" 
-          = c("cpi~I(2)",    "gold~I(2)", 
-              "gdp~I(2)",    "crt~I(1)",    
+          = c("lcpi~I(2)",    "gold~I(2)", 
+              "lgdp~I(2)",    "crt~I(1)",    
               "unemp~I(1)",  "nloan~I(1)", 
               "export~I(1)", "import~I(1)", 
               "aord~I(2)",   "exr~I(2)"
@@ -236,3 +254,7 @@ kable(Unit_Root_Test_table, align = "c") %>%
                 position = "center",
                 latex_options = c("HOLD_position"),
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+
+
+all_data         = na.omit(diff(all_data))
+

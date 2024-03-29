@@ -1,6 +1,6 @@
 ---
 title: "RP1"
-author: "Gezhi Chen Coraline"
+author: "Gezhi Chen"
 
 execute:
   echo: false
@@ -16,26 +16,61 @@ bibliography: references.bib
 
 
 ## The question objective, and motivation
-**Objective: ** The purpose of this research is to explore the trend in Australia's inflation rate over the next two years.
 
-**Question: ** Will Australia's inflation rate fall back to the 2-3% inflation target range in 2025, and will it reach 2.5% in 2026?
+**Objective: ** 
+
+The purpose of this research is to explore the trend in Australia's inflation rate over the next two years.
+
+**Question: ** 
+
+Will Australia's inflation rate fall back to the 2-3% inflation target range in 2025, and will it reach 2.5% in 2026?
 
 The Reserve Bank of Australia (RBA) forecasts that inflation will fall back to the target range of 2% to 3% by 2025 and reach the midpoint of this range in 2026. The purpose of the study is to forecast inflation over the next two years and assess the reasonableness of the RBA's forecast. This is because we have observed a sharp rise in inflation to 7.8% during COVID-19, and in response the RBA implemented tightening monetary policy and increased interest rates starting in late 2022. Entering mid-to-late 2023, the pace of interest rate increases has slowed down. This research will help determine whether the RBA correctly assumed that its monetary policy measures have effectively suppressed inflation and expected that inflation will fall back to the target range over the next year.
+
+```{r Library}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(readabs)
+library(readrba)
+library(xts)
+library(fUnitRoots)   # ADF test - adfTest
+library(tidyverse)    # for table
+library(kableExtra)   # for print table
+```
 
 
 ## Data and their properties
 
-**Data Selection**
-1.$cpi_i$: Consumer Price Index from ABS
-2.$gdp_i$: Gross domestic product (Chain volume measures - Percentage changes) from the ABS
-3.$crt_i$: Cash rate target from RBA
-4.$unemp_i$: Unemployment rate with seasonal adjusted from ABS
-5.$export_i$: International export in Goods and Services with seasonal adjusted from the ABS
-6.$import_i$: International import in Goods and Services with seasonal adjusted from the ABS
-7.$nloan_i$: New loan commitments with seasonal adjusted from ABS
-8.$gold_i$: Gold price from yahoo finance
-9.$aord_i$: All Ordinary index from yahoo finance
-10.$exr_i$: AUD/USD (exchange rate) from yahoo finance
+**Data Selection and**
+
+Direct Inflationary Indicators:
+
+1.$cpi_i$: Consumer Price Index (CPI): Direct measure of inflation (from ABS)
+
+2.$gold_i$: Gold price, indicate inflationary expectations (from yahoo finance)
+
+Economic Activity and Policy Indicators:
+
+3.$gdp_i$: Gross Domestic Product (GDP), reflect economic growth and demand-pull inflation (from ABS)
+
+4.$crt_i$: Cash rate target, Indicate monetary policy stance which affects inflation (from RBA)
+
+5.$unemp_i$: Unemployment rate, indicate the level of slack in the labor market, influencing wage-push inflation (from ABS)
+
+Market and External Trade Indicators:
+
+6.$nloan_i$: New loan commitments, reflect credit growth which can fuel economic activity and inflation (from ABS)
+
+7.$export_i$: International exports, affect trade balance and currency strength, influencing imported inflation (from ABS)
+
+8.$import_i$: International imports: Directly affect inflation through the cost of imported goods (from ABS)
+
+9.$aord_i$: All Ordinaries Index (AORD), reflects investor confidence and economic activity which can be pre-emptive indicators of inflation (from yahoo finance)
+
+10.$exr_i$: AUD/USD exchange rate, affects the price of imports and exports, contributing to inflation (from yahoo finance)
+
 
 ```{r Data downloading, fig.pos="H"}
 #| echo: false
@@ -50,51 +85,7 @@ The Reserve Bank of Australia (RBA) forecasts that inflation will fall back to t
 cpi_download  = read_abs(series_id = "A2325846C")     
 cpi_data      = xts(cpi_download$value, cpi_download$date)
 
-# 2.GDP
-# 5206.0 Australian National Accounts: National Income, Expenditure and Product
-# series_id = "A2304370T": Gross domestic product: Chain volume measures - Percentage changes
-gdp_download  = read_abs(series_id = "A2304370T")     
-gdp_data      = xts(cpi_download$value, cpi_download$date)
-
-# 3.Cash rate target
-
-crt_download   = read_rba(series_id = "FIRMMCRTD")   
-crt_data       = xts(crt_download$value, crt_download$date)
-crt_data       = apply.quarterly(crt_data, mean)     # change daily to quarterly
-crt_data       = xts(crt_data, seq(as.Date("1990-03-01"), by = "quarter", length.out = length(crt_data)))
-
-# 4.Unemployment rate
-# 6202.0 Labour Force, Australia
-# series_id = "A84423050A": Unemployment rate ;  Persons ; seasonal adjust
-unemp_download = read_abs(series_id = "A84423050A")     
-unemp_data     = xts(unemp_download$value, unemp_download$date)
-unemp_data     = apply.quarterly(unemp_data, mean) # change daily to quarterly
-unemp_data     = xts(unemp_data, seq(as.Date("1978-03-01"), by = "quarter", length.out = length(unemp_data)))
-
-# 5.Export
-# 5368.0 International Trade in Goods
-# series_id = "A2718603V": Debits, Total goods ;
-export_download = read_abs(series_id = "A2718603V")     
-export_data     = xts(export_download$value, export_download$date)
-export_data     = abs(export_data)
-export_data     = apply.quarterly(export_data, mean)
- 
-# 6.Import
-# 5368.0 International Trade in Goods
-# series_id = "A2718577A": Credits, Total goods ;
-import_download  = read_abs(series_id = "A2718577A")     
-import_data      = xts(import_download$value, import_download$date)
-import_data      = apply.quarterly(import_data, mean)
-
-# 7.New loan
-# 5601.0 Lending Indicators
-# series_id = "A108296973X"： Households ;  Housing Finance ;  Total housing excluding refinancing ;  New loan commitments ;  Value ; seasonal adjust
-nloan_download   = read_abs(series_id = "A108296973X")     
-nloan_data       = xts(nloan_download$value, nloan_download$date)
-nloan_data       = apply.quarterly(nloan_data, mean)
-
-
-# 8.Gold price
+# 2.Gold price
 gold_link       = "https://query1.finance.yahoo.com/v7/finance/download/GC%3DF?period1=1262304000&period2=1703980800&interval=1mo&filter=history&frequency=1mo&includeAdjustedClose=true"
 gold_download   = read.csv(gold_link)
 gold_data       = gold_download[,6]
@@ -103,6 +94,49 @@ colnames(gold_data) = c('date', 'gol')
 gold_data$date  = as.Date(as.character(gold_data$date),format="%Y-%m-%d") 
 gold_data       = xts(gold_data$gol, gold_data$date)
 gold_data       = apply.quarterly(gold_data, mean)
+
+# 3.GDP
+# 5206.0 Australian National Accounts: National Income, Expenditure and Product
+# series_id = "A2304370T": Gross domestic product: Chain volume measures - Percentage changes
+gdp_download  = read_abs(series_id = "A2304370T")     
+gdp_data      = xts(cpi_download$value, cpi_download$date)
+
+# 4.Cash rate target
+
+crt_download   = read_rba(series_id = "FIRMMCRTD")   
+crt_data       = xts(crt_download$value, crt_download$date)
+crt_data       = apply.quarterly(crt_data, mean)     # change daily to quarterly
+crt_data       = xts(crt_data, seq(as.Date("1990-03-01"), by = "quarter", length.out = length(crt_data)))
+
+# 5.Unemployment rate
+# 6202.0 Labour Force, Australia
+# series_id = "A84423050A": Unemployment rate ;  Persons ; seasonal adjust
+unemp_download = read_abs(series_id = "A84423050A")     
+unemp_data     = xts(unemp_download$value, unemp_download$date)
+unemp_data     = apply.quarterly(unemp_data, mean) # change daily to quarterly
+unemp_data     = xts(unemp_data, seq(as.Date("1978-03-01"), by = "quarter", length.out = length(unemp_data)))
+
+# 6.New loan
+# 5601.0 Lending Indicators
+# series_id = "A108296973X"： Households ;  Housing Finance ;  Total housing excluding refinancing ;  New loan commitments ;  Value ; seasonal adjust
+nloan_download   = read_abs(series_id = "A108296973X")     
+nloan_data       = xts(nloan_download$value, nloan_download$date)
+nloan_data       = apply.quarterly(nloan_data, mean)
+
+# 7.Export
+# 5368.0 International Trade in Goods
+# series_id = "A2718603V": Debits, Total goods ;
+export_download = read_abs(series_id = "A2718603V")     
+export_data     = xts(export_download$value, export_download$date)
+export_data     = abs(export_data)
+export_data     = apply.quarterly(export_data, mean)
+ 
+# 8.Import
+# 5368.0 International Trade in Goods
+# series_id = "A2718577A": Credits, Total goods ;
+import_download  = read_abs(series_id = "A2718577A")     
+import_data      = xts(import_download$value, import_download$date)
+import_data      = apply.quarterly(import_data, mean)
 
 # 9.AORD
 aord_link       = "https://query1.finance.yahoo.com/v7/finance/download/%5EAORD?period1=1262304000&period2=1703980800&interval=1mo&filter=history&frequency=1mo&includeAdjustedClose=true"
@@ -127,23 +161,23 @@ exr_data        = apply.quarterly(exr_data, mean)
 
 ```
 
-```{r Data combine fig.pos="H"}
+```{r Data combine, fig.pos="H"}
 #| echo: false
 #| message: false
 #| warning: false
 
 ### Data plot
 # All Variables
-all_data             = na.omit(merge(cpi_data, gdp_data, 
-                                     crt_data, unemp_data, 
+all_data             = na.omit(merge(cpi_data,    gold_data, 
+                                     gdp_data,    crt_data, 
+                                     unemp_data,  nloan_data,  
                                      export_data, import_data, 
-                                     nloan_data,  gold_data, 
-                                     aord_data, exr_data ))
-colnames(all_data)   = c("cpi_data", "gdp_data", 
-                         "crt_data", "unemp_data", 
+                                     aord_data,   exr_data ))
+colnames(all_data)   = c("cpi_data",    "gold_data", 
+                         "gdp_data",    "crt_data", 
+                         "unemp_data",  "nloan_data", 
                          "export_data", "import_data",
-                         "nloan_data", "gold_data", 
-                         "aord_data", "exr_data")
+                         "aord_data",   "exr_data")
 ```
 
 
@@ -185,13 +219,13 @@ for (i in 1:10){
 
 # find the optimal lag 
 ol.cpi.aic.ar    = (ar(cpi_data, order.max=20, aic=TRUE, method="ols"))
+ol.gold.aic.ar   = (ar(gold_data, order.max=20, aic=TRUE, method="ols"))
 ol.gdp.aic.ar    = (ar(gdp_data, order.max=20, aic=TRUE, method="ols"))
 ol.crt.aic.ar    = (ar(crt_data, order.max=20, aic=TRUE, method="ols"))
 ol.unemp.aic.ar  = (ar(unemp_data, order.max=20, aic=TRUE, method="ols"))
+ol.nloan.aic.ar  = (ar(nloan_data, order.max=20, aic=TRUE, method="ols"))
 ol.export.aic.ar = (ar(export_data, order.max=20, aic=TRUE, method="ols"))
 ol.import.aic.ar = (ar(import_data, order.max=20, aic=TRUE, method="ols"))
-ol.nloan.aic.ar  = (ar(nloan_data, order.max=20, aic=TRUE, method="ols"))
-ol.gold.aic.ar   = (ar(gold_data, order.max=20, aic=TRUE, method="ols"))
 ol.aord.aic.ar   = (ar(aord_data, order.max=20, aic=TRUE, method="ols"))
 ol.exr.aic.ar    = (ar(exr_data, order.max=20, aic=TRUE, method="ols"))
 
@@ -203,6 +237,13 @@ adf.cpi   = adfTest(cpi_data, lags=5, type="c")              # don't reject -> n
 dadf.cpi  = adfTest(diff(cpi_data), lags=4, type="nc")        # don't reject -> non-stationary
 d2adf.cpi = adfTest(diff(diff(cpi_data)), lags=3, type="nc")  # reject -> (I2 is stationary)
 # adf.cpi@test$p.value
+#-> integration order = 2
+
+# ol.gold.aic.ar$order
+adf.gold   = adfTest(gold_data, lags=16, type="c")               # don't reject -> non-stationary
+dadf.gold  = adfTest(diff(gold_data), lags=15, type="nc")        # don't reject -> non-stationary
+d2adf.gold = adfTest(diff(diff(gold_data)), lags=14, type="nc")  # reject -> (I2 is stationary)
+# adf.gold@test$p.value
 #-> integration order = 2
 
 # ol.gdp.aic.ar$order
@@ -224,6 +265,12 @@ dadf.unemp = adfTest(diff(unemp_data), lags=2, type="nc")    # reject -> (I1 is 
 # adf.unemp@test$p.value
 #-> integration order = 1
 
+# ol.nloan.aic.ar$order
+adf.nloan  = adfTest(nloan_data, lags=2, type="c")           # don't reject -> non-stationary
+dadf.nloan = adfTest(diff(nloan_data), lags=1, type="nc")    # reject -> (I1 is stationary)
+# adf.nloan@test$p.value
+#-> integration order = 1
+
 # ol.export.aic.ar$order
 adf.export  = adfTest(export_data, lags=13, type="c")           # don't reject -> non-stationary
 dadf.export = adfTest(diff(export_data), lags=12, type="nc")    # reject -> (I1 is stationary)
@@ -235,19 +282,6 @@ adf.import  = adfTest(import_data, lags=12, type="c")           # don't reject -
 dadf.import = adfTest(diff(import_data), lags=11, type="nc")    # reject -> (I1 is stationary)
 # adf.import@test$p.value
 #-> integration order = 1
-
-# ol.nloan.aic.ar$order
-adf.nloan  = adfTest(nloan_data, lags=2, type="c")           # don't reject -> non-stationary
-dadf.nloan = adfTest(diff(nloan_data), lags=1, type="nc")    # reject -> (I1 is stationary)
-# adf.nloan@test$p.value
-#-> integration order = 1
-
-# ol.gold.aic.ar$order
-adf.gold   = adfTest(gold_data, lags=16, type="c")               # don't reject -> non-stationary
-dadf.gold  = adfTest(diff(gold_data), lags=15, type="nc")        # don't reject -> non-stationary
-d2adf.gold = adfTest(diff(diff(gold_data)), lags=14, type="nc")  # reject -> (I2 is stationary)
-# adf.gold@test$p.value
-#-> integration order = 2
 
 # ol.aord.aic.ar$order
 adf.aord   = adfTest(aord_data, lags=15, type="c")               # don't reject -> non-stationary
@@ -264,32 +298,33 @@ d2adf.exr = adfTest(diff(diff(exr_data)), lags=18, type="nc")  # reject -> (I2 i
 # #-> integration order = 2
 
 Unit_Root_Test_table <- 
-  tibble( " " = c("cpi", "gdp", "crt", "unemp", "export","import", "nloan", "gold", "aord", "exr"),
+  tibble( " " = c("cpi", "gold", "gdp", "crt", "unemp", "nloan", "export","import", "aord", "exr"),
           "p value of ADF test of AR" 
-          = round(c(adf.cpi@test$p.value,    adf.gdp@test$p.value,
-                    adf.crt@test$p.value,    adf.unemp@test$p.value,
+          = round(c(adf.cpi@test$p.value,    adf.gold@test$p.value,
+                    adf.gdp@test$p.value,    adf.crt@test$p.value,    
+                    adf.unemp@test$p.value,  adf.nloan@test$p.value,
                     adf.export@test$p.value, adf.import@test$p.value,
-                    adf.nloan@test$p.value,  adf.gold@test$p.value,
                     adf.aord@test$p.value,   adf.exr@test$p.value),4),
           "p value of ADF test of diff-AR" 
-          = round(c(dadf.cpi@test$p.value,    dadf.gdp@test$p.value,
-                    dadf.crt@test$p.value,    dadf.unemp@test$p.value,
-                    dadf.export@test$p.value, dadf.import@test$p.value,
-                    dadf.nloan@test$p.value,  dadf.gold@test$p.value,
+          = round(c(dadf.cpi@test$p.value,    dadf.gold@test$p.value,
+                    dadf.gdp@test$p.value,    dadf.crt@test$p.value,    
+                    dadf.unemp@test$p.value,  dadf.nloan@test$p.value,
+                    dadf.export@test$p.value, dadf.import@test$p.value,   
                     dadf.aord@test$p.value,   dadf.exr@test$p.value),4),
           "p value of ADF test of diff-diff-AR" 
-          = round(c(d2adf.cpi@test$p.value,    d2adf.gdp@test$p.value,
+          = round(c(d2adf.cpi@test$p.value,    d2adf.gold@test$p.value,
+                    d2adf.gdp@test$p.value,
                     NA, NA, NA, NA, NA,
-                    d2adf.gold@test$p.value,
                     d2adf.aord@test$p.value,   d2adf.exr@test$p.value),4),
           "conclusion" 
-          = c("cpi~I(2)",    "gdp~I(2)", 
-              "crt~I(1)",    "unemp~I(1)", 
+          = c("cpi~I(2)",    "gold~I(2)", 
+              "gdp~I(2)",    "crt~I(1)",    
+              "unemp~I(1)",  "nloan~I(1)", 
               "export~I(1)", "import~I(1)", 
-              "nloan~I(1)",  "gold~I(2)", 
-              "aord~I(2)", "exr~I(2)"
-                    ),
+              "aord~I(2)",   "exr~I(2)"
+          ),
   )
+
 
 kable(Unit_Root_Test_table, align = "c") %>% 
   kable_styling(font_size = 8, 

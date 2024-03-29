@@ -98,7 +98,11 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
   <li><a href="#the-question-objective-and-motivation" id="toc-the-question-objective-and-motivation" class="nav-link" data-scroll-target="#the-question-objective-and-motivation">The question objective, and motivation</a></li>
-  <li><a href="#data-and-their-properties" id="toc-data-and-their-properties" class="nav-link" data-scroll-target="#data-and-their-properties">Data and their properties</a></li>
+  <li><a href="#data-and-their-properties" id="toc-data-and-their-properties" class="nav-link" data-scroll-target="#data-and-their-properties">Data and their properties</a>
+  <ul class="collapse">
+  <li><a href="#data-selection-and-rationale" id="toc-data-selection-and-rationale" class="nav-link" data-scroll-target="#data-selection-and-rationale">Data Selection and Rationale</a></li>
+  <li><a href="#data-transformation" id="toc-data-transformation" class="nav-link" data-scroll-target="#data-transformation">Data Transformation</a></li>
+  </ul></li>
   <li><a href="#the-model-and-hypothesis" id="toc-the-model-and-hypothesis" class="nav-link" data-scroll-target="#the-model-and-hypothesis">The model and hypothesis</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
@@ -139,28 +143,38 @@ ul.task-list li input[type="checkbox"] {
 <h1>Introduction</h1>
 <section id="the-question-objective-and-motivation" class="level2">
 <h2 class="anchored" data-anchor-id="the-question-objective-and-motivation">The question objective, and motivation</h2>
-<p><strong>Objective: </strong></p>
+<p><strong>Objective:</strong></p>
 <p>The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years.</p>
-<p><strong>Question: </strong></p>
+<p><strong>Question:</strong></p>
 <p>Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025, and will it reach 2.5% in 2026?</p>
 <p>The Reserve Bank of Australia (RBA) forecasts that inflation will fall back to the target range of 2% to 3% by 2025 and reach the midpoint of this range in 2026. The purpose of the study is to forecast inflation over the next two years and assess the reasonableness of the RBA’s forecast. This is because we have observed a sharp rise in inflation to 7.8% during COVID-19, and in response the RBA implemented tightening monetary policy and increased interest rates starting in late 2022. Entering mid-to-late 2023, the pace of interest rate increases has slowed down. This research will help determine whether the RBA correctly assumed that its monetary policy measures have effectively suppressed inflation and expected that inflation will fall back to the target range over the next year.</p>
 </section>
 <section id="data-and-their-properties" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-their-properties">Data and their properties</h2>
-<p><strong>Data Selection and</strong></p>
-<p>Direct Inflationary Indicators:</p>
+<section id="data-selection-and-rationale" class="level3">
+<h3 class="anchored" data-anchor-id="data-selection-and-rationale">Data Selection and Rationale</h3>
+<ul>
+<li><p><strong>Direct Inflationary Indicators:</strong></p>
 <p>1.<span class="math inline">\(cpi_i\)</span>: Consumer Price Index (CPI): Direct measure of inflation (from ABS)</p>
-<p>2.<span class="math inline">\(gold_i\)</span>: Gold price, indicate inflationary expectations (from yahoo finance)</p>
-<p>Economic Activity and Policy Indicators:</p>
+<p>2.<span class="math inline">\(gold_i\)</span>: Gold price, indicate inflationary expectations (from yahoo finance)</p></li>
+<li><p><strong>Economic Activity and Policy Indicators:</strong></p>
 <p>3.<span class="math inline">\(gdp_i\)</span>: Gross Domestic Product (GDP), reflect economic growth and demand-pull inflation (from ABS)</p>
 <p>4.<span class="math inline">\(crt_i\)</span>: Cash rate target, Indicate monetary policy stance which affects inflation (from RBA)</p>
-<p>5.<span class="math inline">\(unemp_i\)</span>: Unemployment rate, indicate the level of slack in the labor market, influencing wage-push inflation (from ABS)</p>
-<p>Market and External Trade Indicators:</p>
+<p>5.<span class="math inline">\(unemp_i\)</span>: Unemployment rate, indicate the level of slack in the labor market, influencing wage-push inflation (from ABS)</p></li>
+<li><p><strong>Market and External Trade Indicators:</strong></p>
 <p>6.<span class="math inline">\(nloan_i\)</span>: New loan commitments, reflect credit growth which can fuel economic activity and inflation (from ABS)</p>
 <p>7.<span class="math inline">\(export_i\)</span>: International exports, affect trade balance and currency strength, influencing imported inflation (from ABS)</p>
 <p>8.<span class="math inline">\(import_i\)</span>: International imports: Directly affect inflation through the cost of imported goods (from ABS)</p>
 <p>9.<span class="math inline">\(aord_i\)</span>: All Ordinaries Index (AORD), reflects investor confidence and economic activity which can be pre-emptive indicators of inflation (from yahoo finance)</p>
-<p>10.<span class="math inline">\(exr_i\)</span>: AUD/USD exchange rate, affects the price of imports and exports, contributing to inflation (from yahoo finance)</p>
+<p>10.<span class="math inline">\(exr_i\)</span>: AUD/USD exchange rate, affects the price of imports and exports, contributing to inflation (from yahoo finance)</p></li>
+</ul>
+</section>
+<section id="data-transformation" class="level3">
+<h3 class="anchored" data-anchor-id="data-transformation">Data Transformation</h3>
+<ul>
+<li><strong>Log Transformation</strong></li>
+</ul>
+<p>Based on the line graph of the original data below (Figure 1), we can observe that exponentially growing variables need to be linearized, such as <span class="math inline">\(cpi_i\)</span>, <span class="math inline">\(export_i\)</span>, <span class="math inline">\(import_i\)</span>, <span class="math inline">\(exr_i\)</span>. Therefore, its logarithmically transformed form will be used in the following analysis.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -170,6 +184,11 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>Figure 1 Line graph of original data</p>
+<ul>
+<li><strong>Integration transformation</strong></li>
+</ul>
+<p>According to ACF plot for all data (Figure 2), we can see all data with autocorrelation. It suggests that the series is not white noise and might not be stationary. In this case, applying a differencing operation, such as a first difference (single-order integration), can help remove the autocorrelation and achieve stationary.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -179,7 +198,14 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
+<p>Figure 2 ACF Plot for all data</p>
+<p>Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).</p>
+<p>According to Table 1, we can see that <span class="math inline">\(cpi_i\)</span>, <span class="math inline">\(crt_i\)</span>, <span class="math inline">\(nloan_i\)</span> and <span class="math inline">\(limport_i\)</span> require more than second-order integration, while <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(unemp_i\)</span>, <span class="math inline">\(lexport_i\)</span> require sencond-order integration, other variables require first-order integration (under 10% level of confidence and n in the table means larger than 2).</p>
 <div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>          
+0.2378902 </code></pre>
+</div>
 <div class="cell-output-display">
 <div class="table-responsive">
 <table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
@@ -194,74 +220,74 @@ ul.task-list li input[type="checkbox"] {
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;">cpi</td>
-<td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.0910</td>
-<td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">cpi~I(2)</td>
+<td style="text-align: center;">lcpi</td>
+<td style="text-align: center;">0.9328</td>
+<td style="text-align: center;">0.6733</td>
+<td style="text-align: center;">0.2018</td>
+<td style="text-align: center;">lcpi~I(n)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">gold</td>
-<td style="text-align: center;">0.9072</td>
-<td style="text-align: center;">0.3109</td>
-<td style="text-align: center;">0.0161</td>
+<td style="text-align: center;">0.3959</td>
+<td style="text-align: center;">0.3375</td>
+<td style="text-align: center;">0.0862</td>
 <td style="text-align: center;">gold~I(2)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">gdp</td>
-<td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.0910</td>
+<td style="text-align: center;">0.5625</td>
 <td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">gdp~I(2)</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">gdp~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">crt</td>
-<td style="text-align: center;">0.5333</td>
-<td style="text-align: center;">0.0310</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">crt~I(1)</td>
+<td style="text-align: center;">0.1132</td>
+<td style="text-align: center;">0.3419</td>
+<td style="text-align: center;">0.2553</td>
+<td style="text-align: center;">crt~I(n)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">unemp</td>
-<td style="text-align: center;">0.3190</td>
-<td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">unemp~I(1)</td>
+<td style="text-align: center;">0.7376</td>
+<td style="text-align: center;">0.7392</td>
+<td style="text-align: center;">0.0196</td>
+<td style="text-align: center;">unemp~I(2)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">nloan</td>
-<td style="text-align: center;">0.3523</td>
-<td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">nloan~I(1)</td>
+<td style="text-align: center;">0.9536</td>
+<td style="text-align: center;">0.5166</td>
+<td style="text-align: center;">0.1664</td>
+<td style="text-align: center;">nloan~I(n)</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">export</td>
+<td style="text-align: center;">lexport</td>
+<td style="text-align: center;">0.9798</td>
 <td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.0249</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">export~I(1)</td>
+<td style="text-align: center;">0.0892</td>
+<td style="text-align: center;">lexport~I(2)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">import</td>
-<td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.0380</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">import~I(1)</td>
+<td style="text-align: center;">limport</td>
+<td style="text-align: center;">0.6601</td>
+<td style="text-align: center;">0.6736</td>
+<td style="text-align: center;">0.2379</td>
+<td style="text-align: center;">limport~I(n)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">aord</td>
-<td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.2665</td>
-<td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">aord~I(2)</td>
+<td style="text-align: center;">0.8289</td>
+<td style="text-align: center;">0.0169</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">aord~I(1)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">exr</td>
-<td style="text-align: center;">0.1342</td>
-<td style="text-align: center;">0.0889</td>
-<td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">exr~I(2)</td>
+<td style="text-align: center;">lexr</td>
+<td style="text-align: center;">0.8915</td>
+<td style="text-align: center;">0.0473</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">lexr~I(1)</td>
 </tr>
 </tbody>
 </table>
@@ -270,6 +296,9 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 </div>
+<p>Table 1 Unit root test for all data</p>
+<p>Since the second-order difference may remove part of the long-term information (such as trends) in the data, this may be detrimental to time series data such as <span class="math inline">\(cpi_i\)</span> and <span class="math inline">\(crt_i\)</span> that contain important trend information. Therefore, only first-order differences are used for all data.</p>
+</section>
 </section>
 <section id="the-model-and-hypothesis" class="level2">
 <h2 class="anchored" data-anchor-id="the-model-and-hypothesis">The model and hypothesis</h2>

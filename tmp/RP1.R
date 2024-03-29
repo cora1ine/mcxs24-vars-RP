@@ -8,6 +8,8 @@ library(xts)
 library(fUnitRoots)   # ADF test - adfTest
 library(tidyverse)    # for table
 library(kableExtra)   # for print table
+install.packages("corrplot") # for corr
+library(corrplot)
 
 ### Data downloading
 
@@ -96,6 +98,20 @@ exr_data        = apply.quarterly(exr_data, mean)
 all_data             = na.omit(merge(cpi_data, gdp_data, crt_data, unemp_data, export_data, import_data, nloan_data,  gold_data, aord_data, exr_data ))
 colnames(all_data)   = c("cpi_data", "gdp_data", "crt_data", "unemp_data", "export_data", "import_data","nloan_data", "gold_data", "aord_data", "exr_data")
 
+## plot corr table
+cor_matrix <- round(cor(all_data), 4)
+
+cor_results_table <- as_tibble(cor_matrix)
+
+kable(cor_results_table, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+
+
 ## Line plot
 par(mfcol = c(5, 2), mar = c(2, 2, 2, 2))
 
@@ -110,7 +126,6 @@ lcpi_data  =  log(cpi_data)
 lexport_data= log(export_data)
 limport_data=  log(import_data)
 lexr_data = log(exr_data)
-
 
 
 # All Variables after log
@@ -201,7 +216,7 @@ d2adf.export = adfTest(diff(diff(all_data[,7])), lags=18, type="nc")    # don't 
 adf.import  = adfTest(all_data[,8], lags=20, type="c")           # don't reject -> non-stationary
 dadf.import = adfTest(diff(all_data[,8]), lags=19, type="nc")    # don't reject -> non-stationary
 d2adf.import = adfTest(diff(diff(all_data[,8])), lags=18, type="nc")    # don't reject -> non-stationary
-d2adf.import@test$p.value
+# d2adf.import@test$p.value
 #-> integration order = 
 
 # ol.aord.aic.ar$order
@@ -256,5 +271,48 @@ kable(Unit_Root_Test_table, align = "c") %>%
                 latex_options = c("HOLD_position"),
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 
+# all are first order diff
 all_data         = na.omit(diff(all_data))
+
+### Data plot after transformation
+
+## Line plot for after transformation data
+par(mfcol = c(5, 2), mar = c(2, 2, 2, 2))
+
+for (i in 1:10) {
+  ts.plot(all_data[, i], main = colnames(all_data)[i], 
+          ylab = "", xlab = "", col = "darkgreen")
+}
+
+## compute CPI
+
+inflation_table <-
+  tibble( " " = c("Inflation rate"),
+          "2023/03" = round((all_data[nrow(all_data) - 3, 1][[1]]/all_data[nrow(all_data) - 7, 1][[1]] -1 )*100, 2),
+          "2023/06" = round((all_data[nrow(all_data) - 2, 1][[1]]/all_data[nrow(all_data) - 6, 1][[1]] -1 )*100 ,2),
+          "2023/09" = round((all_data[nrow(all_data) - 1, 1][[1]]/all_data[nrow(all_data) - 5, 1][[1]] -1 )*100 ,2),
+          "2023/12" = round((all_data[nrow(all_data), 1][[1]]/all_data[nrow(all_data) - 4, 1][[1]] -1 )*100 ,2)
+          )
+ 
+kable(inflation_table, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+
+
+## gold data
+cpi_last_12 <- tail(all_data$cpi_data, 12)
+gold_last_12 <- tail(all_data$gold_data, 12)/10 
+
+
+
+plot(cpi_last_12, type="l", col="blue", xlab="Date", ylab="CPI (blue)", ylim=range(c(100,200)))
+lines(gold_last_12, col="red")
+title("CPI and Gold Data Over the Last 12 Months")
+legend("topleft", legend=c("CPI Data", "Gold Data"), col=c("blue", "red"), lty=5)
+
+
 

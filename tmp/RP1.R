@@ -5,11 +5,8 @@
 library(readabs)
 library(readrba)
 library(xts)
-
 library(fUnitRoots)   # ADF test - adfTest
-
 library(tidyverse)    # for table
-
 library(kableExtra)   # for print table
 
 ### Data downloading
@@ -22,9 +19,9 @@ cpi_data      = xts(cpi_download$value, cpi_download$date)
 
 # 2.GDP
 # 5206.0 Australian National Accounts: National Income, Expenditure and Product
-# series_id = "A2304370T": Gross domestic product: Chain volume measures - Percentage changes
-gdp_download  = read_abs(series_id = "A2304370T")     
-gdp_data      = xts(cpi_download$value, cpi_download$date)
+# series_id = "A2304404C": GDP per capita: Chain volume measures ;
+gdp_download  = read_abs(series_id = "A2304404C")     
+gdp_data      = xts(gdp_download$value, gdp_download$date)
 
 # 3.Cash rate target
 
@@ -107,23 +104,27 @@ for (i in 1:10) {
           ylab = "", xlab = "", col = "darkblue")
 }
 
-## log transformation for cpi and gdp
-cpi_data  =  log(cpi_data)
-gdp_data  =  log(gdp_data)
+## log transformation for exp data
+
+lcpi_data  =  log(cpi_data)
+lexport_data= log(export_data)
+limport_data=  log(import_data)
+lexr_data = log(exr_data)
+
 
 
 # All Variables after log
 all_data             = na.omit(merge(lcpi_data,    gold_data, 
-                                     lgdp_data,    crt_data, 
+                                     gdp_data,     crt_data, 
                                      unemp_data,   nloan_data,  
-                                     export_data,  import_data, 
-                                     aord_data,    exr_data ))
+                                     lexport_data, limport_data, 
+                                     aord_data,    lexr_data ))
 
-colnames(all_data)   = c("lcpi_data",    "gold_data", 
-                         "lgdp_data",    "crt_data", 
-                         "unemp_data",   "nloan_data", 
-                         "export_data",  "import_data",
-                         "aord_data",    "exr_data")
+colnames(all_data)   = c("lcpi_data",     "gold_data", 
+                         "gdp_data",      "crt_data", 
+                         "unemp_data",    "nloan_data", 
+                         "lexport_data",  "limport_data",
+                         "aord_data",     "lexr_data")
 
 
 ## ACF plot
@@ -138,89 +139,85 @@ for (i in 1:10){
 ## AR
 
 #check the optimal lag 
-ol.cpi.aic.ar    = (ar(lcpi_data, order.max=20, aic=TRUE, method="ols"))
-ol.gdp.aic.ar    = (ar(lgdp_data, order.max=20, aic=TRUE, method="ols"))
-ol.crt.aic.ar    = (ar(crt_data, order.max=20, aic=TRUE, method="ols"))
-ol.unemp.aic.ar  = (ar(unemp_data, order.max=20, aic=TRUE, method="ols"))
-ol.export.aic.ar = (ar(export_data, order.max=20, aic=TRUE, method="ols"))
-ol.import.aic.ar = (ar(import_data, order.max=20, aic=TRUE, method="ols"))
-ol.nloan.aic.ar  = (ar(nloan_data, order.max=20, aic=TRUE, method="ols"))
-ol.gold.aic.ar   = (ar(gold_data, order.max=20, aic=TRUE, method="ols"))
-ol.aord.aic.ar   = (ar(aord_data, order.max=20, aic=TRUE, method="ols"))
-ol.exr.aic.ar    = (ar(exr_data, order.max=20, aic=TRUE, method="ols"))
+ar_results <- list()
 
-
+for (i in 1:ncol(all_data)) {
+  ol.aic.ar <- ar(all_data[,i], order.max=20, aic=TRUE, method="ols")
+  
+  ar_results[[colnames(all_data)[i]]] <- ol.aic.ar$order
+}
 
 ## ADF test
 
-
 # ol.cpi.aic.ar$order
-adf.cpi = adfTest(lcpi_data, lags=5, type="c")              # don't reject -> non-stationary
-dadf.cpi = adfTest(diff(lcpi_data), lags=4, type="nc")        # don't reject -> non-stationary
-d2adf.cpi = adfTest(diff(diff(lcpi_data)), lags=3, type="nc")  # reject -> (I2 is stationary)
-adf.cpi@test$p.value
-#-> integration order = 2
-
-# ol.gdp.aic.ar$order
-adf.gdp = adfTest(lgdp_data, lags=5, type="c")              # don't reject -> non-stationary
-dadf.gdp = adfTest(diff(lgdp_data), lags=4, type="nc")       # don't reject -> non-stationary
-d2adf.gdp = adfTest(diff(diff(lgdp_data)), lags=3, type="nc")  # reject -> (I2 is stationary)
-# adf.gdp@test$p.value
-#-> integration order = 2
-
-# ol.crt.aic.ar$order
-adf.crt = adfTest(crt_data, lags=20, type="c")               # don't reject -> non-stationary
-dadf.crt = adfTest(diff(crt_data), lags=19, type="nc")        # reject -> (I1 is stationary)
-# adf.crt@test$p.value
-#-> integration order = 1
-
-# ol.unemp.aic.ar$order
-adf.unemp = adfTest(unemp_data, lags=3, type="c")           # don't reject -> non-stationary
-dadf.unemp = adfTest(diff(unemp_data), lags=2, type="nc")    # reject -> (I1 is stationary)
-# adf.unemp@test$p.value
-#-> integration order = 1
-
-# ol.export.aic.ar$order
-adf.export = adfTest(export_data, lags=13, type="c")           # don't reject -> non-stationary
-dadf.export = adfTest(diff(export_data), lags=12, type="nc")    # reject -> (I1 is stationary)
-# adf.export@test$p.value
-#-> integration order = 1
-
-ol.import.aic.ar$order
-adf.import = adfTest(import_data, lags=12, type="c")           # don't reject -> non-stationary
-dadf.import = adfTest(diff(import_data), lags=11, type="nc")    # reject -> (I1 is stationary)
-# adf.import@test$p.value
-#-> integration order = 1
-
-# ol.nloan.aic.ar$order
-adf.nloan = adfTest(nloan_data, lags=2, type="c")           # don't reject -> non-stationary
-dadf.nloan = adfTest(diff(nloan_data), lags=1, type="nc")    # reject -> (I1 is stationary)
-# adf.nloan@test$p.value
-#-> integration order = 1
+adf.cpi   = adfTest(all_data[,1], lags=17, type="c")              # don't reject -> non-stationary
+dadf.cpi  = adfTest(diff(all_data[,1]), lags=16, type="nc")        # don't reject -> non-stationary
+d2adf.cpi = adfTest(diff(diff(all_data[,1])), lags=15, type="nc")  # reject -> (I2 is stationary)
+# adf.cpi@test$p.value
+#-> integration order = 
 
 # ol.gold.aic.ar$order
-adf.gold = adfTest(gold_data, lags=16, type="c")               # don't reject -> non-stationary
-dadf.gold = adfTest(diff(gold_data), lags=15, type="nc")        # don't reject -> non-stationary
-d2adf.gold = adfTest(diff(diff(gold_data)), lags=14, type="nc")  # reject -> (I2 is stationary)
+adf.gold   = adfTest(all_data[,2], lags=18, type="c")               # don't reject -> non-stationary
+dadf.gold  = adfTest(diff(all_data[,2]), lags=17, type="nc")        # don't reject -> non-stationary
+d2adf.gold = adfTest(diff(diff(all_data[,2])), lags=16, type="nc")  # reject -> (I2 is stationary)
 # adf.gold@test$p.value
 #-> integration order = 2
 
-# ol.aord.aic.ar$order
-adf.aord = adfTest(aord_data, lags=15, type="c")               # don't reject -> non-stationary
-dadf.aord = adfTest(diff(aord_data), lags=14, type="nc")        # don't reject -> non-stationary
-d2adf.aord = adfTest(diff(diff(aord_data)), lags=13, type="nc")  # reject -> (I2 is stationary)
-adf.aord@test$p.value
+# ol.gdp.aic.ar$order
+adf.gdp   = adfTest(all_data[,3], lags=1, type="c")              # don't reject -> non-stationary
+dadf.gdp  = adfTest(diff(all_data[,3]), lags=0, type="nc")       # reject -> (I1 is stationary)
+# adf.gdp@test$p.value
+#-> integration order = 1
+
+# ol.crt.aic.ar$order
+adf.crt  = adfTest(all_data[,4], lags=20, type="c")               # don't reject -> non-stationary
+dadf.crt = adfTest(diff(all_data[,4]), lags=19, type="nc")        # don't reject -> non-stationary
+d2adf.crt = adfTest(diff(diff(all_data[,4])), lags=18, type="nc") # don't reject -> non-stationary
+# d2adf.crt@test$p.value
+#-> integration order = 
+
+# ol.unemp.aic.ar$order
+adf.unemp  = adfTest(all_data[,5], lags=20, type="c")           # don't reject -> non-stationary
+dadf.unemp = adfTest(diff(all_data[,5]), lags=19, type="nc")    # don't reject -> non-stationary
+d2adf.unemp = adfTest(diff(diff(all_data[,5])), lags=18, type="nc")    # don't reject -> non-stationary
+# adf.unemp@test$p.value
 #-> integration order = 2
 
+# ol.nloan.aic.ar$order
+adf.nloan  = adfTest(all_data[,6], lags=20, type="c")           # don't reject -> non-stationary
+dadf.nloan = adfTest(diff(all_data[,6]), lags=19, type="nc")    # don't reject -> non-stationary
+d2adf.nloan = adfTest(diff(diff(all_data[,6])), lags=18, type="nc")    # don't reject -> non-stationary
+# adf.nloan@test$p.value
+#-> integration order = 
+
+# ol.export.aic.ar$order
+adf.export  = adfTest(all_data[,7], lags=20, type="c")           # don't reject -> non-stationary
+dadf.export = adfTest(diff(all_data[,7]), lags=19, type="nc")    # reject -> (I1 is stationary)
+d2adf.export = adfTest(diff(diff(all_data[,7])), lags=18, type="nc")    # don't reject -> non-stationary
+# adf.export@test$p.value
+#-> integration order = 2
+
+# ol.import.aic.ar$order
+adf.import  = adfTest(all_data[,8], lags=20, type="c")           # don't reject -> non-stationary
+dadf.import = adfTest(diff(all_data[,8]), lags=19, type="nc")    # don't reject -> non-stationary
+d2adf.import = adfTest(diff(diff(all_data[,8])), lags=18, type="nc")    # don't reject -> non-stationary
+d2adf.import@test$p.value
+#-> integration order = 
+
+# ol.aord.aic.ar$order
+adf.aord   = adfTest(all_data[,9], lags=7, type="c")               # don't reject -> non-stationary
+dadf.aord  = adfTest(diff(all_data[,9]), lags=6, type="nc")        # reject -> (I1 is stationary)
+# adf.aord@test$p.value
+#-> integration order = 1
+
 # ol.exr.aic.ar$order
-adf.exr = adfTest(exr_data, lags=20, type="c")               # don't reject -> non-stationary
-dadf.exr = adfTest(diff(exr_data), lags=19, type="nc")        # don't reject -> non-stationary
-d2adf.exr = adfTest(diff(diff(exr_data)), lags=18, type="nc")  # reject -> (I2 is stationary)
+adf.exr   = adfTest(all_data[,10], lags=20, type="c")               # don't reject -> non-stationary
+dadf.exr  = adfTest(diff(all_data[,10]), lags=19, type="nc")        # reject -> (I1 is stationary)
 # adf.exr@test$p.value
-# #-> integration order = 2
+# #-> integration order = 1
 
 Unit_Root_Test_table <- 
-  tibble( " " = c("lcpi", "gold", "lgdp", "crt", "unemp", "nloan", "export","import", "aord", "exr"),
+  tibble( " " = c("lcpi", "gold", "gdp", "crt", "unemp", "nloan", "lexport","limport", "aord", "lexr"),
           "p value of ADF test of AR" 
           = round(c(adf.cpi@test$p.value,    adf.gold@test$p.value,
                     adf.gdp@test$p.value,    adf.crt@test$p.value,    
@@ -234,18 +231,22 @@ Unit_Root_Test_table <-
                     dadf.export@test$p.value, dadf.import@test$p.value,   
                     dadf.aord@test$p.value,   dadf.exr@test$p.value),4),
           "p value of ADF test of diff-diff-AR" 
-          = round(c(d2adf.cpi@test$p.value,    d2adf.gold@test$p.value,
-                    d2adf.gdp@test$p.value,
-                    NA, NA, NA, NA, NA,
-                    d2adf.aord@test$p.value,   d2adf.exr@test$p.value),4),
+          = round(c(d2adf.cpi@test$p.value,   d2adf.gold@test$p.value,
+                    NA,                       d2adf.crt@test$p.value,
+                    d2adf.unemp@test$p.value, d2adf.nloan@test$p.value, 
+                    d2adf.export@test$p.value,d2adf.import@test$p.value,
+                    NA, NA
+                    ),4),
           "conclusion" 
-          = c("lcpi~I(2)",    "gold~I(2)", 
-              "lgdp~I(2)",    "crt~I(1)",    
-              "unemp~I(1)",  "nloan~I(1)", 
-              "export~I(1)", "import~I(1)", 
-              "aord~I(2)",   "exr~I(2)"
+          = c("lcpi~I(n)",    "gold~I(2)", 
+              "gdp~I(1)",    "crt~I(n)",    
+              "unemp~I(2)",  "nloan~I(n)", 
+              "lexport~I(2)", "limport~I(n)", 
+              "aord~I(1)",   "lexr~I(1)"
           ),
   )
+
+# use 10% los, n>2
 
 kable(Unit_Root_Test_table, align = "c") %>% 
   kable_styling(font_size = 8, 
@@ -254,7 +255,6 @@ kable(Unit_Root_Test_table, align = "c") %>%
                 position = "center",
                 latex_options = c("HOLD_position"),
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
-
 
 all_data         = na.omit(diff(all_data))
 

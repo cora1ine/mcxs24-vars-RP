@@ -202,31 +202,31 @@ d2adf.exr = adfTest(diff(diff(exr_data)), lags=18, type="nc")  # reject -> (I2 i
 # #-> integration order = 2
 
 Unit_Root_Test_table <- 
-  tibble( " " = c("cpi", "gdp", "crt", "unemp", "export","import", "nloan", "gold", "aord", "exr"),
+  tibble( " " = c("cpi", "gold", "gdp", "crt", "unemp", "nloan", "export","import", "aord", "exr"),
           "p value of ADF test of AR" 
-          = round(c(adf.cpi@test$p.value,    adf.gdp@test$p.value,
-                    adf.crt@test$p.value,    adf.unemp@test$p.value,
+          = round(c(adf.cpi@test$p.value,    adf.gold@test$p.value,
+                    adf.gdp@test$p.value,    adf.crt@test$p.value,    
+                    adf.unemp@test$p.value,  adf.nloan@test$p.value,
                     adf.export@test$p.value, adf.import@test$p.value,
-                    adf.nloan@test$p.value,  adf.gold@test$p.value,
                     adf.aord@test$p.value,   adf.exr@test$p.value),4),
           "p value of ADF test of diff-AR" 
-          = round(c(dadf.cpi@test$p.value,    dadf.gdp@test$p.value,
-                    dadf.crt@test$p.value,    dadf.unemp@test$p.value,
-                    dadf.export@test$p.value, dadf.import@test$p.value,
-                    dadf.nloan@test$p.value,  dadf.gold@test$p.value,
+          = round(c(dadf.cpi@test$p.value,    dadf.gold@test$p.value,
+                    dadf.gdp@test$p.value,    dadf.crt@test$p.value,    
+                    dadf.unemp@test$p.value,  dadf.nloan@test$p.value,
+                    dadf.export@test$p.value, dadf.import@test$p.value,   
                     dadf.aord@test$p.value,   dadf.exr@test$p.value),4),
           "p value of ADF test of diff-diff-AR" 
-          = round(c(d2adf.cpi@test$p.value,    d2adf.gdp@test$p.value,
+          = round(c(d2adf.cpi@test$p.value,    d2adf.gold@test$p.value,
+                    d2adf.gdp@test$p.value,
                     NA, NA, NA, NA, NA,
-                    d2adf.gold@test$p.value,
                     d2adf.aord@test$p.value,   d2adf.exr@test$p.value),4),
           "conclusion" 
-          = c("cpi~I(2)",    "gdp~I(2)", 
-              "crt~I(1)",    "unemp~I(1)", 
+          = c("cpi~I(2)",    "gold~I(2)", 
+              "gdp~I(2)",    "crt~I(1)",    
+              "unemp~I(1)",  "nloan~I(1)", 
               "export~I(1)", "import~I(1)", 
-              "nloan~I(1)",  "gold~I(2)", 
-              "aord~I(2)", "exr~I(2)"
-                    ),
+              "aord~I(2)",   "exr~I(2)"
+          ),
   )
 
 kable(Unit_Root_Test_table, align = "c") %>% 

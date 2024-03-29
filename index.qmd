@@ -22,7 +22,7 @@ The purpose of this research is to explore the trend in Australia's inflation ra
 
 **Question:**
 
-Will Australia's inflation rate fall back to the 2-3% inflation target range in 2025, and will it reach 2.5% in 2026?
+Will Australia's inflation rate fall back to the 2-3% inflation target range in 2025?
 
 The Reserve Bank of Australia (RBA) forecasts that inflation will fall back to the target range of 2% to 3% by 2025 and reach the midpoint of this range in 2026. The purpose of the study is to forecast inflation over the next two years and assess the reasonableness of the RBA's forecast. This is because we have observed a sharp rise in inflation to 7.8% during COVID-19, and in response the RBA implemented tightening monetary policy and increased interest rates starting in late 2022. Entering mid-to-late 2023, the pace of interest rate increases has slowed down. This research will help determine whether the RBA correctly assumed that its monetary policy measures have effectively suppressed inflation and expected that inflation will fall back to the target range over the next year.
 
@@ -45,29 +45,51 @@ library(kableExtra)   # for print table
 
 -   **Direct Inflationary Indicators:**
 
-    1.$cpi_i$: Consumer Price Index (CPI): Direct measure of inflation (from ABS)
+    1.$cpi_i$: Consumer Price Index (CPI) from ABS.
 
-    2.$gold_i$: Gold price, indicate inflationary expectations (from yahoo finance)
+    CPI directly measure inflation by follow formula:
+
+    $$Inflation  = \frac{CPI_{Quarter \ of \ These \ Year}}{CPI_{Quarter \ of \ Previous \ Year} )}\times 100$$ {#eq-1}
+
+    2.$gold_i$: Gold price from yahoo finance.
+
+    Gold is widely viewed as a safe-haven asset, meaning investors are likely to buy it as a store of value during s of economic uncertainty and rising inflation expectations. Such purchases will increase the price of gold.
 
 -   **Economic Activity and Policy Indicators:**
 
-    3.$gdp_i$: Gross Domestic Product (GDP), reflect economic growth and demand-pull inflation (from ABS)
+    3.  $gdp_i$: Gross Domestic Product (GDP) from ABS.
 
-    4.$crt_i$: Cash rate target, Indicate monetary policy stance which affects inflation (from RBA)
+    GDP reflects the size and growth rate of a country's economy. When GDP increases, it indicates increased economic activity, which can lead to demand-pull inflation because increased demand may exceed current production capacity, pushing up prices.
 
-    5.$unemp_i$: Unemployment rate, indicate the level of slack in the labor market, influencing wage-push inflation (from ABS)
+    4.  $crt_i$: Cash rate target publsh by RBA.
+
+    This is the main tool used by the RBA to influence economic activity. Raising the cash rate is usually aimed at reducing borrowing and spending, thereby reducing inflationary pressures.
+
+    5.  $unemp_i$: Unemployment rate from ABS.
+
+    It indicate the level of slack in the labor market, influencing wage-push inflation.
 
 -   **Market and External Trade Indicators:**
 
-    6.$nloan_i$: New loan commitments, reflect credit growth which can fuel economic activity and inflation (from ABS)
+    6.  $nloan_i$: New loan commitments from ABS.
 
-    7.$export_i$: International exports, affect trade balance and currency strength, influencing imported inflation (from ABS)
+    Credit growth is often accompanied by rising asset prices such as real estate and stocks. While these direct price changes are not necessarily reflected in CPI, increases in asset prices may affect the CPI indirectly through construction costs and rents.
 
-    8.$import_i$: International imports: Directly affect inflation through the cost of imported goods (from ABS)
+    7.  $export_i$: International exports from ABS.
 
-    9.$aord_i$: All Ordinaries Index (AORD), reflects investor confidence and economic activity which can be pre-emptive indicators of inflation (from yahoo finance)
+    It affects trade balance and currency strength, influencing imported inflation.
 
-    10.$exr_i$: AUD/USD exchange rate, affects the price of imports and exports, contributing to inflation (from yahoo finance)
+    8.  $import_i$: International imports from ABS.
+
+    Directly affect inflation through the cost of imported goods.
+
+    9.  $aord_i$: All Ordinaries Index (AORD) from yahoo finance.
+
+    It reflects investor confidence and economic activity which can be pre-emptive indicators of inflation.
+
+    10. $exr_i$: AUD/USD exchange rate from yahoo finance.
+
+    It affects the price of imports and exports, contributing to inflation.
 
 ```{r Data downloading, fig.pos="H"}
 #| echo: false
@@ -179,6 +201,29 @@ colnames(all_data)   = c("cpi_data",    "gold_data",
                          "aord_data",   "exr_data")
 ```
 
+```{r Corr Plot, fig.pos="H"}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+## plot corr table
+cor_matrix <- round(cor(all_data), 4)
+
+cor_results_table <- as_tibble(cor_matrix)
+
+kable(cor_results_table, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+
+```
+
+Table 1 Correlation Matrix
+
 ### Data Transformation
 
 -   **Log Transformation**
@@ -201,7 +246,7 @@ for (i in 1:10) {
 }
 ```
 
-Figure 1 Line graph of original data
+Figure 1 Line plot of original data
 
 ```{r Log transfomation}
 
@@ -249,7 +294,7 @@ Figure 2 ACF Plot for all data
 
 Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).
 
-According to Table 1, we can see that $cpi_i$, $crt_i$, $nloan_i$ and $limport_i$ require more than second-order integration, while $gold_i$, $unemp_i$, $lexport_i$ require sencond-order integration, other variables require first-order integration (under 10% level of confidence and n in the table means larger than 2).
+According to Table 2, we can see that $cpi_i$, $crt_i$, $nloan_i$ and $limport_i$ require more than second-order integration, while $gold_i$, $unemp_i$, $lexport_i$ require sencond-order integration, other variables require first-order integration (under 10% level of confidence and n in the table means larger than 2).
 
 ```{r ACF test, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -321,7 +366,7 @@ d2adf.export = adfTest(diff(diff(all_data[,7])), lags=18, type="nc")    # don't 
 adf.import  = adfTest(all_data[,8], lags=20, type="c")           # don't reject -> non-stationary
 dadf.import = adfTest(diff(all_data[,8]), lags=19, type="nc")    # don't reject -> non-stationary
 d2adf.import = adfTest(diff(diff(all_data[,8])), lags=18, type="nc")    # don't reject -> non-stationary
-d2adf.import@test$p.value
+# d2adf.import@test$p.value
 #-> integration order = 
 
 # ol.aord.aic.ar$order
@@ -378,7 +423,7 @@ kable(Unit_Root_Test_table, align = "c") %>%
 
 ```
 
-Table 1 Unit root test for all data
+Table 2 Unit root test for all data
 
 Since the second-order difference may remove part of the long-term information (such as trends) in the data, this may be detrimental to time series data such as $cpi_i$ and $crt_i$ that contain important trend information. Therefore, only first-order differences are used for all data.
 
@@ -389,6 +434,81 @@ Since the second-order difference may remove part of the long-term information (
 
 all_data         = na.omit(diff(all_data))
 ```
+
+After first-order difference processing of the data and logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 3): Although the fluctuation amplitude cannot be directly compared due to the different proportions on the y-axis, from Looking at the trend of fluctuations, $gold_i$ are negatively correlated with $lcpi_i$, and $gdp_i$ and $crt_i$ are positively correlated. This finding is consistent with the data presented in the matrix of correlations.
+
+```{r Data Plot 2, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+## Line plot for after transformation data
+par(mfcol = c(5, 2), mar = c(2, 2, 2, 2))
+
+for (i in 1:10) {
+  ts.plot(all_data[, i], main = colnames(all_data)[i], 
+          ylab = "", xlab = "", col = "darkgreen")
+}
+```
+
+Figure 3 Line plot of adjusted data
+
+### Importance of Key Variables Analysis
+
+The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation are CPI and gold price. Meanwhile, since this study is to explore whether the RBA's recent suspension of raising the cash rate target has deemed the previous deflationary measures to be effective. So the cash rate target becomes one of the key variables. Below we focus on analyzing these three variables:
+
+-   CPI: As Table 3 shows, Using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.
+
+```{r CPI compute, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+## compute CPI
+
+inflation_table <-
+  tibble( " " = c("Inflation rate"),
+          "2023/03" = round((cpi_data[nrow(cpi_data) - 3, 1][[1]]/cpi_data[nrow(cpi_data) - 7, 1][[1]] -1 )*100, 2),
+          "2023/06" = round((cpi_data[nrow(cpi_data) - 2, 1][[1]]/cpi_data[nrow(cpi_data) - 6, 1][[1]] -1 )*100 ,2),
+          "2023/09" = round((cpi_data[nrow(cpi_data) - 1, 1][[1]]/cpi_data[nrow(cpi_data) - 5, 1][[1]] -1 )*100 ,2),
+          "2023/12" = round((cpi_data[nrow(cpi_data), 1][[1]]/cpi_data[nrow(cpi_data) - 4, 1][[1]] -1 )*100 ,2)
+          )
+ 
+kable(inflation_table, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+```
+
+-   Gold price: 
+
+Observing the trend charts of gold prices and cpi in the past three years, we can see that the trends of the two are almost consistent, so we believe that it is reasonable to use international gold prices as inflation expectations (gold price reduced by tenfold). Although the gold price is denominated in US dollars, the inclusion of the Australian dollar against the US dollar exchange rate in the data set makes it feasible to convert the gold price into a measure of its impact on the Australian market.
+
+
+```{r gold compute, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+## gold plot
+cpi_last_12 <- tail(cpi_data, 12)
+gold_last_12 <- tail(gold_data, 12)
+
+common_time_index <- index(cpi_last_12)
+
+par(mfcol = c(2, 1), mar=c(2,2,2,2))
+
+plot(cpi_last_12, type="l", col="blue", xlab="Date", ylab="CPI Value", xlim=range(common_time_index))
+title(main = "CPI last 12 values", line = 0.5)
+
+plot(gold_last_12, type="l", col="red", xlab="Date", ylab="Gold Price", xlim=range(common_time_index))
+title(main = "Gold price last 12 values", line = 0.5)
+```
+
+
+-   Cash rate target:
 
 ## The model and hypothesis
 

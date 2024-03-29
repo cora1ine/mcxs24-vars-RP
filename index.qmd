@@ -512,7 +512,7 @@ title(main = "Gold price 3yrs", line = 0.5)
 
 Figure 4 CPI and Gold Price Last 3 Yrs Plot
 
--   Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.51), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 27). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA's monetary tightening policy have already been reflected.
+-   Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.31), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 32). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA's monetary tightening policy have already been reflected.
 
 ```{r cash rate vs cpi, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -527,8 +527,8 @@ final2022.inf = (cpi_data[nrow(cpi_data) - 4, 1][[1]]/cpi_data[nrow(cpi_data) - 
 final2023.inf = (cpi_data[nrow(cpi_data), 1][[1]]/cpi_data[nrow(cpi_data) - 4, 1][[1]] -1 )*100
 
 final2021.crt = crt_data[nrow(crt_data) - 8, 1][[1]]
-final2022.crt = (crt_data[nrow(crt_data) - 4, 1][[1]])
-final2023.crt = (crt_data[nrow(crt_data), 1][[1]])
+final2022.crt = crt_data[nrow(crt_data) - 4, 1][[1]]
+final2023.crt = crt_data[nrow(crt_data), 1][[1]]
 
 cash_rate_table <-
   tibble( " " = c("Inflation rate","Cash rate target"),
@@ -536,7 +536,7 @@ cash_rate_table <-
                         round((crt_data[nrow(crt_data) - 8, 1][[1]]), 2)),
           "2022/03" = c(round((cpi_data[nrow(cpi_data) - 7, 1][[1]]/cpi_data[nrow(cpi_data) - 11, 1][[1]] -1 )*100, 2),
                         round((crt_data[nrow(crt_data) - 7, 1][[1]]), 2)),
-          "2022/06" = c(round((cpi_data[nrow(all_data) - 6, 1][[1]]/cpi_data[nrow(cpi_data) - 10, 1][[1]] -1 )*100 ,2),
+          "2022/06" = c(round((cpi_data[nrow(cpi_data) - 6, 1][[1]]/cpi_data[nrow(cpi_data) - 10, 1][[1]] -1 )*100 ,2),
                         round((crt_data[nrow(crt_data) - 6, 1][[1]]), 2)),
           "2022/09" = c(round((cpi_data[nrow(cpi_data) - 5, 1][[1]]/cpi_data[nrow(cpi_data) - 9, 1][[1]] -1 )*100 ,2),
                         round((crt_data[nrow(crt_data) - 5, 1][[1]]), 2)),

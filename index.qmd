@@ -210,7 +210,9 @@ colnames(all_data)   = c("cpi_data",    "gold_data",
 ## plot corr table
 cor_matrix <- round(cor(all_data), 4)
 
-cor_results_table <- as_tibble(cor_matrix)
+cor_first_row <- as_tibble(t(cor_matrix[1, , drop = FALSE]))
+
+cor_results_table <- add_column(cor_first_row, Variable = colnames(cor_matrix), .before = 1)
 
 kable(cor_results_table, align = "c") %>% 
   kable_styling(font_size = 8, 
@@ -482,9 +484,10 @@ kable(inflation_table, align = "c") %>%
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 ```
 
--   Gold price: 
 
-Observing the trend charts of gold prices and cpi in the past three years, we can see that the trends of the two are almost consistent, so we believe that it is reasonable to use international gold prices as inflation expectations (gold price reduced by tenfold). Although the gold price is denominated in US dollars, the inclusion of the Australian dollar against the US dollar exchange rate in the data set makes it feasible to convert the gold price into a measure of its impact on the Australian market.
+Table 3 Inflation Rate 2023
+
+-   Gold price:  Observing the trend charts of gold prices and cpi in the past three years, we can see that the trends of the two are almost consistent, so we believe that it is reasonable to use international gold prices as inflation expectations. Although the gold price is denominated in US dollars, the inclusion of the Australian dollar against the US dollar exchange rate in the data set makes it feasible to convert the gold price into a measure of its impact on the Australian market.
 
 
 ```{r gold compute, fig.align='center',fig.pos='H'}
@@ -501,14 +504,69 @@ common_time_index <- index(cpi_last_12)
 par(mfcol = c(2, 1), mar=c(2,2,2,2))
 
 plot(cpi_last_12, type="l", col="blue", xlab="Date", ylab="CPI Value", xlim=range(common_time_index))
-title(main = "CPI last 12 values", line = 0.5)
+title(main = "CPI last 3yrs", line = 0.5)
 
 plot(gold_last_12, type="l", col="red", xlab="Date", ylab="Gold Price", xlim=range(common_time_index))
-title(main = "Gold price last 12 values", line = 0.5)
+title(main = "Gold price 3yrs", line = 0.5)
 ```
 
+Figure 4 CPI and Gold Price Last 3 Yrs Plot
 
--   Cash rate target:
+-   Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.51), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 27). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA's monetary tightening policy have already been reflected.
+
+```{r cash rate vs cpi, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+final2021.inf = (all_data[nrow(all_data) - 8, 1][[1]]/all_data[nrow(all_data) - 12, 1][[1]] -1 )*100
+final2022.inf = (all_data[nrow(all_data) - 4, 1][[1]]/all_data[nrow(all_data) - 8, 1][[1]] -1 )*100
+final2023.inf = (all_data[nrow(all_data), 1][[1]]/all_data[nrow(all_data) - 4, 1][[1]] -1 )*100
+
+final2021.crt = (all_data[nrow(all_data) - 8, 3][[1]])
+final2022.crt = (all_data[nrow(all_data) - 4, 3][[1]])
+final2023.crt = (all_data[nrow(all_data), 3][[1]])
+
+cash_rate_table <-
+  tibble( " " = c("Inflation rate","Cash rate target"),
+          "2021/12" = c(round((all_data[nrow(all_data) - 8, 1][[1]]/all_data[nrow(all_data) - 12, 1][[1]] -1 )*100, 2),
+                        round((all_data[nrow(all_data) - 8, 3][[1]]), 2)),
+          "2022/03" = c(round((all_data[nrow(all_data) - 7, 1][[1]]/all_data[nrow(all_data) - 11, 1][[1]] -1 )*100, 2),
+                        round((all_data[nrow(all_data) - 7, 3][[1]]), 2)),
+          "2022/06" = c(round((all_data[nrow(all_data) - 6, 1][[1]]/all_data[nrow(all_data) - 10, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 6, 3][[1]]), 2)),
+          "2022/09" = c(round((all_data[nrow(all_data) - 5, 1][[1]]/all_data[nrow(all_data) - 9, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 5, 3][[1]]), 2)),
+          "2022/12" = c(round((all_data[nrow(all_data) - 4, 1][[1]]/all_data[nrow(all_data) - 8, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 4, 3][[1]]), 2)),
+          "2022 annual change" = c(round((final2022.inf - final2021.inf)/final2021.inf ,2),
+                                   round((final2022.crt - final2021.crt)/final2021.crt ,2)),
+          "2023/03" = c(round((all_data[nrow(all_data) - 3, 1][[1]]/all_data[nrow(all_data) - 7, 1][[1]] -1 )*100, 2),
+                        round((all_data[nrow(all_data) - 3, 3][[1]]), 2)),
+          "2023/06" = c(round((all_data[nrow(all_data) - 2, 1][[1]]/all_data[nrow(all_data) - 6, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 2, 3][[1]]), 2)),
+          "2023/09" = c(round((all_data[nrow(all_data) - 1, 1][[1]]/all_data[nrow(all_data) - 5, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data) - 1, 3][[1]]), 2)),
+          "2023/12" = c(round((all_data[nrow(all_data), 1][[1]]/all_data[nrow(all_data) - 4, 1][[1]] -1 )*100 ,2),
+                        round((all_data[nrow(all_data), 3][[1]]), 2)),
+          "2023 annual change" = c(round((final2023.inf - final2022.inf)/final2022.inf ,2),
+                                   round((final2023.crt - final2022.crt)/final2022.crt ,2)),
+  )
+
+kable(cash_rate_table, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+
+```
+
+Table 4 Cash Rate Target vs Inflation Rate
+
+In summary, based on the above analysis, it is expected that gold prices and cpi will have a positive correlation, but the cash rate target will have a negative correlation. This is also consistent with the correlations in Table 1.
 
 ## The model and hypothesis
 

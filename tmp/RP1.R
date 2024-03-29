@@ -8,7 +8,7 @@ library(xts)
 library(fUnitRoots)   # ADF test - adfTest
 library(tidyverse)    # for table
 library(kableExtra)   # for print table
-install.packages("corrplot") # for corr
+# install.packages("corrplot") # for corr
 library(corrplot)
 
 ### Data downloading
@@ -311,6 +311,8 @@ gold_last_12 <- tail(gold_data, 12)
 
 par(mfcol = c(2, 1), mar=c(2,2,2,2))
 
+common_time_index <- index(cpi_last_12)
+
 plot(cpi_last_12, type="l", col="blue", xlab="Date", ylab="CPI Value", xlim=range(common_time_index))
 title(main = "CPI last 3yrs", line = 0.5)
 
@@ -319,36 +321,36 @@ title(main = "Gold price 3yrs", line = 0.5)
 
 ## cash rate data
 
-final2021.inf = (all_data[nrow(all_data) - 8, 1][[1]]/all_data[nrow(all_data) - 12, 1][[1]] -1 )*100
-final2022.inf = (all_data[nrow(all_data) - 4, 1][[1]]/all_data[nrow(all_data) - 8, 1][[1]] -1 )*100
-final2023.inf = (all_data[nrow(all_data), 1][[1]]/all_data[nrow(all_data) - 4, 1][[1]] -1 )*100
+final2021.inf = (cpi_data[nrow(cpi_data) - 8, 1][[1]]/cpi_data[nrow(cpi_data) - 12, 1][[1]] -1 )*100
+final2022.inf = (cpi_data[nrow(cpi_data) - 4, 1][[1]]/cpi_data[nrow(cpi_data) - 8, 1][[1]] -1 )*100
+final2023.inf = (cpi_data[nrow(cpi_data), 1][[1]]/cpi_data[nrow(cpi_data) - 4, 1][[1]] -1 )*100
 
-final2021.crt = (all_data[nrow(all_data) - 8, 3][[1]])
-final2022.crt = (all_data[nrow(all_data) - 4, 3][[1]])
-final2023.crt = (all_data[nrow(all_data), 3][[1]])
+final2021.crt = crt_data[nrow(crt_data) - 8, 1][[1]]
+final2022.crt = (crt_data[nrow(crt_data) - 4, 1][[1]])
+final2023.crt = (crt_data[nrow(crt_data), 1][[1]])
 
 cash_rate_table <-
   tibble( " " = c("Inflation rate","Cash rate target"),
-          "2021/12" = c(round((all_data[nrow(all_data) - 8, 1][[1]]/all_data[nrow(all_data) - 12, 1][[1]] -1 )*100, 2),
-                        round((all_data[nrow(all_data) - 8, 3][[1]]), 2)),
-          "2022/03" = c(round((all_data[nrow(all_data) - 7, 1][[1]]/all_data[nrow(all_data) - 11, 1][[1]] -1 )*100, 2),
-                        round((all_data[nrow(all_data) - 7, 3][[1]]), 2)),
-          "2022/06" = c(round((all_data[nrow(all_data) - 6, 1][[1]]/all_data[nrow(all_data) - 10, 1][[1]] -1 )*100 ,2),
-                        round((all_data[nrow(all_data) - 6, 3][[1]]), 2)),
-          "2022/09" = c(round((all_data[nrow(all_data) - 5, 1][[1]]/all_data[nrow(all_data) - 9, 1][[1]] -1 )*100 ,2),
-                        round((all_data[nrow(all_data) - 5, 3][[1]]), 2)),
-          "2022/12" = c(round((all_data[nrow(all_data) - 4, 1][[1]]/all_data[nrow(all_data) - 8, 1][[1]] -1 )*100 ,2),
-                        round((all_data[nrow(all_data) - 4, 3][[1]]), 2)),
+          "2021/12" = c(round((cpi_data[nrow(cpi_data) - 8, 1][[1]]/cpi_data[nrow(cpi_data) - 12, 1][[1]] -1 )*100, 2),
+                        round((crt_data[nrow(crt_data) - 8, 1][[1]]), 2)),
+          "2022/03" = c(round((cpi_data[nrow(cpi_data) - 7, 1][[1]]/cpi_data[nrow(cpi_data) - 11, 1][[1]] -1 )*100, 2),
+                        round((crt_data[nrow(crt_data) - 7, 1][[1]]), 2)),
+          "2022/06" = c(round((cpi_data[nrow(all_data) - 6, 1][[1]]/cpi_data[nrow(cpi_data) - 10, 1][[1]] -1 )*100 ,2),
+                        round((crt_data[nrow(crt_data) - 6, 1][[1]]), 2)),
+          "2022/09" = c(round((cpi_data[nrow(cpi_data) - 5, 1][[1]]/cpi_data[nrow(cpi_data) - 9, 1][[1]] -1 )*100 ,2),
+                        round((crt_data[nrow(crt_data) - 5, 1][[1]]), 2)),
+          "2022/12" = c(round((cpi_data[nrow(cpi_data) - 4, 1][[1]]/cpi_data[nrow(cpi_data) - 8, 1][[1]] -1 )*100 ,2),
+                        round((crt_data[nrow(crt_data) - 4, 1][[1]]), 2)),
           "2022 annual change" = c(round((final2022.inf - final2021.inf)/final2021.inf ,2),
                                    round((final2022.crt - final2021.crt)/final2021.crt ,2)),
-          "2023/03" = c(round((all_data[nrow(all_data) - 3, 1][[1]]/all_data[nrow(all_data) - 7, 1][[1]] -1 )*100, 2),
-                        round((all_data[nrow(all_data) - 3, 3][[1]]), 2)),
-          "2023/06" = c(round((all_data[nrow(all_data) - 2, 1][[1]]/all_data[nrow(all_data) - 6, 1][[1]] -1 )*100 ,2),
-                        round((all_data[nrow(all_data) - 2, 3][[1]]), 2)),
-          "2023/09" = c(round((all_data[nrow(all_data) - 1, 1][[1]]/all_data[nrow(all_data) - 5, 1][[1]] -1 )*100 ,2),
-                        round((all_data[nrow(all_data) - 1, 3][[1]]), 2)),
-          "2023/12" = c(round((all_data[nrow(all_data), 1][[1]]/all_data[nrow(all_data) - 4, 1][[1]] -1 )*100 ,2),
-                        round((all_data[nrow(all_data), 3][[1]]), 2)),
+          "2023/03" = c(round((cpi_data[nrow(cpi_data) - 3, 1][[1]]/cpi_data[nrow(cpi_data) - 7, 1][[1]] -1 )*100, 2),
+                        round((crt_data[nrow(crt_data) - 3, 1][[1]]), 2)),
+          "2023/06" = c(round((cpi_data[nrow(cpi_data) - 2, 1][[1]]/cpi_data[nrow(cpi_data) - 6, 1][[1]] -1 )*100 ,2),
+                        round((crt_data[nrow(crt_data) - 2, 1][[1]]), 2)),
+          "2023/09" = c(round((cpi_data[nrow(cpi_data) - 1, 1][[1]]/cpi_data[nrow(cpi_data) - 5, 1][[1]] -1 )*100 ,2),
+                        round((crt_data[nrow(crt_data) - 1, 1][[1]]), 2)),
+          "2023/12" = c(round((cpi_data[nrow(cpi_data), 1][[1]]/cpi_data[nrow(cpi_data) - 4, 1][[1]] -1 )*100 ,2),
+                        round((crt_data[nrow(crt_data), 1][[1]]), 2)),
           "2023 annual change" = c(round((final2023.inf - final2022.inf)/final2022.inf ,2),
                                    round((final2023.crt - final2022.crt)/final2022.crt ,2)),
   )
@@ -360,3 +362,4 @@ kable(cash_rate_table, align = "c") %>%
                 position = "center",
                 latex_options = c("HOLD_position"),
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+

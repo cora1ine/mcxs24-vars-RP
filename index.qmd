@@ -437,7 +437,7 @@ Since the second-order difference may remove part of the long-term information (
 all_data         = na.omit(diff(all_data))
 ```
 
-After first-order difference processing of the data and logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 3): Although the fluctuation amplitude cannot be directly compared due to the different proportions on the y-axis, from Looking at the trend of fluctuations, $gold_i$ are negatively correlated with $lcpi_i$, and $gdp_i$ and $crt_i$ are positively correlated. This finding is consistent with the data presented in the matrix of correlations.
+After first-order difference processing of the data and logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 3): Even after one section of differential processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 30-40).
 
 ```{r Data Plot 2, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -459,7 +459,7 @@ Figure 3 Line plot of adjusted data
 
 The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation are CPI and gold price. Meanwhile, since this study is to explore whether the RBA's recent suspension of raising the cash rate target has deemed the previous deflationary measures to be effective. So the cash rate target becomes one of the key variables. Below we focus on analyzing these three variables:
 
--   CPI: As Table 3 shows, Using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.
+-   CPI: As Table 3 shows, using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.
 
 ```{r CPI compute, fig.align='center',fig.pos='H'}
 #| echo: false

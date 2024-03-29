@@ -381,7 +381,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Table 2 Unit root test for all data</p>
 <p>Since the second-order difference may remove part of the long-term information (such as trends) in the data, this may be detrimental to time series data such as <span class="math inline">\(cpi_i\)</span> and <span class="math inline">\(crt_i\)</span> that contain important trend information. Therefore, only first-order differences are used for all data.</p>
-<p>After first-order difference processing of the data and logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 3): Although the fluctuation amplitude cannot be directly compared due to the different proportions on the y-axis, from Looking at the trend of fluctuations, <span class="math inline">\(gold_i\)</span> are negatively correlated with <span class="math inline">\(lcpi_i\)</span>, and <span class="math inline">\(gdp_i\)</span> and <span class="math inline">\(crt_i\)</span> are positively correlated. This finding is consistent with the data presented in the matrix of correlations.</p>
+<p>After first-order difference processing of the data and logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 3): Even after one section of differential processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 30-40).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -397,7 +397,7 @@ ul.task-list li input[type="checkbox"] {
 <h3 class="anchored" data-anchor-id="importance-of-key-variables-analysis">Importance of Key Variables Analysis</h3>
 <p>The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation are CPI and gold price. Meanwhile, since this study is to explore whether the RBA’s recent suspension of raising the cash rate target has deemed the previous deflationary measures to be effective. So the cash rate target becomes one of the key variables. Below we focus on analyzing these three variables:</p>
 <ul>
-<li>CPI: As Table 3 shows, Using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.</li>
+<li>CPI: As Table 3 shows, using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.</li>
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -467,31 +467,31 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">Inflation rate</td>
-<td style="text-align: center;">54.96</td>
-<td style="text-align: center;">256.14</td>
-<td style="text-align: center;">131.44</td>
-<td style="text-align: center;">139.49</td>
-<td style="text-align: center;">39.47</td>
-<td style="text-align: center;">-0.28</td>
-<td style="text-align: center;">-35.55</td>
-<td style="text-align: center;">-53.06</td>
-<td style="text-align: center;">-34.19</td>
-<td style="text-align: center;">-68.17</td>
-<td style="text-align: center;">-2.73</td>
+<td style="text-align: center;">3.5</td>
+<td style="text-align: center;">5.09</td>
+<td style="text-align: center;">-93.86</td>
+<td style="text-align: center;">7.27</td>
+<td style="text-align: center;">7.83</td>
+<td style="text-align: center;">1.24</td>
+<td style="text-align: center;">7.02</td>
+<td style="text-align: center;">6.03</td>
+<td style="text-align: center;">5.37</td>
+<td style="text-align: center;">4.05</td>
+<td style="text-align: center;">-0.48</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Cash rate target</td>
-<td style="text-align: center;">844.00</td>
-<td style="text-align: center;">19.00</td>
-<td style="text-align: center;">75.00</td>
-<td style="text-align: center;">-81.00</td>
-<td style="text-align: center;">57.00</td>
-<td style="text-align: center;">-0.93</td>
-<td style="text-align: center;">-1.00</td>
-<td style="text-align: center;">-40.00</td>
-<td style="text-align: center;">-106.00</td>
-<td style="text-align: center;">-78.00</td>
-<td style="text-align: center;">-2.37</td>
+<td style="text-align: center;">0.1</td>
+<td style="text-align: center;">0.40</td>
+<td style="text-align: center;">1.78</td>
+<td style="text-align: center;">2.82</td>
+<td style="text-align: center;">3.32</td>
+<td style="text-align: center;">32.22</td>
+<td style="text-align: center;">3.84</td>
+<td style="text-align: center;">4.10</td>
+<td style="text-align: center;">4.24</td>
+<td style="text-align: center;">4.35</td>
+<td style="text-align: center;">0.31</td>
 </tr>
 </tbody>
 </table>

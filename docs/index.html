@@ -6,7 +6,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Gezhi Chen Coraline">
+<meta name="author" content="Gezhi Chen">
 
 <title>Macroeconometrics Research Report - RP1</title>
 <style>
@@ -60,6 +60,11 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -93,6 +98,7 @@ ul.task-list li input[type="checkbox"] {
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
   <li><a href="#the-question-objective-and-motivation" id="toc-the-question-objective-and-motivation" class="nav-link" data-scroll-target="#the-question-objective-and-motivation">The question objective, and motivation</a></li>
+  <li><a href="#data-and-their-properties" id="toc-data-and-their-properties" class="nav-link" data-scroll-target="#data-and-their-properties">Data and their properties</a></li>
   <li><a href="#the-model-and-hypothesis" id="toc-the-model-and-hypothesis" class="nav-link" data-scroll-target="#the-model-and-hypothesis">The model and hypothesis</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
@@ -114,7 +120,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Gezhi Chen Coraline </p>
+             <p>Gezhi Chen </p>
           </div>
   </div>
     
@@ -127,15 +133,143 @@ ul.task-list li input[type="checkbox"] {
 
 <blockquote class="blockquote">
 <p><strong>Abstract.</strong> This is a suggested formatting for your abstract. This <strong>quarto</strong> document is a template for your report. It includes some basic ways of working with such documents. You are invited to learn more about developing online reports with this technology.</p>
-<p><strong>Keywords.</strong> bsvars, quarto, R,</p>
+<p><strong>Keywords.</strong> bsvars, quarto, R, Australia inflation rate</p>
 </blockquote>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <section id="the-question-objective-and-motivation" class="level2">
 <h2 class="anchored" data-anchor-id="the-question-objective-and-motivation">The question objective, and motivation</h2>
-<p>Objective: The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years.</p>
-<p>Question: Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025, and will it reach 2.5% in 2026?</p>
-<p>The Reserve Bank of Australia (RBA) forecasts that inflation will fall back to the target range of 2% to 3% by 2025 and reach the midpoint of this range in 2026. The purpose of the study is to forecast inflation over the next two years and assess the reasonableness of the RBA’s forecast. This is because we have observed a sharp rise in inflation to 7.8% during COVID-19, and in response the RBA implemented tightening monetary policy and increased interest rates starting in late 2022. Entering mid-to-late 2023, the pace of interest rate increases has slowed down. This research will help determine whether the RBA correctly assumed that its monetary policy measures have effectively suppressed inflation and expected that inflation will fall back to the target range over the next year. ## Data and their properties #</p>
+<p><strong>Objective: </strong></p>
+<p>The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years.</p>
+<p><strong>Question: </strong></p>
+<p>Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025, and will it reach 2.5% in 2026?</p>
+<p>The Reserve Bank of Australia (RBA) forecasts that inflation will fall back to the target range of 2% to 3% by 2025 and reach the midpoint of this range in 2026. The purpose of the study is to forecast inflation over the next two years and assess the reasonableness of the RBA’s forecast. This is because we have observed a sharp rise in inflation to 7.8% during COVID-19, and in response the RBA implemented tightening monetary policy and increased interest rates starting in late 2022. Entering mid-to-late 2023, the pace of interest rate increases has slowed down. This research will help determine whether the RBA correctly assumed that its monetary policy measures have effectively suppressed inflation and expected that inflation will fall back to the target range over the next year.</p>
+</section>
+<section id="data-and-their-properties" class="level2">
+<h2 class="anchored" data-anchor-id="data-and-their-properties">Data and their properties</h2>
+<p><strong>Data Selection and</strong></p>
+<p>Direct Inflationary Indicators:</p>
+<p>1.<span class="math inline">\(cpi_i\)</span>: Consumer Price Index (CPI): Direct measure of inflation (from ABS)</p>
+<p>2.<span class="math inline">\(gold_i\)</span>: Gold price, indicate inflationary expectations (from yahoo finance)</p>
+<p>Economic Activity and Policy Indicators:</p>
+<p>3.<span class="math inline">\(gdp_i\)</span>: Gross Domestic Product (GDP), reflect economic growth and demand-pull inflation (from ABS)</p>
+<p>4.<span class="math inline">\(crt_i\)</span>: Cash rate target, Indicate monetary policy stance which affects inflation (from RBA)</p>
+<p>5.<span class="math inline">\(unemp_i\)</span>: Unemployment rate, indicate the level of slack in the labor market, influencing wage-push inflation (from ABS)</p>
+<p>Market and External Trade Indicators:</p>
+<p>6.<span class="math inline">\(nloan_i\)</span>: New loan commitments, reflect credit growth which can fuel economic activity and inflation (from ABS)</p>
+<p>7.<span class="math inline">\(export_i\)</span>: International exports, affect trade balance and currency strength, influencing imported inflation (from ABS)</p>
+<p>8.<span class="math inline">\(import_i\)</span>: International imports: Directly affect inflation through the cost of imported goods (from ABS)</p>
+<p>9.<span class="math inline">\(aord_i\)</span>: All Ordinaries Index (AORD), reflects investor confidence and economic activity which can be pre-emptive indicators of inflation (from yahoo finance)</p>
+<p>10.<span class="math inline">\(exr_i\)</span>: AUD/USD exchange rate, affects the price of imports and exports, contributing to inflation (from yahoo finance)</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Data plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/ACF plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">p value of ADF test of AR</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">p value of ADF test of diff-AR</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">p value of ADF test of diff-diff-AR</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">conclusion</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">cpi</td>
+<td style="text-align: center;">0.9900</td>
+<td style="text-align: center;">0.0910</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">cpi~I(2)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">gold</td>
+<td style="text-align: center;">0.9072</td>
+<td style="text-align: center;">0.3109</td>
+<td style="text-align: center;">0.0161</td>
+<td style="text-align: center;">gold~I(2)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">gdp</td>
+<td style="text-align: center;">0.9900</td>
+<td style="text-align: center;">0.0910</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">gdp~I(2)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">crt</td>
+<td style="text-align: center;">0.5333</td>
+<td style="text-align: center;">0.0310</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">crt~I(1)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">unemp</td>
+<td style="text-align: center;">0.3190</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">unemp~I(1)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">nloan</td>
+<td style="text-align: center;">0.3523</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">nloan~I(1)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">export</td>
+<td style="text-align: center;">0.9900</td>
+<td style="text-align: center;">0.0249</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">export~I(1)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">import</td>
+<td style="text-align: center;">0.9900</td>
+<td style="text-align: center;">0.0380</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">import~I(1)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">aord</td>
+<td style="text-align: center;">0.9900</td>
+<td style="text-align: center;">0.2665</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">aord~I(2)</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">exr</td>
+<td style="text-align: center;">0.1342</td>
+<td style="text-align: center;">0.0889</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">exr~I(2)</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
 </section>
 <section id="the-model-and-hypothesis" class="level2">
 <h2 class="anchored" data-anchor-id="the-model-and-hypothesis">The model and hypothesis</h2>

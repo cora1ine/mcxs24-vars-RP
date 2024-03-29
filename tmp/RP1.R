@@ -326,8 +326,8 @@ final2022.inf = (cpi_data[nrow(cpi_data) - 4, 1][[1]]/cpi_data[nrow(cpi_data) - 
 final2023.inf = (cpi_data[nrow(cpi_data), 1][[1]]/cpi_data[nrow(cpi_data) - 4, 1][[1]] -1 )*100
 
 final2021.crt = crt_data[nrow(crt_data) - 8, 1][[1]]
-final2022.crt = (crt_data[nrow(crt_data) - 4, 1][[1]])
-final2023.crt = (crt_data[nrow(crt_data), 1][[1]])
+final2022.crt = crt_data[nrow(crt_data) - 4, 1][[1]]
+final2023.crt = crt_data[nrow(crt_data), 1][[1]]
 
 cash_rate_table <-
   tibble( " " = c("Inflation rate","Cash rate target"),
@@ -335,7 +335,7 @@ cash_rate_table <-
                         round((crt_data[nrow(crt_data) - 8, 1][[1]]), 2)),
           "2022/03" = c(round((cpi_data[nrow(cpi_data) - 7, 1][[1]]/cpi_data[nrow(cpi_data) - 11, 1][[1]] -1 )*100, 2),
                         round((crt_data[nrow(crt_data) - 7, 1][[1]]), 2)),
-          "2022/06" = c(round((cpi_data[nrow(all_data) - 6, 1][[1]]/cpi_data[nrow(cpi_data) - 10, 1][[1]] -1 )*100 ,2),
+          "2022/06" = c(round((cpi_data[nrow(cpi_data) - 6, 1][[1]]/cpi_data[nrow(cpi_data) - 10, 1][[1]] -1 )*100 ,2),
                         round((crt_data[nrow(crt_data) - 6, 1][[1]]), 2)),
           "2022/09" = c(round((cpi_data[nrow(cpi_data) - 5, 1][[1]]/cpi_data[nrow(cpi_data) - 9, 1][[1]] -1 )*100 ,2),
                         round((crt_data[nrow(crt_data) - 5, 1][[1]]), 2)),
@@ -362,4 +362,3 @@ kable(cash_rate_table, align = "c") %>%
                 position = "center",
                 latex_options = c("HOLD_position"),
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
-

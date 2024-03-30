@@ -14,7 +14,7 @@ bibliography: references.bib
 
 # Introduction
 
-## The question objective, and motivation
+## Question Objective and Motivation
 
 **Objective:**
 
@@ -39,7 +39,7 @@ library(tidyverse)    # for table
 library(kableExtra)   # for print table
 ```
 
-## Data and their properties
+## Data and Data Properties
 
 ### Data Selection and Rationale
 
@@ -567,8 +567,78 @@ kable(cash_rate_table, align = "c") %>%
 
 Table 4 Cash Rate Target vs Inflation Rate
 
-In summary, based on the above analysis, it is expected that gold prices and cpi will have a positive correlation, but the cash rate target will have a negative correlation. This is also consistent with the correlations in Table 1.
+In summary, based on the above analysis, it is expected that gold prices and CPI will have a positive correlation, but the cash rate target will have a negative correlation. This is also consistent with the correlations in Table 1.
 
-## The model and hypothesis
+## Model and Hypothesis
+
+Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.
+
+$$y_t = \mu_0 + A_1y_{t-1} +...+A_1y_{t-p} +\epsilon_t$$
+
+$$\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_N(0_N, \Sigma)$$
+
+
+In matrix notation: 
+$$Y = X A +E$$
+
+Notation of matrix notation:
+
+$Y$ is $T\times 10$matrix of dependent variables.
+
+$$Y = \begin{bmatrix}
+y_{lcpi,1} & y_{gold,1} & y_{gdp,1} & y_{crt,1} & y_{unemp,1} & y_{nloan,1} & y_{lexport,1} & y_{limport,1} & y_{aord,1} & y_{lexr,1}\\
+\ y_{lcpi,2} & y_{gold,2} & y_{gdp,2} & y_{crt,2} & y_{unemp,2} & y_{nloan,2} & y_{lexport,2} & y_{limport,2} & y_{aord,2} & y_{lexr,2} \\
+
+\vdots  & \vdots  & \vdots& \vdots& \vdots& \vdots& \vdots& \vdots& \vdots & \vdots  \\
+y_{lcpi,T} & y_{gold,T} & y_{gdp,T} & y_{crt,T} & y_{unemp,T} & y_{nloan,T} & y_{lexport,T} & y_{limport,T} & y_{aord,T} & y_{lexr,T}\\
+\end{bmatrix}_{T \times 10}
+$$
+
+$X$ is $T \times (1 + 10p)$ matrix of independent variables.
+
+
+$$
+X = \begin{bmatrix}
+1 & y_{lcpi,t-1} & y_{gold,t-1} & \ldots & y_{lexr,t-1} & \ldots & y_{lcpi,t-p} & y_{gold,t-p} & \ldots &  y_{lexr,t-p} \\
+1 & y_{lcpi,t-2} & y_{gold,t-2} & \ldots & y_{lexr,t-2} & \ldots & y_{lcpi,t-p-1} & y_{gold,t-p-1} & \ldots &  y_{lexr,t-p-1} \\
+\vdots & \vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \vdots &  \ddots & \vdots \\
+1 & y_{lcpi,1} & y_{gold,2} & \ldots & y_{lexr,1} & \ldots & y_{lcpi,1-p} & y_{gold,1-p} & \ldots &  y_{lexr,1-p}\\
+\end{bmatrix}_{T \times (1 + 10p)}
+
+$$
+
+
+$A $is the matrix of coefficients, which includes the constant term $\mu_0$ and the autoregressive coefficients.
+
+$$A = \begin{bmatrix}
+\mu_{lcpi} & \mu_{gold} & \ldots & \mu_{lexr} \\
+A_{1,lcpi}^{(1)} & A_{1,gold}^{(1)} & \ldots & A_{1,lexr}^{(1)} \\
+A_{2,lpci}^{(1)} & A_{2,gold}^{(1)} & \ldots & A_{2,lexr}^{(1)} \\
+\vdots  & \vdots  & \ddots & \vdots  \\
+A_{10,lcpi}^{(1)} & A_{10,gold}^{(1)} & \ldots & A_{10,lexr}^{(1)} \\
+\vdots  & \vdots  & \ddots & \vdots  \\
+A_{1,lcpi}^{(p)} & A_{1,gold}^{(p)} & \ldots & A_{1,lexr}^{(p)} \\
+A_{2,lcpi}^{(p)} & A_{2,gold}^{(p)} & \ldots & A_{2,lexr}^{(p)} \\
+\vdots  & \vdots  & \ddots & \vdots  \\
+A_{10,lcpi}^{(p)} & A_{10,gold}^{(p)} & \ldots & A_{10,lexr}^{(p)} \\
+\end{bmatrix}_{(1 + 10p)\times 10}
+$$
+
+### Assumption of Error Term
+
+$$\begin{align*}
+E &= 
+\begin{bmatrix}
+\epsilon_{1,lcpi} & \epsilon_{1,gold} & \ldots & \epsilon_{1,lexr} \\
+\epsilon_{2,lcpi} & \epsilon_{2,gold} & \ldots & \epsilon_{2,lexr} \\
+\vdots & \vdots & \ddots & \vdots \\
+\epsilon_{T,lcpi} & \epsilon_{T,gold} & \ldots & \epsilon_{T,lexr}
+\end{bmatrix}_{T\times 10}
+\\
+\end{align*}
+$$
+
+$$E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)$$
+
 
 ## References {.unnumbered}

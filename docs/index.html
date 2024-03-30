@@ -515,16 +515,16 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="model-and-hypothesis">Model and Hypothesis</h2>
 <p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.</p>
 <p><span class="math display">\[y_t = \mu_0 + A_1y_{t-1} +...+A_1y_{t-p} +\epsilon_t\]</span></p>
-<p><span class="math display">\[\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_N(0_N, \Sigma)\]</span></p>
+<p><span class="math display">\[\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(0_{10}, \Sigma)\]</span></p>
 <p>In matrix notation:</p>
 <p><span class="math display">\[Y = X A +E\]</span></p>
 <p><span class="math display">\[E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)\]</span></p>
 <ul>
 <li><p><span class="math inline">\(Y\)</span> is <span class="math inline">\(T\times 10\)</span>matrix of dependent variables.</p></li>
 <li><p><span class="math inline">\(X\)</span> is <span class="math inline">\(T \times (1 + 10p)\)</span> matrix of independent variables.</p></li>
-<li><p>$A $is the matrix of coefficients, which includes the constant term <span class="math inline">\(\mu_0\)</span> and the autoregressive coefficients.</p></li>
+<li><p><span class="math inline">\(A\)</span>is the matrix of coefficients, which includes the constant term <span class="math inline">\(\mu_0\)</span> and the autoregressive coefficients.</p></li>
 </ul>
-$$ Y=
+<p>$$ Y=</p>
 <span class="math display">\[\begin{bmatrix}
 y_{lcpi,1} &amp; y_{gold,1} &amp; y_{gdp,1} &amp; y_{crt,1} &amp; y_{unemp,1} &amp; y_{nloan,1} &amp; y_{lexport,1} &amp; y_{limport,1} &amp; y_{aord,1} &amp; y_{lexr,1}\\
 \ y_{lcpi,2} &amp; y_{gold,2} &amp; y_{gdp,2} &amp; y_{crt,2} &amp; y_{unemp,2} &amp; y_{nloan,2} &amp; y_{lexport,2} &amp; y_{limport,2} &amp; y_{aord,2} &amp; y_{lexr,2} \\
@@ -532,17 +532,15 @@ y_{lcpi,1} &amp; y_{gold,1} &amp; y_{gdp,1} &amp; y_{crt,1} &amp; y_{unemp,1} &a
 \vdots  &amp; \vdots  &amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots &amp; \vdots  \\
 y_{lcpi,T} &amp; y_{gold,T} &amp; y_{gdp,T} &amp; y_{crt,T} &amp; y_{unemp,T} &amp; y_{nloan,T} &amp; y_{lexport,T} &amp; y_{limport,T} &amp; y_{aord,T} &amp; y_{lexr,T}\\
 \end{bmatrix}\]</span>
-<p>_{T }</p>
-<p>$$</p>
-$$ X =
-<span class="math display">\[\begin{bmatrix}
+<p>_{T } $$</p>
+<p><span class="math display">\[
+X=\begin{bmatrix}
 1 &amp; y_{lcpi,t-1} &amp; y_{gold,t-1} &amp; \ldots &amp; y_{lexr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{gold,t-p} &amp; \ldots &amp;  y_{lexr,t-p} \\
 1 &amp; y_{lcpi,t-2} &amp; y_{gold,t-2} &amp; \ldots &amp; y_{lexr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{gold,t-p-1} &amp; \ldots &amp;  y_{lexr,t-p-1} \\
 \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp;  \ddots &amp; \vdots \\
 1 &amp; y_{lcpi,1} &amp; y_{gold,2} &amp; \ldots &amp; y_{lexr,1} &amp; \ldots &amp; y_{lcpi,1-p} &amp; y_{gold,1-p} &amp; \ldots &amp;  y_{lexr,1-p}\\
-\end{bmatrix}\]</span>
-<p>_{T (1 + 10p)}</p>
-<p>$$</p>
+\end{bmatrix}_{T\times (1+10p)}
+\]</span></p>
 <p><span class="math display">\[
 A = \begin{bmatrix}
 \mu_{lcpi} &amp; \mu_{gold} &amp; \ldots &amp; \mu_{lexr} \\

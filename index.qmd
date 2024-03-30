@@ -50,7 +50,7 @@ library(kableExtra)   # for print table
     CPI directly measure inflation by follow formula:
 
     $$Inflation  = \frac{CPI_{Quarter \ of \ These \ Year}}{CPI_{Quarter \ of \ Previous \ Year} )}\times 100$$ {#eq-1}
-    
+
     CPI is the basic data for measuring inflation. It is more stable and less affected by seasonal factors and short-term fluctuations than the annual inflation rate from which it is derived. In VAR, raw time series data rather than rates of change are used to capture and model the dynamic nature of the data.
 
     2.$gold_i$: Gold price from yahoo finance.
@@ -221,8 +221,6 @@ colnames(all_data)   = c("cpi_data",    "gold_data",
                          "aord_data",   "exr_data")
 ```
 
-
-
 Following Table shows the correlation between CPI and other variables.
 
 ```{r Corr Plot, fig.pos="H"}
@@ -252,11 +250,9 @@ Table 1 Correlation Matrix
 
 In summary, the dataset included data from 2010Q1 to 2023Q4, total 96 observation points with 10 variables.
 
-
 ### Data Transformation
 
--   **Quarterly Transformation**
-All data have been quarterly converted by selecting the data on the last day of the quarter as the observation.
+-   **Quarterly Transformation** All data have been quarterly converted by selecting the data on the last day of the quarter as the observation.
 
 -   **Log Transformation**
 
@@ -326,7 +322,7 @@ Figure 2 ACF Plot for all data
 
 Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).
 
-According to Table 2, we can see that $lcpi_i$, $gold_i$, $lexport_i$ require  second-order integration, while $gdp_i$, $unemp_i$, $nloan_i$ require first-order integration(under 5% level of confidence and n in the table means larger than 2).
+According to Table 2, we can see that $lcpi_i$, $gold_i$, $lexport_i$ require second-order integration, while $gdp_i$, $unemp_i$, $nloan_i$ require first-order integration(under 5% level of confidence and n in the table means larger than 2).
 
 ```{r ACF test, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -598,46 +594,41 @@ Based on the above analysis, all 10 variables play an important role in the fitt
 
 $$y_t = \mu_0 + A_1y_{t-1} +...+A_1y_{t-p} +\epsilon_t$$
 
-$$\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_N(0_N, \Sigma)$$
+$$\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(0_{10}, \Sigma)$$
 
-In matrix notation: 
+In matrix notation:
 
 $$Y = X A +E$$
 
 $$E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)$$
 
-- $Y$ is $T\times 10$matrix of dependent variables. 
+-   $Y$ is $T\times 10$matrix of dependent variables.
 
-- $X$ is $T \times (1 + 10p)$ matrix of independent variables. 
+-   $X$ is $T \times (1 + 10p)$ matrix of independent variables.
 
-- $A $is the matrix of coefficients, which includes the constant term $\mu_0$ and the autoregressive coefficients.
-
+-   $A$is the matrix of coefficients, which includes the constant term $\mu_0$ and the autoregressive coefficients.
 
 $$
-Y= \begin{bmatrix}
+Y=
+
+
+\begin{bmatrix}
 y_{lcpi,1} & y_{gold,1} & y_{gdp,1} & y_{crt,1} & y_{unemp,1} & y_{nloan,1} & y_{lexport,1} & y_{limport,1} & y_{aord,1} & y_{lexr,1}\\
 \ y_{lcpi,2} & y_{gold,2} & y_{gdp,2} & y_{crt,2} & y_{unemp,2} & y_{nloan,2} & y_{lexport,2} & y_{limport,2} & y_{aord,2} & y_{lexr,2} \\
 
 \vdots  & \vdots  & \vdots& \vdots& \vdots& \vdots& \vdots& \vdots& \vdots & \vdots  \\
 y_{lcpi,T} & y_{gold,T} & y_{gdp,T} & y_{crt,T} & y_{unemp,T} & y_{nloan,T} & y_{lexport,T} & y_{limport,T} & y_{aord,T} & y_{lexr,T}\\
-\end{bmatrix}_{T \times 10} 
-
+\end{bmatrix}_{T \times 10}
 $$
 
-
-
 $$
-X = \begin{bmatrix}
+X=\begin{bmatrix}
 1 & y_{lcpi,t-1} & y_{gold,t-1} & \ldots & y_{lexr,t-1} & \ldots & y_{lcpi,t-p} & y_{gold,t-p} & \ldots &  y_{lexr,t-p} \\
 1 & y_{lcpi,t-2} & y_{gold,t-2} & \ldots & y_{lexr,t-2} & \ldots & y_{lcpi,t-p-1} & y_{gold,t-p-1} & \ldots &  y_{lexr,t-p-1} \\
 \vdots & \vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \vdots &  \ddots & \vdots \\
 1 & y_{lcpi,1} & y_{gold,2} & \ldots & y_{lexr,1} & \ldots & y_{lcpi,1-p} & y_{gold,1-p} & \ldots &  y_{lexr,1-p}\\
-\end{bmatrix}_{T \times (1 + 10p)}
-
+\end{bmatrix}_{T\times (1+10p)}
 $$
-
-
-
 
 $$
 A = \begin{bmatrix}
@@ -670,7 +661,6 @@ $$
 ### Model Application and Objective Fulfillment
 
 Based on the model above, we will employ VAR of order p to carry out forecasts for the next two years. Given that the data is quarterly, setting the forecast horizon (h) to 8 quarters for our iterative forecasting process.
-
 
 In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as $cpi_{T+h|T}$. Subsequently, we'll utilize the forecasted CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.
 

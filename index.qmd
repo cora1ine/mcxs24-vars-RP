@@ -252,7 +252,9 @@ In summary, the dataset included data from 2010Q1 to 2023Q4, total 96 observatio
 
 ### Data Transformation
 
--   **Quarterly Transformation** All data have been quarterly converted by selecting the data on the last day of the quarter as the observation.
+-   **Quarterly Transformation**
+
+All data have been quarterly converted by selecting the data on the last day of the quarter as the observation.
 
 -   **Log Transformation**
 
@@ -610,12 +612,9 @@ $$E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)$$
 
 $$
 Y=
-
-
 \begin{bmatrix}
 y_{lcpi,1} & y_{gold,1} & y_{gdp,1} & y_{crt,1} & y_{unemp,1} & y_{nloan,1} & y_{lexport,1} & y_{limport,1} & y_{aord,1} & y_{lexr,1}\\
 \ y_{lcpi,2} & y_{gold,2} & y_{gdp,2} & y_{crt,2} & y_{unemp,2} & y_{nloan,2} & y_{lexport,2} & y_{limport,2} & y_{aord,2} & y_{lexr,2} \\
-
 \vdots  & \vdots  & \vdots& \vdots& \vdots& \vdots& \vdots& \vdots& \vdots & \vdots  \\
 y_{lcpi,T} & y_{gold,T} & y_{gdp,T} & y_{crt,T} & y_{unemp,T} & y_{nloan,T} & y_{lexport,T} & y_{limport,T} & y_{aord,T} & y_{lexr,T}\\
 \end{bmatrix}_{T \times 10}

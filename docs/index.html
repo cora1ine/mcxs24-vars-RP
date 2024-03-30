@@ -97,14 +97,17 @@ ul.task-list li input[type="checkbox"] {
   <ul>
   <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a>
   <ul class="collapse">
-  <li><a href="#the-question-objective-and-motivation" id="toc-the-question-objective-and-motivation" class="nav-link" data-scroll-target="#the-question-objective-and-motivation">The question objective, and motivation</a></li>
-  <li><a href="#data-and-their-properties" id="toc-data-and-their-properties" class="nav-link" data-scroll-target="#data-and-their-properties">Data and their properties</a>
+  <li><a href="#question-objective-and-motivation" id="toc-question-objective-and-motivation" class="nav-link" data-scroll-target="#question-objective-and-motivation">Question Objective and Motivation</a></li>
+  <li><a href="#data-and-data-properties" id="toc-data-and-data-properties" class="nav-link" data-scroll-target="#data-and-data-properties">Data and Data Properties</a>
   <ul class="collapse">
   <li><a href="#data-selection-and-rationale" id="toc-data-selection-and-rationale" class="nav-link" data-scroll-target="#data-selection-and-rationale">Data Selection and Rationale</a></li>
   <li><a href="#data-transformation" id="toc-data-transformation" class="nav-link" data-scroll-target="#data-transformation">Data Transformation</a></li>
   <li><a href="#importance-of-key-variables-analysis" id="toc-importance-of-key-variables-analysis" class="nav-link" data-scroll-target="#importance-of-key-variables-analysis">Importance of Key Variables Analysis</a></li>
   </ul></li>
-  <li><a href="#the-model-and-hypothesis" id="toc-the-model-and-hypothesis" class="nav-link" data-scroll-target="#the-model-and-hypothesis">The model and hypothesis</a></li>
+  <li><a href="#model-and-hypothesis" id="toc-model-and-hypothesis" class="nav-link" data-scroll-target="#model-and-hypothesis">Model and Hypothesis</a>
+  <ul class="collapse">
+  <li><a href="#assumption-of-error-term" id="toc-assumption-of-error-term" class="nav-link" data-scroll-target="#assumption-of-error-term">Assumption of Error Term</a></li>
+  </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -142,16 +145,16 @@ ul.task-list li input[type="checkbox"] {
 </blockquote>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
-<section id="the-question-objective-and-motivation" class="level2">
-<h2 class="anchored" data-anchor-id="the-question-objective-and-motivation">The question objective, and motivation</h2>
+<section id="question-objective-and-motivation" class="level2">
+<h2 class="anchored" data-anchor-id="question-objective-and-motivation">Question Objective and Motivation</h2>
 <p><strong>Objective:</strong></p>
 <p>The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years.</p>
 <p><strong>Question:</strong></p>
 <p>Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025?</p>
 <p>The Reserve Bank of Australia (RBA) forecasts that inflation will fall back to the target range of 2% to 3% by 2025 and reach the midpoint of this range in 2026. The purpose of the study is to forecast inflation over the next two years and assess the reasonableness of the RBA’s forecast. This is because we have observed a sharp rise in inflation to 7.8% during COVID-19, and in response the RBA implemented tightening monetary policy and increased interest rates starting in late 2022. Entering mid-to-late 2023, the pace of interest rate increases has slowed down. This research will help determine whether the RBA correctly assumed that its monetary policy measures have effectively suppressed inflation and expected that inflation will fall back to the target range over the next year.</p>
 </section>
-<section id="data-and-their-properties" class="level2">
-<h2 class="anchored" data-anchor-id="data-and-their-properties">Data and their properties</h2>
+<section id="data-and-data-properties" class="level2">
+<h2 class="anchored" data-anchor-id="data-and-data-properties">Data and Data Properties</h2>
 <section id="data-selection-and-rationale" class="level3">
 <h3 class="anchored" data-anchor-id="data-selection-and-rationale">Data Selection and Rationale</h3>
 <ul>
@@ -501,11 +504,65 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>Table 4 Cash Rate Target vs Inflation Rate</p>
-<p>In summary, based on the above analysis, it is expected that gold prices and cpi will have a positive correlation, but the cash rate target will have a negative correlation. This is also consistent with the correlations in Table 1.</p>
+<p>In summary, based on the above analysis, it is expected that gold prices and CPI will have a positive correlation, but the cash rate target will have a negative correlation. This is also consistent with the correlations in Table 1.</p>
 </section>
 </section>
-<section id="the-model-and-hypothesis" class="level2">
-<h2 class="anchored" data-anchor-id="the-model-and-hypothesis">The model and hypothesis</h2>
+<section id="model-and-hypothesis" class="level2">
+<h2 class="anchored" data-anchor-id="model-and-hypothesis">Model and Hypothesis</h2>
+<p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.</p>
+<p><span class="math display">\[y_t = \mu_0 + A_1y_{t-1} +...+A_1y_{t-p} +\epsilon_t\]</span></p>
+<p><span class="math display">\[\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_N(0_N, \Sigma)\]</span></p>
+<p>In matrix notation: <span class="math display">\[Y = X A +E\]</span></p>
+<p>Notation of matrix notation:</p>
+<p><span class="math inline">\(Y\)</span> is <span class="math inline">\(T\times 10\)</span>matrix of dependent variables.</p>
+$$Y =
+<span class="math display">\[\begin{bmatrix}
+y_{lcpi,1} &amp; y_{gold,1} &amp; y_{gdp,1} &amp; y_{crt,1} &amp; y_{unemp,1} &amp; y_{nloan,1} &amp; y_{lexport,1} &amp; y_{limport,1} &amp; y_{aord,1} &amp; y_{lexr,1}\\
+\ y_{lcpi,2} &amp; y_{gold,2} &amp; y_{gdp,2} &amp; y_{crt,2} &amp; y_{unemp,2} &amp; y_{nloan,2} &amp; y_{lexport,2} &amp; y_{limport,2} &amp; y_{aord,2} &amp; y_{lexr,2} \\
+
+\vdots  &amp; \vdots  &amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots &amp; \vdots  \\
+y_{lcpi,T} &amp; y_{gold,T} &amp; y_{gdp,T} &amp; y_{crt,T} &amp; y_{unemp,T} &amp; y_{nloan,T} &amp; y_{lexport,T} &amp; y_{limport,T} &amp; y_{aord,T} &amp; y_{lexr,T}\\
+\end{bmatrix}\]</span>
+<p>_{T } $$</p>
+<p><span class="math inline">\(X\)</span> is <span class="math inline">\(T \times (1 + 10p)\)</span> matrix of independent variables.</p>
+$$ X =
+<span class="math display">\[\begin{bmatrix}
+1 &amp; y_{lcpi,t-1} &amp; y_{gold,t-1} &amp; \ldots &amp; y_{lexr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{gold,t-p} &amp; \ldots &amp;  y_{lexr,t-p} \\
+1 &amp; y_{lcpi,t-2} &amp; y_{gold,t-2} &amp; \ldots &amp; y_{lexr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{gold,t-p-1} &amp; \ldots &amp;  y_{lexr,t-p-1} \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp;  \ddots &amp; \vdots \\
+1 &amp; y_{lcpi,1} &amp; y_{gold,2} &amp; \ldots &amp; y_{lexr,1} &amp; \ldots &amp; y_{lcpi,1-p} &amp; y_{gold,1-p} &amp; \ldots &amp;  y_{lexr,1-p}\\
+\end{bmatrix}\]</span>
+<p>_{T (1 + 10p)}</p>
+<p>$$</p>
+<p>$A $is the matrix of coefficients, which includes the constant term <span class="math inline">\(\mu_0\)</span> and the autoregressive coefficients.</p>
+<p><span class="math display">\[A = \begin{bmatrix}
+\mu_{lcpi} &amp; \mu_{gold} &amp; \ldots &amp; \mu_{lexr} \\
+A_{1,lcpi}^{(1)} &amp; A_{1,gold}^{(1)} &amp; \ldots &amp; A_{1,lexr}^{(1)} \\
+A_{2,lpci}^{(1)} &amp; A_{2,gold}^{(1)} &amp; \ldots &amp; A_{2,lexr}^{(1)} \\
+\vdots  &amp; \vdots  &amp; \ddots &amp; \vdots  \\
+A_{10,lcpi}^{(1)} &amp; A_{10,gold}^{(1)} &amp; \ldots &amp; A_{10,lexr}^{(1)} \\
+\vdots  &amp; \vdots  &amp; \ddots &amp; \vdots  \\
+A_{1,lcpi}^{(p)} &amp; A_{1,gold}^{(p)} &amp; \ldots &amp; A_{1,lexr}^{(p)} \\
+A_{2,lcpi}^{(p)} &amp; A_{2,gold}^{(p)} &amp; \ldots &amp; A_{2,lexr}^{(p)} \\
+\vdots  &amp; \vdots  &amp; \ddots &amp; \vdots  \\
+A_{10,lcpi}^{(p)} &amp; A_{10,gold}^{(p)} &amp; \ldots &amp; A_{10,lexr}^{(p)} \\
+\end{bmatrix}_{(1 + 10p)\times 10}
+\]</span></p>
+<section id="assumption-of-error-term" class="level3">
+<h3 class="anchored" data-anchor-id="assumption-of-error-term">Assumption of Error Term</h3>
+<p><span class="math display">\[\begin{align*}
+E &amp;=
+\begin{bmatrix}
+\epsilon_{1,lcpi} &amp; \epsilon_{1,gold} &amp; \ldots &amp; \epsilon_{1,lexr} \\
+\epsilon_{2,lcpi} &amp; \epsilon_{2,gold} &amp; \ldots &amp; \epsilon_{2,lexr} \\
+\vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+\epsilon_{T,lcpi} &amp; \epsilon_{T,gold} &amp; \ldots &amp; \epsilon_{T,lexr}
+\end{bmatrix}_{T\times 10}
+\\
+\end{align*}
+\]</span></p>
+<p><span class="math display">\[E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)\]</span></p>
+</section>
 </section>
 <section id="references" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="references">References</h2>

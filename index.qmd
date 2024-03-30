@@ -114,15 +114,19 @@ gdp_data      = xts(gdp_download$value, gdp_download$date)
 
 crt_download   = read_rba(series_id = "FIRMMCRTD")   
 crt_data       = xts(crt_download$value, crt_download$date)
-crt_data       = apply.quarterly(crt_data, mean)     # change daily to quarterly
+quarter_ends   = endpoints(crt_data , on = "quarters")
+crt_data       = crt_data[quarter_ends]
 crt_data       = xts(crt_data, seq(as.Date("1990-03-01"), by = "quarter", length.out = length(crt_data)))
+
+
 
 # 4.Unemployment rate
 # 6202.0 Labour Force, Australia
 # series_id = "A84423050A": Unemployment rate ;  Persons ; seasonal adjust
 unemp_download = read_abs(series_id = "A84423050A")     
 unemp_data     = xts(unemp_download$value, unemp_download$date)
-unemp_data     = apply.quarterly(unemp_data, mean) # change daily to quarterly
+quarter_ends   = endpoints(unemp_data , on = "quarters")
+unemp_data     = unemp_data[quarter_ends]
 unemp_data     = xts(unemp_data, seq(as.Date("1978-03-01"), by = "quarter", length.out = length(unemp_data)))
 
 # 5.Export
@@ -131,21 +135,28 @@ unemp_data     = xts(unemp_data, seq(as.Date("1978-03-01"), by = "quarter", leng
 export_download = read_abs(series_id = "A2718603V")     
 export_data     = xts(export_download$value, export_download$date)
 export_data     = abs(export_data)
-export_data     = apply.quarterly(export_data, mean)
- 
+quarter_ends    = endpoints(export_data , on = "quarters")
+export_data     = export_data[quarter_ends]
+export_data     = xts(export_data, seq(as.Date("1971-09-01"), by = "quarter", length.out = length(export_data)))
+
 # 6.Import
 # 5368.0 International Trade in Goods
 # series_id = "A2718577A": Credits, Total goods ;
 import_download  = read_abs(series_id = "A2718577A")     
 import_data      = xts(import_download$value, import_download$date)
-import_data      = apply.quarterly(import_data, mean)
+quarter_ends     = endpoints(import_data , on = "quarters")
+import_data      = import_data[quarter_ends]
+import_data      = xts(import_data, seq(as.Date("1971-09-01"), by = "quarter", length.out = length(import_data)))
+
 
 # 7.New loan
 # 5601.0 Lending Indicators
 # series_id = "A108296973X"： Households ;  Housing Finance ;  Total housing excluding refinancing ;  New loan commitments ;  Value ; seasonal adjust
 nloan_download   = read_abs(series_id = "A108296973X")     
 nloan_data       = xts(nloan_download$value, nloan_download$date)
-nloan_data       = apply.quarterly(nloan_data, mean)
+quarter_ends     = endpoints(nloan_data , on = "quarters")
+nloan_data       = nloan_data[quarter_ends]
+nloan_data       = xts(nloan_data, seq(as.Date("2002-09-01"), by = "quarter", length.out = length(nloan_data)))
 
 
 # 8.Gold price
@@ -156,7 +167,10 @@ gold_data       = data.frame(gold_download[,1], gold_data)
 colnames(gold_data) = c('date', 'gol')
 gold_data$date  = as.Date(as.character(gold_data$date),format="%Y-%m-%d") 
 gold_data       = xts(gold_data$gol, gold_data$date)
-gold_data       = apply.quarterly(gold_data, mean)
+quarter_ends    = endpoints(gold_data , on = "quarters")
+gold_data       = gold_data[quarter_ends]
+gold_data       = xts(gold_data, seq(as.Date("2010-03-01"), by = "quarter", length.out = length(gold_data)))
+
 
 # 9.AORD
 aord_link       = "https://query1.finance.yahoo.com/v7/finance/download/%5EAORD?period1=1262304000&period2=1703980800&interval=1mo&filter=history&frequency=1mo&includeAdjustedClose=true"
@@ -166,7 +180,9 @@ aord_data       = data.frame(aord_download[,1], aord_data)
 colnames(aord_data) = c('date', 'aord')
 aord_data$date  = as.Date(as.character(aord_data$date),format="%Y-%m-%d") 
 aord_data       = xts(aord_data$aord, aord_data$date)
-aord_data       = apply.quarterly(aord_data, mean)
+quarter_ends    = endpoints(aord_data , on = "quarters")
+aord_data       = aord_data[quarter_ends]
+aord_data       = xts(aord_data, seq(as.Date("2010-03-01"), by = "quarter", length.out = length(aord_data)))
 
 # 10. AUD/USD
 exr_link        = "https://query1.finance.yahoo.com/v7/finance/download/AUDUSD%3DX?period1=1262304000&period2=1703980800&interval=1mo&filter=history&frequency=1mo&includeAdjustedClose=true"
@@ -176,7 +192,9 @@ exr_data        = data.frame(exr_download[,1], exr_data)
 colnames(exr_data) = c('date', 'exr')
 exr_data$date   = as.Date(as.character(exr_data$date),format="%Y-%m-%d") 
 exr_data        = xts(exr_data$exr, exr_data$date)
-exr_data        = apply.quarterly(exr_data, mean)
+quarter_ends    = endpoints(exr_data , on = "quarters")
+exr_data        = exr_data[quarter_ends]
+exr_data        = xts(exr_data, seq(as.Date("2010-03-01"), by = "quarter", length.out = length(exr_data)))
 
 
 
@@ -200,6 +218,10 @@ colnames(all_data)   = c("cpi_data",    "gold_data",
                          "export_data", "import_data",
                          "aord_data",   "exr_data")
 ```
+
+
+
+Following Table shows the correlation between CPI and other variables.
 
 ```{r Corr Plot, fig.pos="H"}
 #| echo: false
@@ -225,6 +247,9 @@ kable(cor_results_table, align = "c") %>%
 ```
 
 Table 1 Correlation Matrix
+
+In summary, the dataset included data from 2010Q1 to 2023Q4, total 96 observation points with 10 variables.
+
 
 ### Data Transformation
 
@@ -296,7 +321,7 @@ Figure 2 ACF Plot for all data
 
 Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).
 
-According to Table 2, we can see that $cpi_i$, $crt_i$, $nloan_i$ and $limport_i$ require more than second-order integration, while $gold_i$, $unemp_i$, $lexport_i$ require sencond-order integration, other variables require first-order integration (under 10% level of confidence and n in the table means larger than 2).
+According to Table 2, we can see that $lcpi_i$, $gold_i$, $lexport_i$ require  second-order integration, while $gdp_i$, $unemp_i$, $nloan_i$ require first-order integration(under 5% level of confidence and n in the table means larger than 2).
 
 ```{r ACF test, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -317,11 +342,11 @@ for (i in 1:ncol(all_data)) {
 ## ADF test
 
 # ol.cpi.aic.ar$order
-adf.cpi   = adfTest(all_data[,1], lags=17, type="c")              # don't reject -> non-stationary
-dadf.cpi  = adfTest(diff(all_data[,1]), lags=16, type="nc")        # don't reject -> non-stationary
-d2adf.cpi = adfTest(diff(diff(all_data[,1])), lags=15, type="nc")  # reject -> (I2 is stationary)
+adf.cpi   = adfTest(all_data[,1], lags=18, type="c")              # don't reject -> non-stationary
+dadf.cpi  = adfTest(diff(all_data[,1]), lags=17, type="nc")        # don't reject -> non-stationary
+d2adf.cpi = adfTest(diff(diff(all_data[,1])), lags=16, type="nc")  # reject -> (I2 is stationary)
 # adf.cpi@test$p.value
-#-> integration order = 
+#-> integration order = 2
 
 # ol.gold.aic.ar$order
 adf.gold   = adfTest(all_data[,2], lags=18, type="c")               # don't reject -> non-stationary
@@ -344,44 +369,41 @@ d2adf.crt = adfTest(diff(diff(all_data[,4])), lags=18, type="nc") # don't reject
 #-> integration order = 
 
 # ol.unemp.aic.ar$order
-adf.unemp  = adfTest(all_data[,5], lags=20, type="c")           # don't reject -> non-stationary
-dadf.unemp = adfTest(diff(all_data[,5]), lags=19, type="nc")    # don't reject -> non-stationary
-d2adf.unemp = adfTest(diff(diff(all_data[,5])), lags=18, type="nc")    # don't reject -> non-stationary
+adf.unemp  = adfTest(all_data[,5], lags=1, type="c")           # don't reject -> non-stationary
+dadf.unemp = adfTest(diff(all_data[,5]), lags=0, type="nc")    # reject -> (I1 is stationary)
 # adf.unemp@test$p.value
-#-> integration order = 2
+#-> integration order = 1
 
 # ol.nloan.aic.ar$order
-adf.nloan  = adfTest(all_data[,6], lags=20, type="c")           # don't reject -> non-stationary
-dadf.nloan = adfTest(diff(all_data[,6]), lags=19, type="nc")    # don't reject -> non-stationary
-d2adf.nloan = adfTest(diff(diff(all_data[,6])), lags=18, type="nc")    # don't reject -> non-stationary
+adf.nloan  = adfTest(all_data[,6], lags=2, type="c")           # don't reject -> non-stationary
+dadf.nloan = adfTest(diff(all_data[,6]), lags=1, type="nc")    # reject -> (I1 is stationary)
 # adf.nloan@test$p.value
-#-> integration order = 
+#-> integration order = 1
 
 # ol.export.aic.ar$order
-adf.export  = adfTest(all_data[,7], lags=20, type="c")           # don't reject -> non-stationary
-dadf.export = adfTest(diff(all_data[,7]), lags=19, type="nc")    # reject -> (I1 is stationary)
-d2adf.export = adfTest(diff(diff(all_data[,7])), lags=18, type="nc")    # don't reject -> non-stationary
+adf.export  = adfTest(all_data[,7], lags=19, type="c")           # don't reject -> non-stationary
+dadf.export = adfTest(diff(all_data[,7]), lags=18, type="nc")    # don't reject -> non-stationary
+d2adf.export = adfTest(diff(diff(all_data[,7])), lags=17, type="nc")    # reject -> (I2 is stationary)
 # adf.export@test$p.value
 #-> integration order = 2
 
 # ol.import.aic.ar$order
-adf.import  = adfTest(all_data[,8], lags=20, type="c")           # don't reject -> non-stationary
-dadf.import = adfTest(diff(all_data[,8]), lags=19, type="nc")    # don't reject -> non-stationary
-d2adf.import = adfTest(diff(diff(all_data[,8])), lags=18, type="nc")    # don't reject -> non-stationary
+adf.import  = adfTest(all_data[,8], lags=5, type="c")           # don't reject -> non-stationary
+dadf.import = adfTest(diff(all_data[,8]), lags=4, type="nc")    # reject -> (I1 is stationary)
+
 # d2adf.import@test$p.value
 #-> integration order = 
 
 # ol.aord.aic.ar$order
-adf.aord   = adfTest(all_data[,9], lags=7, type="c")               # don't reject -> non-stationary
-dadf.aord  = adfTest(diff(all_data[,9]), lags=6, type="nc")        # reject -> (I1 is stationary)
+adf.aord   = adfTest(all_data[,9], lags=2, type="c")               # don't reject -> non-stationary
+dadf.aord  = adfTest(diff(all_data[,9]), lags=1, type="nc")        # reject -> (I1 is stationary)
 # adf.aord@test$p.value
 #-> integration order = 1
 
 # ol.exr.aic.ar$order
-adf.exr   = adfTest(all_data[,10], lags=20, type="c")               # don't reject -> non-stationary
-dadf.exr  = adfTest(diff(all_data[,10]), lags=19, type="nc")        # reject -> (I1 is stationary)
+adf.exr   = adfTest(all_data[,10], lags=20, type="c")               # reject -> (I0 is stationary)
 # adf.exr@test$p.value
-# #-> integration order = 1
+# #-> integration order = 0
 
 Unit_Root_Test_table <- 
   tibble( " " = c("lcpi", "gold", "gdp", "crt", "unemp", "nloan", "lexport","limport", "aord", "lexr"),
@@ -396,24 +418,22 @@ Unit_Root_Test_table <-
                     dadf.gdp@test$p.value,    dadf.crt@test$p.value,    
                     dadf.unemp@test$p.value,  dadf.nloan@test$p.value,
                     dadf.export@test$p.value, dadf.import@test$p.value,   
-                    dadf.aord@test$p.value,   dadf.exr@test$p.value),4),
+                    dadf.aord@test$p.value,   NA),4),
           "p value of ADF test of diff-diff-AR" 
           = round(c(d2adf.cpi@test$p.value,   d2adf.gold@test$p.value,
                     NA,                       d2adf.crt@test$p.value,
-                    d2adf.unemp@test$p.value, d2adf.nloan@test$p.value, 
-                    d2adf.export@test$p.value,d2adf.import@test$p.value,
+                    NA , NA, 
+                    d2adf.export@test$p.value,NA,
                     NA, NA
                     ),4),
           "conclusion" 
-          = c("lcpi~I(n)",    "gold~I(2)", 
+          = c("lcpi~I(2)",    "gold~I(2)", 
               "gdp~I(1)",    "crt~I(n)",    
-              "unemp~I(2)",  "nloan~I(n)", 
-              "lexport~I(2)", "limport~I(n)", 
-              "aord~I(1)",   "lexr~I(1)"
+              "unemp~I(1)",  "nloan~I(1)", 
+              "lexport~I(2)", "limport~I(1)", 
+              "aord~I(1)",   "lexr~I(0)"
           ),
   )
-
-# use 10% los, n>2
 
 kable(Unit_Root_Test_table, align = "c") %>% 
   kable_styling(font_size = 8, 
@@ -484,11 +504,9 @@ kable(inflation_table, align = "c") %>%
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 ```
 
-
 Table 3 Inflation Rate 2023
 
--   Gold price:  Observing the trend charts of gold prices and cpi in the past three years, we can see that the trends of the two are almost consistent, so we believe that it is reasonable to use international gold prices as inflation expectations. Although the gold price is denominated in US dollars, the inclusion of the Australian dollar against the US dollar exchange rate in the data set makes it feasible to convert the gold price into a measure of its impact on the Australian market.
-
+-   Gold price: Observing the trend charts of gold prices and cpi in the past three years, we can see that the trends of the two are almost consistent, so we believe that it is reasonable to use international gold prices as inflation expectations. Although the gold price is denominated in US dollars, the inclusion of the Australian dollar against the US dollar exchange rate in the data set makes it feasible to convert the gold price into a measure of its impact on the Australian market.
 
 ```{r gold compute, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -512,7 +530,7 @@ title(main = "Gold price 3yrs", line = 0.5)
 
 Figure 4 CPI and Gold Price Last 3 Yrs Plot
 
--   Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.31), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 32). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA's monetary tightening policy have already been reflected.
+-   Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.21), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 35). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA's monetary tightening policy have already been reflected.
 
 ```{r cash rate vs cpi, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -577,28 +595,36 @@ $$y_t = \mu_0 + A_1y_{t-1} +...+A_1y_{t-p} +\epsilon_t$$
 
 $$\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_N(0_N, \Sigma)$$
 
-
 In matrix notation: 
+
 $$Y = X A +E$$
 
-Notation of matrix notation:
+$$E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)$$
 
-$Y$ is $T\times 10$matrix of dependent variables.
+- $Y$ is $T\times 10$matrix of dependent variables. 
 
-$$Y = \begin{bmatrix}
+- $X$ is $T \times (1 + 10p)$ matrix of independent variables. 
+
+- $A $is the matrix of coefficients, which includes the constant term $\mu_0$ and the autoregressive coefficients.
+
+
+$$
+Y=
+\begin{bmatrix}
 y_{lcpi,1} & y_{gold,1} & y_{gdp,1} & y_{crt,1} & y_{unemp,1} & y_{nloan,1} & y_{lexport,1} & y_{limport,1} & y_{aord,1} & y_{lexr,1}\\
 \ y_{lcpi,2} & y_{gold,2} & y_{gdp,2} & y_{crt,2} & y_{unemp,2} & y_{nloan,2} & y_{lexport,2} & y_{limport,2} & y_{aord,2} & y_{lexr,2} \\
 
 \vdots  & \vdots  & \vdots& \vdots& \vdots& \vdots& \vdots& \vdots& \vdots & \vdots  \\
 y_{lcpi,T} & y_{gold,T} & y_{gdp,T} & y_{crt,T} & y_{unemp,T} & y_{nloan,T} & y_{lexport,T} & y_{limport,T} & y_{aord,T} & y_{lexr,T}\\
-\end{bmatrix}_{T \times 10}
-$$
-
-$X$ is $T \times (1 + 10p)$ matrix of independent variables.
-
+\end{bmatrix}_{T \times 10} 
 
 $$
-X = \begin{bmatrix}
+
+
+
+$$
+X=
+\begin{bmatrix}
 1 & y_{lcpi,t-1} & y_{gold,t-1} & \ldots & y_{lexr,t-1} & \ldots & y_{lcpi,t-p} & y_{gold,t-p} & \ldots &  y_{lexr,t-p} \\
 1 & y_{lcpi,t-2} & y_{gold,t-2} & \ldots & y_{lexr,t-2} & \ldots & y_{lcpi,t-p-1} & y_{gold,t-p-1} & \ldots &  y_{lexr,t-p-1} \\
 \vdots & \vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \vdots &  \ddots & \vdots \\
@@ -608,9 +634,10 @@ X = \begin{bmatrix}
 $$
 
 
-$A $is the matrix of coefficients, which includes the constant term $\mu_0$ and the autoregressive coefficients.
 
-$$A = \begin{bmatrix}
+
+$$
+A = \begin{bmatrix}
 \mu_{lcpi} & \mu_{gold} & \ldots & \mu_{lexr} \\
 A_{1,lcpi}^{(1)} & A_{1,gold}^{(1)} & \ldots & A_{1,lexr}^{(1)} \\
 A_{2,lpci}^{(1)} & A_{2,gold}^{(1)} & \ldots & A_{2,lexr}^{(1)} \\
@@ -624,9 +651,8 @@ A_{10,lcpi}^{(p)} & A_{10,gold}^{(p)} & \ldots & A_{10,lexr}^{(p)} \\
 \end{bmatrix}_{(1 + 10p)\times 10}
 $$
 
-### Assumption of Error Term
-
-$$\begin{align*}
+$$
+\begin{align*}
 E &= 
 \begin{bmatrix}
 \epsilon_{1,lcpi} & \epsilon_{1,gold} & \ldots & \epsilon_{1,lexr} \\
@@ -638,7 +664,11 @@ E &=
 \end{align*}
 $$
 
-$$E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)$$
+### Model Application and Objective Fulfillment
 
+Based on the model above, we will employ VAR of order p to carry out forecasts for the next two years. Given that the data is quarterly, setting the forecast horizon (h) to 8 quarters for our iterative forecasting process.
+
+
+In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as $cpi_{T+h|T}$. Subsequently, we'll utilize the forecasted CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.
 
 ## References {.unnumbered}

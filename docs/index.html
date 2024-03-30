@@ -106,7 +106,7 @@ ul.task-list li input[type="checkbox"] {
   </ul></li>
   <li><a href="#model-and-hypothesis" id="toc-model-and-hypothesis" class="nav-link" data-scroll-target="#model-and-hypothesis">Model and Hypothesis</a>
   <ul class="collapse">
-  <li><a href="#assumption-of-error-term" id="toc-assumption-of-error-term" class="nav-link" data-scroll-target="#assumption-of-error-term">Assumption of Error Term</a></li>
+  <li><a href="#model-application-and-objective-fulfillment" id="toc-model-application-and-objective-fulfillment" class="nav-link" data-scroll-target="#model-application-and-objective-fulfillment">Model Application and Objective Fulfillment</a></li>
   </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
@@ -199,6 +199,7 @@ ul.task-list li input[type="checkbox"] {
 </ol>
 <p>It affects the price of imports and exports, contributing to inflation.</p></li>
 </ul>
+<p>Following Table shows the correlation between CPI and other variables.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -216,39 +217,39 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td style="text-align: center;">gold_data</td>
-<td style="text-align: center;">0.5865</td>
+<td style="text-align: center;">0.6040</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">gdp_data</td>
-<td style="text-align: center;">0.9300</td>
+<td style="text-align: center;">0.9319</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">crt_data</td>
-<td style="text-align: center;">-0.4067</td>
+<td style="text-align: center;">-0.3686</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">unemp_data</td>
-<td style="text-align: center;">-0.5474</td>
+<td style="text-align: center;">-0.5680</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">nloan_data</td>
-<td style="text-align: center;">0.7767</td>
+<td style="text-align: center;">0.7493</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">export_data</td>
-<td style="text-align: center;">0.9682</td>
+<td style="text-align: center;">0.9581</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">import_data</td>
-<td style="text-align: center;">0.9236</td>
+<td style="text-align: center;">0.9152</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">aord_data</td>
-<td style="text-align: center;">0.9274</td>
+<td style="text-align: center;">0.8920</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">exr_data</td>
-<td style="text-align: center;">-0.7998</td>
+<td style="text-align: center;">-0.7951</td>
 </tr>
 </tbody>
 </table>
@@ -258,6 +259,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>Table 1 Correlation Matrix</p>
+<p>In summary, the dataset included data from 2010Q1 to 2023Q4, total 96 observation points with 10 variables.</p>
 </section>
 <section id="data-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="data-transformation">Data Transformation</h3>
@@ -290,7 +292,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Figure 2 ACF Plot for all data</p>
 <p>Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).</p>
-<p>According to Table 2, we can see that <span class="math inline">\(cpi_i\)</span>, <span class="math inline">\(crt_i\)</span>, <span class="math inline">\(nloan_i\)</span> and <span class="math inline">\(limport_i\)</span> require more than second-order integration, while <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(unemp_i\)</span>, <span class="math inline">\(lexport_i\)</span> require sencond-order integration, other variables require first-order integration (under 10% level of confidence and n in the table means larger than 2).</p>
+<p>According to Table 2, we can see that <span class="math inline">\(lcpi_i\)</span>, <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(lexport_i\)</span> require second-order integration, while <span class="math inline">\(gdp_i\)</span>, <span class="math inline">\(unemp_i\)</span>, <span class="math inline">\(nloan_i\)</span> require first-order integration(under 5% level of confidence and n in the table means larger than 2).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -307,73 +309,73 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">lcpi</td>
-<td style="text-align: center;">0.9328</td>
-<td style="text-align: center;">0.6733</td>
-<td style="text-align: center;">0.2018</td>
-<td style="text-align: center;">lcpi~I(n)</td>
+<td style="text-align: center;">0.9900</td>
+<td style="text-align: center;">0.7612</td>
+<td style="text-align: center;">0.0766</td>
+<td style="text-align: center;">lcpi~I(2)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">gold</td>
-<td style="text-align: center;">0.3959</td>
-<td style="text-align: center;">0.3375</td>
-<td style="text-align: center;">0.0862</td>
+<td style="text-align: center;">0.7279</td>
+<td style="text-align: center;">0.5153</td>
+<td style="text-align: center;">0.0153</td>
 <td style="text-align: center;">gold~I(2)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">gdp</td>
-<td style="text-align: center;">0.5625</td>
+<td style="text-align: center;">0.5382</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">NA</td>
 <td style="text-align: center;">gdp~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">crt</td>
-<td style="text-align: center;">0.1132</td>
-<td style="text-align: center;">0.3419</td>
-<td style="text-align: center;">0.2553</td>
+<td style="text-align: center;">0.1841</td>
+<td style="text-align: center;">0.1606</td>
+<td style="text-align: center;">0.3508</td>
 <td style="text-align: center;">crt~I(n)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">unemp</td>
-<td style="text-align: center;">0.7376</td>
-<td style="text-align: center;">0.7392</td>
-<td style="text-align: center;">0.0196</td>
-<td style="text-align: center;">unemp~I(2)</td>
+<td style="text-align: center;">0.4344</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">unemp~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">nloan</td>
-<td style="text-align: center;">0.9536</td>
-<td style="text-align: center;">0.5166</td>
-<td style="text-align: center;">0.1664</td>
-<td style="text-align: center;">nloan~I(n)</td>
+<td style="text-align: center;">0.3625</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">nloan~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">lexport</td>
-<td style="text-align: center;">0.9798</td>
 <td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.0892</td>
+<td style="text-align: center;">0.7513</td>
+<td style="text-align: center;">0.0265</td>
 <td style="text-align: center;">lexport~I(2)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">limport</td>
-<td style="text-align: center;">0.6601</td>
-<td style="text-align: center;">0.6736</td>
-<td style="text-align: center;">0.2379</td>
-<td style="text-align: center;">limport~I(n)</td>
+<td style="text-align: center;">0.9727</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">limport~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">aord</td>
-<td style="text-align: center;">0.8289</td>
-<td style="text-align: center;">0.0169</td>
+<td style="text-align: center;">0.7712</td>
+<td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">NA</td>
 <td style="text-align: center;">aord~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">lexr</td>
-<td style="text-align: center;">0.8915</td>
-<td style="text-align: center;">0.0473</td>
+<td style="text-align: center;">0.0175</td>
 <td style="text-align: center;">NA</td>
-<td style="text-align: center;">lexr~I(1)</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">lexr~I(0)</td>
 </tr>
 </tbody>
 </table>
@@ -445,7 +447,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Figure 4 CPI and Gold Price Last 3 Yrs Plot</p>
 <ul>
-<li>Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.31), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 32). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA’s monetary tightening policy have already been reflected.</li>
+<li>Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.21), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 35). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA’s monetary tightening policy have already been reflected.</li>
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -485,16 +487,16 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td style="text-align: center;">Cash rate target</td>
 <td style="text-align: center;">0.1</td>
-<td style="text-align: center;">0.40</td>
-<td style="text-align: center;">1.78</td>
-<td style="text-align: center;">2.82</td>
-<td style="text-align: center;">3.32</td>
-<td style="text-align: center;">32.22</td>
-<td style="text-align: center;">3.84</td>
+<td style="text-align: center;">0.85</td>
+<td style="text-align: center;">2.35</td>
+<td style="text-align: center;">3.10</td>
+<td style="text-align: center;">3.60</td>
+<td style="text-align: center;">35.00</td>
 <td style="text-align: center;">4.10</td>
-<td style="text-align: center;">4.24</td>
+<td style="text-align: center;">4.10</td>
 <td style="text-align: center;">4.35</td>
-<td style="text-align: center;">0.31</td>
+<td style="text-align: center;">4.35</td>
+<td style="text-align: center;">0.21</td>
 </tr>
 </tbody>
 </table>
@@ -512,10 +514,15 @@ ul.task-list li input[type="checkbox"] {
 <p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.</p>
 <p><span class="math display">\[y_t = \mu_0 + A_1y_{t-1} +...+A_1y_{t-p} +\epsilon_t\]</span></p>
 <p><span class="math display">\[\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_N(0_N, \Sigma)\]</span></p>
-<p>In matrix notation: <span class="math display">\[Y = X A +E\]</span></p>
-<p>Notation of matrix notation:</p>
-<p><span class="math inline">\(Y\)</span> is <span class="math inline">\(T\times 10\)</span>matrix of dependent variables.</p>
-$$Y =
+<p>In matrix notation:</p>
+<p><span class="math display">\[Y = X A +E\]</span></p>
+<p><span class="math display">\[E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)\]</span></p>
+<ul>
+<li><p><span class="math inline">\(Y\)</span> is <span class="math inline">\(T\times 10\)</span>matrix of dependent variables.</p></li>
+<li><p><span class="math inline">\(X\)</span> is <span class="math inline">\(T \times (1 + 10p)\)</span> matrix of independent variables.</p></li>
+<li><p>$A $is the matrix of coefficients, which includes the constant term <span class="math inline">\(\mu_0\)</span> and the autoregressive coefficients.</p></li>
+</ul>
+$$ Y=
 <span class="math display">\[\begin{bmatrix}
 y_{lcpi,1} &amp; y_{gold,1} &amp; y_{gdp,1} &amp; y_{crt,1} &amp; y_{unemp,1} &amp; y_{nloan,1} &amp; y_{lexport,1} &amp; y_{limport,1} &amp; y_{aord,1} &amp; y_{lexr,1}\\
 \ y_{lcpi,2} &amp; y_{gold,2} &amp; y_{gdp,2} &amp; y_{crt,2} &amp; y_{unemp,2} &amp; y_{nloan,2} &amp; y_{lexport,2} &amp; y_{limport,2} &amp; y_{aord,2} &amp; y_{lexr,2} \\
@@ -523,9 +530,9 @@ y_{lcpi,1} &amp; y_{gold,1} &amp; y_{gdp,1} &amp; y_{crt,1} &amp; y_{unemp,1} &a
 \vdots  &amp; \vdots  &amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots &amp; \vdots  \\
 y_{lcpi,T} &amp; y_{gold,T} &amp; y_{gdp,T} &amp; y_{crt,T} &amp; y_{unemp,T} &amp; y_{nloan,T} &amp; y_{lexport,T} &amp; y_{limport,T} &amp; y_{aord,T} &amp; y_{lexr,T}\\
 \end{bmatrix}\]</span>
-<p>_{T } $$</p>
-<p><span class="math inline">\(X\)</span> is <span class="math inline">\(T \times (1 + 10p)\)</span> matrix of independent variables.</p>
-$$ X =
+<p>_{T }</p>
+<p>$$</p>
+$$ X=
 <span class="math display">\[\begin{bmatrix}
 1 &amp; y_{lcpi,t-1} &amp; y_{gold,t-1} &amp; \ldots &amp; y_{lexr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{gold,t-p} &amp; \ldots &amp;  y_{lexr,t-p} \\
 1 &amp; y_{lcpi,t-2} &amp; y_{gold,t-2} &amp; \ldots &amp; y_{lexr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{gold,t-p-1} &amp; \ldots &amp;  y_{lexr,t-p-1} \\
@@ -534,8 +541,8 @@ $$ X =
 \end{bmatrix}\]</span>
 <p>_{T (1 + 10p)}</p>
 <p>$$</p>
-<p>$A $is the matrix of coefficients, which includes the constant term <span class="math inline">\(\mu_0\)</span> and the autoregressive coefficients.</p>
-<p><span class="math display">\[A = \begin{bmatrix}
+<p><span class="math display">\[
+A = \begin{bmatrix}
 \mu_{lcpi} &amp; \mu_{gold} &amp; \ldots &amp; \mu_{lexr} \\
 A_{1,lcpi}^{(1)} &amp; A_{1,gold}^{(1)} &amp; \ldots &amp; A_{1,lexr}^{(1)} \\
 A_{2,lpci}^{(1)} &amp; A_{2,gold}^{(1)} &amp; \ldots &amp; A_{2,lexr}^{(1)} \\
@@ -548,9 +555,8 @@ A_{2,lcpi}^{(p)} &amp; A_{2,gold}^{(p)} &amp; \ldots &amp; A_{2,lexr}^{(p)} \\
 A_{10,lcpi}^{(p)} &amp; A_{10,gold}^{(p)} &amp; \ldots &amp; A_{10,lexr}^{(p)} \\
 \end{bmatrix}_{(1 + 10p)\times 10}
 \]</span></p>
-<section id="assumption-of-error-term" class="level3">
-<h3 class="anchored" data-anchor-id="assumption-of-error-term">Assumption of Error Term</h3>
-<p><span class="math display">\[\begin{align*}
+<p><span class="math display">\[
+\begin{align*}
 E &amp;=
 \begin{bmatrix}
 \epsilon_{1,lcpi} &amp; \epsilon_{1,gold} &amp; \ldots &amp; \epsilon_{1,lexr} \\
@@ -561,7 +567,10 @@ E &amp;=
 \\
 \end{align*}
 \]</span></p>
-<p><span class="math display">\[E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)\]</span></p>
+<section id="model-application-and-objective-fulfillment" class="level3">
+<h3 class="anchored" data-anchor-id="model-application-and-objective-fulfillment">Model Application and Objective Fulfillment</h3>
+<p>Based on the model above, we will employ VAR of order p to carry out forecasts for the next two years. Given that the data is quarterly, setting the forecast horizon (h) to 8 quarters for our iterative forecasting process.</p>
+<p>In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as <span class="math inline">\(cpi_{T+h|T}\)</span>. Subsequently, we’ll utilize the forecasted CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.</p>
 </section>
 </section>
 <section id="references" class="level2 unnumbered">

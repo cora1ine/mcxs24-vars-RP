@@ -162,6 +162,7 @@ ul.task-list li input[type="checkbox"] {
 <p>1.<span class="math inline">\(cpi_i\)</span>: Consumer Price Index (CPI) from ABS.</p>
 <p>CPI directly measure inflation by follow formula:</p>
 <p><span id="eq-1"><span class="math display">\[Inflation  = \frac{CPI_{Quarter \ of \ These \ Year}}{CPI_{Quarter \ of \ Previous \ Year} )}\times 100 \tag{1}\]</span></span></p>
+<p>CPI is the basic data for measuring inflation. It is more stable and less affected by seasonal factors and short-term fluctuations than the annual inflation rate from which it is derived. In VAR, raw time series data rather than rates of change are used to capture and model the dynamic nature of the data.</p>
 <p>2.<span class="math inline">\(gold_i\)</span>: Gold price from yahoo finance.</p>
 <p>Gold is widely viewed as a safe-haven asset, meaning investors are likely to buy it as a store of value during s of economic uncertainty and rising inflation expectations. Such purchases will increase the price of gold.</p></li>
 <li><p><strong>Economic Activity and Policy Indicators:</strong></p>
@@ -264,7 +265,8 @@ ul.task-list li input[type="checkbox"] {
 <section id="data-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="data-transformation">Data Transformation</h3>
 <ul>
-<li><strong>Log Transformation</strong></li>
+<li><p><strong>Quarterly Transformation</strong> All data have been quarterly converted by selecting the data on the last day of the quarter as the observation.</p></li>
+<li><p><strong>Log Transformation</strong></p></li>
 </ul>
 <p>Based on the line graph of the original data below (Figure 1), we can observe that exponentially growing variables need to be linearized, such as <span class="math inline">\(cpi_i\)</span>, <span class="math inline">\(export_i\)</span>, <span class="math inline">\(import_i\)</span>, <span class="math inline">\(exr_i\)</span>. Therefore, its logarithmically transformed form will be used in the following analysis.</p>
 <div class="cell" data-layout-align="center">
@@ -532,7 +534,7 @@ y_{lcpi,T} &amp; y_{gold,T} &amp; y_{gdp,T} &amp; y_{crt,T} &amp; y_{unemp,T} &a
 \end{bmatrix}\]</span>
 <p>_{T }</p>
 <p>$$</p>
-$$ X=
+$$ X =
 <span class="math display">\[\begin{bmatrix}
 1 &amp; y_{lcpi,t-1} &amp; y_{gold,t-1} &amp; \ldots &amp; y_{lexr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{gold,t-p} &amp; \ldots &amp;  y_{lexr,t-p} \\
 1 &amp; y_{lcpi,t-2} &amp; y_{gold,t-2} &amp; \ldots &amp; y_{lexr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{gold,t-p-1} &amp; \ldots &amp;  y_{lexr,t-p-1} \\

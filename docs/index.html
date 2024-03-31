@@ -200,7 +200,7 @@ ul.task-list li input[type="checkbox"] {
 </ol>
 <p>It affects the price of imports and exports, contributing to inflation.</p></li>
 </ul>
-<p>Following Table shows the correlation between CPI and other variables.</p>
+<p>Following Table shows the correlation between CPI and other variables. It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -218,39 +218,39 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td style="text-align: center;">gold_data</td>
-<td style="text-align: center;">0.6040</td>
+<td style="text-align: center;">0.8055</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">gdp_data</td>
-<td style="text-align: center;">0.9319</td>
+<td style="text-align: center;">0.9610</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">crt_data</td>
-<td style="text-align: center;">-0.3686</td>
+<td style="text-align: center;">-0.6522</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">unemp_data</td>
-<td style="text-align: center;">-0.5680</td>
+<td style="text-align: center;">-0.1785</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">nloan_data</td>
-<td style="text-align: center;">0.7493</td>
+<td style="text-align: center;">0.7663</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">export_data</td>
-<td style="text-align: center;">0.9581</td>
+<td style="text-align: center;">0.9583</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">import_data</td>
-<td style="text-align: center;">0.9152</td>
+<td style="text-align: center;">0.9202</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">aord_data</td>
-<td style="text-align: center;">0.8920</td>
+<td style="text-align: center;">0.7173</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">exr_data</td>
-<td style="text-align: center;">-0.7951</td>
+<td style="text-align: center;">-0.5782</td>
 </tr>
 </tbody>
 </table>
@@ -260,14 +260,14 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <p>Table 1 Correlation Matrix</p>
-<p>In summary, the dataset included data from 2010Q1 to 2023Q4, total 96 observation points with 10 variables.</p>
+<p>In summary, the dataset included data from 2006Q2 to 2023Q4, total 71 observation points with 10 variables.</p>
 </section>
 <section id="data-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="data-transformation">Data Transformation</h3>
 <ul>
 <li><strong>Quarterly Transformation</strong></li>
 </ul>
-<p>All data have been quarterly converted by selecting the data on the last day of the quarter as the observation.</p>
+<p>All data have been quarterly converted by selecting the data on the last day of the quarter as the observation. One of the reasons for not using monthly data is that the key data of this study, CPI, is published on ABS, and the monthly data starting point is Q3 of 2017. Since the research wanted to capture longer-term data, quarterly data was considered (the starting point was Q2 2006).</p>
 <ul>
 <li><strong>Log Transformation</strong></li>
 </ul>
@@ -297,7 +297,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Figure 2 ACF Plot for all data</p>
 <p>Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).</p>
-<p>According to Table 2, we can see that <span class="math inline">\(lcpi_i\)</span>, <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(lexport_i\)</span> require second-order integration, while <span class="math inline">\(gdp_i\)</span>, <span class="math inline">\(unemp_i\)</span>, <span class="math inline">\(nloan_i\)</span> require first-order integration(under 5% level of confidence and n in the table means larger than 2).</p>
+<p>According to Table 2, we can see that <span class="math inline">\(lcpi_i\)</span>, <span class="math inline">\(lcrt_i\)</span>, <span class="math inline">\(lexport_i\)</span>, <span class="math inline">\(limport_i\)</span>, <span class="math inline">\(lexport_i\)</span>require second-order integration, while <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(gdp_i\)</span>, <span class="math inline">\(unemp_i\)</span>, <span class="math inline">\(nloan_i\)</span>, <span class="math inline">\(aord_i\)</span>require first-order integration(under 5% level of confidence.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -314,73 +314,73 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">lcpi</td>
-<td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.7612</td>
-<td style="text-align: center;">0.0766</td>
+<td style="text-align: center;">0.9863</td>
+<td style="text-align: center;">0.5974</td>
+<td style="text-align: center;">0.0551</td>
 <td style="text-align: center;">lcpi~I(2)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">gold</td>
-<td style="text-align: center;">0.7279</td>
-<td style="text-align: center;">0.5153</td>
-<td style="text-align: center;">0.0153</td>
-<td style="text-align: center;">gold~I(2)</td>
+<td style="text-align: center;">0.5910</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">NA</td>
+<td style="text-align: center;">gold~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">gdp</td>
-<td style="text-align: center;">0.5382</td>
+<td style="text-align: center;">0.6333</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">NA</td>
 <td style="text-align: center;">gdp~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">crt</td>
-<td style="text-align: center;">0.1841</td>
-<td style="text-align: center;">0.1606</td>
-<td style="text-align: center;">0.3508</td>
-<td style="text-align: center;">crt~I(n)</td>
+<td style="text-align: center;">0.3132</td>
+<td style="text-align: center;">0.4088</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">crt~I(2)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">unemp</td>
-<td style="text-align: center;">0.4344</td>
+<td style="text-align: center;">0.2145</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">NA</td>
 <td style="text-align: center;">unemp~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">nloan</td>
-<td style="text-align: center;">0.3625</td>
-<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">0.9900</td>
+<td style="text-align: center;">0.0163</td>
 <td style="text-align: center;">NA</td>
 <td style="text-align: center;">nloan~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">lexport</td>
 <td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.7513</td>
-<td style="text-align: center;">0.0265</td>
+<td style="text-align: center;">0.4046</td>
+<td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">lexport~I(2)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">limport</td>
-<td style="text-align: center;">0.9727</td>
-<td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">limport~I(1)</td>
+<td style="text-align: center;">0.9900</td>
+<td style="text-align: center;">0.3215</td>
+<td style="text-align: center;">0.2758</td>
+<td style="text-align: center;">limport~I(2)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">aord</td>
-<td style="text-align: center;">0.7712</td>
-<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">0.9900</td>
+<td style="text-align: center;">0.0108</td>
 <td style="text-align: center;">NA</td>
 <td style="text-align: center;">aord~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">lexr</td>
-<td style="text-align: center;">0.0175</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">lexr~I(0)</td>
+<td style="text-align: center;">0.6102</td>
+<td style="text-align: center;">0.0733</td>
+<td style="text-align: center;">0.0577</td>
+<td style="text-align: center;">lexr~I(2)</td>
 </tr>
 </tbody>
 </table>
@@ -391,7 +391,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 <p>Table 2 Unit root test for all data</p>
 <p>Since the second-order difference may remove part of the long-term information (such as trends) in the data, this may be detrimental to time series data such as <span class="math inline">\(cpi_i\)</span> and <span class="math inline">\(crt_i\)</span> that contain important trend information. Therefore, only first-order differences are used for all data.</p>
-<p>After first-order difference processing of the data and logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 3): Even after one section of differential processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 30-40).</p>
+<p>After first-order difference processing of the data and logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 3). Even after first order difference processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 50-60).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">

@@ -324,7 +324,7 @@ Figure 2 ACF Plot for all data
 
 Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).
 
-According to Table 2, we can see that $lcpi_i$, $gold_i$, $lcrt_i$, $lexport_i$, $limport_i$, $lexport_i$require second-order integration, while $gdp_i$, $unemp_i$, $nloan_i$, $aord_i$require first-order integration(under 5% level of confidence.
+According to Table 2, we can see that $lcpi_i$, $lcrt_i$, $lexport_i$, $limport_i$, $lexport_i$require second-order integration, while $gold_i$, $gdp_i$, $unemp_i$, $nloan_i$, $aord_i$require first-order integration(under 5% level of confidence.
 
 ```{r ACF test, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -426,14 +426,14 @@ Unit_Root_Test_table <-
                     dadf.export@test$p.value, dadf.import@test$p.value,   
                     dadf.aord@test$p.value,   dadf.exr@test$p.value),4),
           "p value of ADF test of diff-diff-AR" 
-          = round(c(d2adf.cpi@test$p.value,   d2adf.gold@test$p.value,
+          = round(c(d2adf.cpi@test$p.value,   NA,
                     NA,                       d2adf.crt@test$p.value,
                     NA ,                      NA, 
                     d2adf.export@test$p.value,d2adf.import@test$p.value,
                     NA,                       d2adf.exr@test$p.value
                     ),4),
           "conclusion" 
-          = c("lcpi~I(2)",    "gold~I(2)", 
+          = c("lcpi~I(2)",    "gold~I(1)", 
               "gdp~I(1)",    "crt~I(2)",    
               "unemp~I(1)",  "nloan~I(1)", 
               "lexport~I(2)", "limport~I(2)", 

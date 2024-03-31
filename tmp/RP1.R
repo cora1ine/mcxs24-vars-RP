@@ -267,14 +267,14 @@ Unit_Root_Test_table <-
                     dadf.export@test$p.value, dadf.import@test$p.value,   
                     dadf.aord@test$p.value,   dadf.exr@test$p.value),4),
           "p value of ADF test of diff-diff-AR" 
-          = round(c(d2adf.cpi@test$p.value,   d2adf.gold@test$p.value,
+          = round(c(d2adf.cpi@test$p.value,   NA,
                     NA,                       d2adf.crt@test$p.value,
                     NA ,                      NA, 
                     d2adf.export@test$p.value,d2adf.import@test$p.value,
                     NA,                       d2adf.exr@test$p.value
           ),4),
           "conclusion" 
-          = c("lcpi~I(2)",    "gold~I(2)", 
+          = c("lcpi~I(2)",    "gold~I(1)", 
               "gdp~I(1)",    "crt~I(2)",    
               "unemp~I(1)",  "nloan~I(1)", 
               "lexport~I(2)", "limport~I(2)", 

@@ -24,7 +24,7 @@ The purpose of this research is to explore the trend in Australia's inflation ra
 
 Will Australia's inflation rate fall back to the 2-3% inflation target range in 2025?
 
-Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country (Bernoth & Ider, 2021). The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026(Reserve Bank of Australia, 2024). Influenced by the COVID-19 pandemic, Blot et al. deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates(BLOT et al., 2022). Therefore, this study will assess the reasonableness of the RBA's inflation rate forecast for the next two years. During the COVID-19 period, Australia's inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.
+Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country (Bernoth & Ider, 2021). The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026(Reserve Bank of Australia, 2024). Influenced by the COVID-19 pandemic, Blot et al. deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates (BLOT et al., 2022). Therefore, this study will assess the reasonableness of the RBA's inflation rate forecast for the next two years. During the COVID-19 period, Australia's inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.
 
 ```{r Library}
 #| echo: false
@@ -63,7 +63,7 @@ library(kableExtra)   # for print table
 
     GDP reflects the size and growth rate of a country's economy. When GDP increases, it indicates increased economic activity, which can lead to demand-pull inflation because increased demand may exceed current production capacity, pushing up prices.
 
-    4.  $crt_i$: Cash rate target publsh by RBA.
+    4.  $crt_i$: Cash rate target published by RBA.
 
     This is the main tool used by the RBA to influence economic activity. Raising the cash rate is usually aimed at reducing borrowing and spending, thereby reducing inflationary pressures.
 
@@ -667,7 +667,7 @@ $$
 
 Based on the model above, we will employ VAR of order p to carry out forecasts for the next two years. Given that the data is quarterly, setting the forecast horizon (h) to 8 quarters for our iterative forecasting process.
 
-In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as $cpi_{T+h|T}$. Subsequently, we'll utilize the forecasted CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.
+In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as $lcpi_{T+h|T}$. Subsequently, we'll utilize the forecasted (log) CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.
 
 ## References {.unnumbered}
 

@@ -631,7 +631,7 @@ X=\begin{bmatrix}
 1 & y_{lcpi,t-1} & y_{gold,t-1} & \ldots & y_{lexr,t-1} & \ldots & y_{lcpi,t-p} & y_{gold,t-p} & \ldots &  y_{lexr,t-p} \\
 1 & y_{lcpi,t-2} & y_{gold,t-2} & \ldots & y_{lexr,t-2} & \ldots & y_{lcpi,t-p-1} & y_{gold,t-p-1} & \ldots &  y_{lexr,t-p-1} \\
 \vdots & \vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \vdots &  \ddots & \vdots \\
-1 & y_{lcpi,1} & y_{gold,2} & \ldots & y_{lexr,1} & \ldots & y_{lcpi,1-p} & y_{gold,1-p} & \ldots &  y_{lexr,1-p}\\
+1 & y_{lcpi,1} & y_{gold,1} & \ldots & y_{lexr,1} & \ldots & y_{lcpi,1-p} & y_{gold,1-p} & \ldots &  y_{lexr,1-p}\\
 \end{bmatrix}_{T\times (1+10p)}
 $$
 

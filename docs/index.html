@@ -477,7 +477,7 @@ ul.task-list li input[type="checkbox"] {
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">Inflation rate</td>
-<td style="text-align: center;">3.5</td>
+<td style="text-align: center;">3.50</td>
 <td style="text-align: center;">5.09</td>
 <td style="text-align: center;">6.14</td>
 <td style="text-align: center;">7.27</td>
@@ -491,17 +491,17 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td style="text-align: center;">Cash rate target</td>
-<td style="text-align: center;">0.1</td>
 <td style="text-align: center;">0.85</td>
 <td style="text-align: center;">2.35</td>
 <td style="text-align: center;">3.10</td>
 <td style="text-align: center;">3.60</td>
-<td style="text-align: center;">35.00</td>
 <td style="text-align: center;">4.10</td>
+<td style="text-align: center;">3.82</td>
 <td style="text-align: center;">4.10</td>
 <td style="text-align: center;">4.35</td>
 <td style="text-align: center;">4.35</td>
-<td style="text-align: center;">0.21</td>
+<td style="text-align: center;">4.35</td>
+<td style="text-align: center;">0.06</td>
 </tr>
 </tbody>
 </table>
@@ -519,7 +519,7 @@ ul.task-list li input[type="checkbox"] {
 <p><br>
 Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting(Stock &amp; Watson, 2001).</p>
 <p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.</p>
-<p><span class="math display">\[y_t = \mu_0 + A_1y_{t-1} +...+A_1y_{t-p} +\epsilon_t\]</span></p>
+<p><span class="math display">\[y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t\]</span></p>
 <p><span class="math display">\[\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(0_{10}, \Sigma)\]</span></p>
 <p>In matrix notation:</p>
 <p><span class="math display">\[Y = X A +E\]</span></p>

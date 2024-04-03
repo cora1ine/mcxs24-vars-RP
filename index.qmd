@@ -600,7 +600,7 @@ Regarding model selection, the VAR model, capable of concurrently integrating th
 
 Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.
 
-$$y_t = \mu_0 + A_1y_{t-1} +...+A_1y_{t-p} +\epsilon_t$$
+$$y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t$$
 
 $$\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(0_{10}, \Sigma)$$
 

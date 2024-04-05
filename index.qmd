@@ -8,7 +8,7 @@ execute:
 bibliography: references.bib
 ---
 
-> **Abstract.** 
+> **Abstract.** The purpose of this research is to  explore the trend in Australia’s inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model.
 >
 > **Keywords.** bsvars, quarto, R, Australia inflation rate
 

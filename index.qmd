@@ -1,5 +1,5 @@
 ---
-title: "RP1"
+title: "Forecasting Australian Inflation Rate Using Bayesian VAR model "
 author: "Gezhi Chen"
 
 execute:
@@ -8,7 +8,7 @@ execute:
 bibliography: references.bib
 ---
 
-> **Abstract.**
+> **Abstract.** 
 >
 > **Keywords.** bsvars, quarto, R, Australia inflation rate
 
@@ -18,7 +18,8 @@ bibliography: references.bib
 
 **Objective:**
 
-The purpose of this research is to explore the trend in Australia's inflation rate over the next two years.
+
+
 
 **Question:**
 

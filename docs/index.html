@@ -8,7 +8,7 @@
 
 <meta name="author" content="Gezhi Chen">
 
-<title>Macroeconometrics Research Report - RP1</title>
+<title>Macroeconometrics Research Report - Forecasting Australian Inflation Rate Using Bayesian VAR model</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -108,7 +108,7 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#model-application-and-objective-fulfillment" id="toc-model-application-and-objective-fulfillment" class="nav-link" data-scroll-target="#model-application-and-objective-fulfillment">Model Application and Objective Fulfillment</a></li>
   </ul></li>
-  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
   </ul></li>
   </ul>
 </nav>
@@ -118,7 +118,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">RP1</h1>
+<h1 class="title">Forecasting Australian Inflation Rate Using Bayesian VAR model</h1>
 </div>
 
 
@@ -140,7 +140,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <blockquote class="blockquote">
-<p><strong>Abstract.</strong></p>
+<p><strong>Abstract.</strong> The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model.</p>
 <p><strong>Keywords.</strong> bsvars, quarto, R, Australia inflation rate</p>
 </blockquote>
 <section id="introduction" class="level1">
@@ -148,10 +148,9 @@ ul.task-list li input[type="checkbox"] {
 <section id="question-objective-and-motivation" class="level2">
 <h2 class="anchored" data-anchor-id="question-objective-and-motivation">Question Objective and Motivation</h2>
 <p><strong>Objective:</strong></p>
-<p>The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years.</p>
 <p><strong>Question:</strong></p>
 <p>Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025?</p>
-<p>Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country (Bernoth &amp; Ider, 2021). The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026 (Reserve Bank of Australia, 2024). Influenced by the COVID-19 pandemic, Blot et al.&nbsp;deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates (BLOT et al., 2022). Therefore, this study will assess the reasonableness of the RBA’s inflation rate forecast for the next two years. During the COVID-19 period, Australia’s inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.</p>
+<p>Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country <span class="citation" data-cites="bernoth2021">(<a href="#ref-bernoth2021" role="doc-biblioref"><strong>bernoth2021?</strong></a>)</span>. The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026. Influenced by the COVID-19 pandemic, Blot et al.&nbsp;deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates <span class="citation" data-cites="europeanparliament.directorategeneralforinternalpoliciesoftheunion.2022">(<a href="#ref-europeanparliament.directorategeneralforinternalpoliciesoftheunion.2022" role="doc-biblioref"><strong>europeanparliament.directorategeneralforinternalpoliciesoftheunion.2022?</strong></a>)</span>. Therefore, this study will assess the reasonableness of the RBA’s inflation rate forecast for the next two years. During the COVID-19 period, Australia’s inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.</p>
 </section>
 <section id="data-and-data-properties" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-data-properties">Data and Data Properties</h2>
@@ -200,7 +199,7 @@ ul.task-list li input[type="checkbox"] {
 </ol>
 <p>It affects the price of imports and exports, contributing to inflation.</p></li>
 </ul>
-<p>Following Table shows the correlation between CPI and other variables. It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US (Kalemli-Ozcan et al., 2020). This impact can be seen as an indirect effect of rising unemployment rates on inflation.</p>
+<p>Following Table shows the correlation between CPI and other variables. It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US <span class="citation" data-cites="kalemli-ozcan2020">(<a href="#ref-kalemli-ozcan2020" role="doc-biblioref"><strong>kalemli-ozcan2020?</strong></a>)</span>. This impact can be seen as an indirect effect of rising unemployment rates on inflation.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -234,15 +233,15 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 <tr class="even">
 <td style="text-align: center;">nloan_data</td>
-<td style="text-align: center;">0.7663</td>
+<td style="text-align: center;">0.7680</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">export_data</td>
-<td style="text-align: center;">0.9583</td>
+<td style="text-align: center;">0.9582</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">import_data</td>
-<td style="text-align: center;">0.9202</td>
+<td style="text-align: center;">0.9197</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">aord_data</td>
@@ -350,22 +349,22 @@ ul.task-list li input[type="checkbox"] {
 <tr class="even">
 <td style="text-align: center;">nloan</td>
 <td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.0163</td>
+<td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">NA</td>
 <td style="text-align: center;">nloan~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">lexport</td>
 <td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.4046</td>
+<td style="text-align: center;">0.4050</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">lexport~I(2)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">limport</td>
 <td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.3215</td>
-<td style="text-align: center;">0.2758</td>
+<td style="text-align: center;">0.3084</td>
+<td style="text-align: center;">0.2646</td>
 <td style="text-align: center;">limport~I(2)</td>
 </tr>
 <tr class="odd">
@@ -517,7 +516,7 @@ ul.task-list li input[type="checkbox"] {
 <section id="model-and-hypothesis" class="level2">
 <h2 class="anchored" data-anchor-id="model-and-hypothesis">Model and Hypothesis</h2>
 <p><br>
-Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting(Stock &amp; Watson, 2001).</p>
+Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting <span class="citation" data-cites="stock2001">(<a href="#ref-stock2001" role="doc-biblioref"><strong>stock2001?</strong></a>)</span>.</p>
 <p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.</p>
 <p><span class="math display">\[y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t\]</span></p>
 <p><span class="math display">\[\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(0_{10}, \Sigma)\]</span></p>
@@ -578,13 +577,8 @@ E &amp;=
 <p>In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as <span class="math inline">\(lcpi_{T+h|T}\)</span>. Subsequently, we’ll utilize the forecasted (log) CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.</p>
 </section>
 </section>
-<section id="references" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="references">References</h2>
-<p>Bernoth, K., &amp; Ider, G. (2021). Inflation in the euro area: factors mostly have only a temporary effect, but risk of prolonged elevated inflation remains. <em>DIW Weekly Report</em> , <em>11</em>(41/42), 315–323. https://doi.org/10.18723/diw_dwr:2021-41-1</p>
-<p>BLOT, C., BOZOU, C., &amp; CREEL, J. (2022, January 3). <em>Inflation expectations in the euro area: Trends and policy considerations: Think tank: European parliament</em>. Think Tank | European Parliament. https://www.europarl.europa.eu/thinktank/en/document/IPOL_IDA(2022)703341</p>
-<p>Kalemli-Ozcan, S., Gourinchas, P.-O., Penciakova, V., &amp; Sander, N. (2020). Covid-19 and SME Failures. <em>IMF Working Papers</em>, <em>2020</em>(207), 1. https://doi.org/10.5089/9781513557748.001</p>
-<p>Reserve Bank of Australia. (2024a, February 6). <em>Statement on monetary policy – February 2024</em>. https://www.rba.gov.au/publications/smp/2024/feb/</p>
-<p>Stock, J. H., &amp; Watson, M. W. (2001). Vector autoregressions. <em>Journal of Economic Perspectives</em>, <em>15</em>(4), 101–115. https://doi.org/10.1257/jep.15.4.101</p>
+<section id="section" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="section"></h2>
 
 
 </section>

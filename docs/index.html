@@ -229,7 +229,6 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<p>Table 1 Correlation Matrix</p>
 <p>Figure 1 Correlation Matrix</p>
 <p>In summary, the dataset included data from 2000Q3 to 2023Q4, total 94 observation points with 10 variables.</p>
 </section>
@@ -268,7 +267,7 @@ div.csl-indent {
 </div>
 <p>Figure 3 ACF Plot for all data</p>
 <p>Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).</p>
-<p>According to Table 1, we can see that <span class="math inline">\(abn_i\)</span>, <span class="math inline">\(lexport_i\)</span>, require more than first order integration, while other require first-order integration(under 5% level of confidence).</p>
+<p>According to Table 1, we can see that <span class="math inline">\(labn_i\)</span>, <span class="math inline">\(lexport_i\)</span>, require more than first order integration, while other require first-order integration(under 5% level of confidence).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -289,13 +288,13 @@ div.csl-indent {
 <td style="text-align: center;">lcpi~I(1)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">gold</td>
+<td style="text-align: center;">lgold</td>
 <td style="text-align: center;">0.3901</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">lgold~I(1)</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">gdp</td>
+<td style="text-align: center;">lgdp</td>
 <td style="text-align: center;">0.3543</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">lgdp~I(1)</td>
@@ -313,7 +312,7 @@ div.csl-indent {
 <td style="text-align: center;">unemp~I(1)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">abn</td>
+<td style="text-align: center;">labn</td>
 <td style="text-align: center;">0.8804</td>
 <td style="text-align: center;">0.2618</td>
 <td style="text-align: center;">labn~I(n)</td>
@@ -331,13 +330,13 @@ div.csl-indent {
 <td style="text-align: center;">limport~I(1)</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;">aord</td>
+<td style="text-align: center;">laord</td>
 <td style="text-align: center;">0.5183</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">laord~I(1)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">lexr</td>
+<td style="text-align: center;">exr</td>
 <td style="text-align: center;">0.3001</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">exr~I(1)</td>

@@ -288,8 +288,6 @@ corrplot(cor_matrix, method = "color",
 )
 ```
 
-Table 1 Correlation Matrix
-
 Figure 1 Correlation Matrix
 
 In summary, the dataset included data from 2000Q3 to 2023Q4, total 94 observation points with 10 variables.
@@ -370,7 +368,7 @@ Figure 3 ACF Plot for all data
 
 Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).
 
-According to Table 1, we can see that $abn_i$, $lexport_i$, require more than first order integration, while other require first-order integration(under 5% level of confidence).
+According to Table 1, we can see that $labn_i$, $lexport_i$, require more than first order integration, while other require first-order integration(under 5% level of confidence).
 
 ```{r ACF test, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -434,7 +432,7 @@ adf.exr   = adfTest(all_data[,10], lags=1, type="c")               # don't rejec
 dadf.exr  = adfTest(diff(all_data[,10]), lags=0, type="nc")        # reject -> (I1 is stationary)
 
 Unit_Root_Test_table <- 
-  tibble( " " = c("lcpi", "gold", "gdp", "crt", "unemp", "abn", "lexport","limport", "aord", "lexr"),
+  tibble( " " = c("lcpi", "lgold", "lgdp", "crt", "unemp", "labn", "lexport","limport", "laord", "exr"),
           "p value of ADF test of AR" 
           = round(c(adf.cpi@test$p.value,    adf.gold@test$p.value,
                     adf.gdp@test$p.value,    adf.crt@test$p.value,    

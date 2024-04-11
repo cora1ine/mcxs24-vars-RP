@@ -21,7 +21,26 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -108,7 +127,7 @@ ul.task-list li input[type="checkbox"] {
   <ul class="collapse">
   <li><a href="#model-application-and-objective-fulfillment" id="toc-model-application-and-objective-fulfillment" class="nav-link" data-scroll-target="#model-application-and-objective-fulfillment">Model Application and Objective Fulfillment</a></li>
   </ul></li>
-  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -150,7 +169,7 @@ ul.task-list li input[type="checkbox"] {
 <p><strong>Objective:</strong></p>
 <p><strong>Question:</strong></p>
 <p>Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025?</p>
-<p>Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country <span class="citation" data-cites="bernoth2021">(<a href="#ref-bernoth2021" role="doc-biblioref"><strong>bernoth2021?</strong></a>)</span>. The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026. Influenced by the COVID-19 pandemic, Blot et al.&nbsp;deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates <span class="citation" data-cites="europeanparliament.directorategeneralforinternalpoliciesoftheunion.2022">(<a href="#ref-europeanparliament.directorategeneralforinternalpoliciesoftheunion.2022" role="doc-biblioref"><strong>europeanparliament.directorategeneralforinternalpoliciesoftheunion.2022?</strong></a>)</span>. Therefore, this study will assess the reasonableness of the RBA’s inflation rate forecast for the next two years. During the COVID-19 period, Australia’s inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.</p>
+<p>Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country <span class="citation" data-cites="bernoth2021">(<a href="#ref-bernoth2021" role="doc-biblioref">Bernoth and Ider 2021</a>)</span>. The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026. Influenced by the COVID-19 pandemic, Blot et al.&nbsp;deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates <span class="citation" data-cites="EuropeanParliament.2022">(<a href="#ref-EuropeanParliament.2022" role="doc-biblioref">European Parliament. Directorate General for Internal Policies of the Union. 2022</a>)</span>. Therefore, this study will assess the reasonableness of the RBA’s inflation rate forecast for the next two years. During the COVID-19 period, Australia’s inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.</p>
 </section>
 <section id="data-and-data-properties" class="level2">
 <h2 class="anchored" data-anchor-id="data-and-data-properties">Data and Data Properties</h2>
@@ -176,12 +195,12 @@ ul.task-list li input[type="checkbox"] {
 <ol start="5" type="1">
 <li><span class="math inline">\(unemp_i\)</span>: Unemployment rate from ABS.</li>
 </ol>
-<p>It indicate the level of slack in the labor market, influencing wage-push inflation.</p></li>
-<li><p><strong>Market and External Trade Indicators:</strong></p>
+<p>It indicate the level of slack in the labor market, influencing wage-push inflation.</p>
 <ol start="6" type="1">
-<li><span class="math inline">\(nloan_i\)</span>: New loan commitments from ABS.</li>
+<li><span class="math inline">\(abn_i\)</span>: All banknotes issued by denomination</li>
 </ol>
-<p>Credit growth is often accompanied by rising asset prices such as real estate and stocks. While these direct price changes are not necessarily reflected in CPI, increases in asset prices may affect the CPI indirectly through construction costs and rents.</p>
+<p>When banks issue more banknotes, it generally signifies an increase in the money supply. According to the Quantity Theory of Money, if the increase in money supply exceeds the demand for economic growth, it could lead to inflation, that is, an increase in the level of prices.</p></li>
+<li><p><strong>Market and External Trade Indicators:</strong></p>
 <ol start="7" type="1">
 <li><span class="math inline">\(export_i\)</span>: International exports from ABS.</li>
 </ol>
@@ -199,78 +218,31 @@ ul.task-list li input[type="checkbox"] {
 </ol>
 <p>It affects the price of imports and exports, contributing to inflation.</p></li>
 </ul>
-<p>Following Table shows the correlation between CPI and other variables. It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US <span class="citation" data-cites="kalemli-ozcan2020">(<a href="#ref-kalemli-ozcan2020" role="doc-biblioref"><strong>kalemli-ozcan2020?</strong></a>)</span>. This impact can be seen as an indirect effect of rising unemployment rates on inflation.</p>
+<p>Following Table shows the correlation between CPI and other variables. It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US <span class="citation" data-cites="kalemli-ozcan2020">(<a href="#ref-kalemli-ozcan2020" role="doc-biblioref">Kalemli-Ozcan et al. 2020</a>)</span>. This impact can be seen as an indirect effect of rising unemployment rates on inflation. Therefore, despite the weak correlation between unemployment rate and CPI, it is still important to include it in the model for a comprehensive analysis.</p>
+<p>Despite the low direct correlation between exchange rates and CPI, this does not mean exchange rates have no impact on inflation. On the contrary, by adjusting the impact of the gold price (priced in USD) on Australia’s CPI, exchange rate fluctuations play a significant role in the model. This approach highlights the mechanism by which exchange rates indirectly affect domestic inflation levels through the cost of imported goods (gold prices). Therefore, even though the direct correlation between exchange rates and CPI may be minor, considering the impact of exchange rates on the conversion of foreign-currency-priced goods (like gold prices) to the domestic currency, the indirect effect of exchange rate changes on inflation is significant.</p>
 <div class="cell">
 <div class="cell-output-display">
-<div class="table-responsive">
-<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Variable</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">cpi_data</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">cpi_data</td>
-<td style="text-align: center;">1.0000</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">gold_data</td>
-<td style="text-align: center;">0.8055</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">gdp_data</td>
-<td style="text-align: center;">0.9610</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">crt_data</td>
-<td style="text-align: center;">-0.6522</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">unemp_data</td>
-<td style="text-align: center;">-0.1785</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">nloan_data</td>
-<td style="text-align: center;">0.7680</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">export_data</td>
-<td style="text-align: center;">0.9582</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">import_data</td>
-<td style="text-align: center;">0.9197</td>
-</tr>
-<tr class="odd">
-<td style="text-align: center;">aord_data</td>
-<td style="text-align: center;">0.7173</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">exr_data</td>
-<td style="text-align: center;">-0.5782</td>
-</tr>
-</tbody>
-</table>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Corr Plot-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-
-
 </div>
 </div>
 <p>Table 1 Correlation Matrix</p>
-<p>In summary, the dataset included data from 2006Q2 to 2023Q4, total 71 observation points with 10 variables.</p>
+<p>Figure 1 Correlation Matrix</p>
+<p>In summary, the dataset included data from 2000Q3 to 2023Q4, total 94 observation points with 10 variables.</p>
 </section>
 <section id="data-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="data-transformation">Data Transformation</h3>
 <ul>
 <li><strong>Quarterly Transformation</strong></li>
 </ul>
-<p>All data have been quarterly converted by selecting the data on the last day of the quarter as the observation. One of the reasons for not using monthly data is that the key data of this study, CPI, is published on ABS, and the monthly data starting point is Q3 of 2017. Since the research wanted to capture longer-term data, quarterly data was considered (the starting point was Q2 2006).</p>
+<p>All data have been quarterly converted by selecting the data on the last day of the quarter as the observation. One of the reasons for not using monthly data is that high-quality quarterly economic data are more readily available compared to monthly data. In this report, the key data, CPI, which published on ABS, and the monthly data starting point is Q3 of 2017. Since the research wanted to capture longer-term data, quarterly data was considered. Also, policymakers and economists often rely more on quarterly data for decision-making because it provides a more stable and comprehensive view of economic conditions to some extent. This stability is key to understanding and predicting economic trends, especially when considering the long-term impacts of policies.</p>
 <ul>
 <li><strong>Log Transformation</strong></li>
 </ul>
-<p>Based on the line graph of the original data below (Figure 1), we can observe that exponentially growing variables need to be linearized, such as <span class="math inline">\(cpi_i\)</span>, <span class="math inline">\(export_i\)</span>, <span class="math inline">\(import_i\)</span>, <span class="math inline">\(exr_i\)</span>. Therefore, its logarithmically transformed form will be used in the following analysis.</p>
+<p>Based on the line graph of the original data below (Figure 2), we can observe that exponentially growing variables need to be linearized, such as <span class="math inline">\(cpi_i\)</span>, <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(gdp_i\)</span>, <span class="math inline">\(abn_i\)</span>, <span class="math inline">\(export_i\)</span>, <span class="math inline">\(import_i\)</span>, <span class="math inline">\(aord_i\)</span>. Therefore, its logarithmically transformed form will be used in the following analysis.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -280,11 +252,11 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Figure 1 Line plot of original data</p>
+<p>Figure 2 Line plot of original data</p>
 <ul>
 <li><strong>Integration transformation</strong></li>
 </ul>
-<p>According to ACF plot for all data (Figure 2), we can see all data with autocorrelation. It suggests that the series is not white noise and might not be stationary. In this case, applying a differencing operation, such as a first difference (single-order integration), can help remove the autocorrelation and achieve stationary.</p>
+<p>According to ACF plot for all data (Figure 3), we can see all data with autocorrelation. It suggests that the series is not white noise and might not be stationary. In this case, applying a differencing operation, such as a first difference (single-order integration), can help remove the autocorrelation and achieve stationary.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -294,9 +266,9 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Figure 2 ACF Plot for all data</p>
+<p>Figure 3 ACF Plot for all data</p>
 <p>Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).</p>
-<p>According to Table 2, we can see that <span class="math inline">\(lcpi_i\)</span>, <span class="math inline">\(lcrt_i\)</span>, <span class="math inline">\(lexport_i\)</span>, <span class="math inline">\(limport_i\)</span>, <span class="math inline">\(lexport_i\)</span>require second-order integration, while <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(gdp_i\)</span>, <span class="math inline">\(unemp_i\)</span>, <span class="math inline">\(nloan_i\)</span>, <span class="math inline">\(aord_i\)</span>require first-order integration(under 5% level of confidence.</p>
+<p>According to Table 1, we can see that <span class="math inline">\(abn_i\)</span>, <span class="math inline">\(lexport_i\)</span>, require more than first order integration, while other require first-order integration(under 5% level of confidence).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -306,80 +278,69 @@ ul.task-list li input[type="checkbox"] {
 <th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
 <th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">p value of ADF test of AR</th>
 <th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">p value of ADF test of diff-AR</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">p value of ADF test of diff-diff-AR</th>
 <th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">conclusion</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">lcpi</td>
-<td style="text-align: center;">0.9863</td>
-<td style="text-align: center;">0.5974</td>
-<td style="text-align: center;">0.0551</td>
-<td style="text-align: center;">lcpi~I(2)</td>
+<td style="text-align: center;">0.9799</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">lcpi~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">gold</td>
-<td style="text-align: center;">0.5910</td>
+<td style="text-align: center;">0.3901</td>
 <td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">gold~I(1)</td>
+<td style="text-align: center;">lgold~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">gdp</td>
-<td style="text-align: center;">0.6333</td>
+<td style="text-align: center;">0.3543</td>
 <td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">gdp~I(1)</td>
+<td style="text-align: center;">lgdp~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">crt</td>
-<td style="text-align: center;">0.3132</td>
-<td style="text-align: center;">0.4088</td>
+<td style="text-align: center;">0.4818</td>
 <td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">crt~I(2)</td>
+<td style="text-align: center;">crt~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">unemp</td>
-<td style="text-align: center;">0.2145</td>
+<td style="text-align: center;">0.1256</td>
 <td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">NA</td>
 <td style="text-align: center;">unemp~I(1)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">nloan</td>
-<td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">nloan~I(1)</td>
+<td style="text-align: center;">abn</td>
+<td style="text-align: center;">0.8804</td>
+<td style="text-align: center;">0.2618</td>
+<td style="text-align: center;">labn~I(n)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">lexport</td>
-<td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.4050</td>
-<td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">lexport~I(2)</td>
+<td style="text-align: center;">0.4611</td>
+<td style="text-align: center;">0.0817</td>
+<td style="text-align: center;">lexport~I(n)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">limport</td>
-<td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.3084</td>
-<td style="text-align: center;">0.2646</td>
-<td style="text-align: center;">limport~I(2)</td>
+<td style="text-align: center;">0.9502</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">limport~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">aord</td>
-<td style="text-align: center;">0.9900</td>
-<td style="text-align: center;">0.0108</td>
-<td style="text-align: center;">NA</td>
-<td style="text-align: center;">aord~I(1)</td>
+<td style="text-align: center;">0.5183</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">laord~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">lexr</td>
-<td style="text-align: center;">0.6102</td>
-<td style="text-align: center;">0.0733</td>
-<td style="text-align: center;">0.0577</td>
-<td style="text-align: center;">lexr~I(2)</td>
+<td style="text-align: center;">0.3001</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">exr~I(1)</td>
 </tr>
 </tbody>
 </table>
@@ -388,9 +349,12 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 </div>
-<p>Table 2 Unit root test for all data</p>
-<p>Since the second-order difference may remove part of the long-term information (such as trends) in the data, this may be detrimental to time series data such as <span class="math inline">\(cpi_i\)</span> and <span class="math inline">\(crt_i\)</span> that contain important trend information. Therefore, only first-order differences are used for all data.</p>
-<p>After first-order difference processing of the data and logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 3). Even after first order difference processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 50-60).</p>
+<p>Table 1 Unit root test for all data</p>
+<p>Given that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted not to apply differencing to any of the data sets.</p>
+<ul>
+<li>Minnesota prior method we will talk about later</li>
+</ul>
+<p>After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). Even after first order difference processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 50-60).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -400,13 +364,13 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Figure 3 Line plot of adjusted data</p>
+<p>Figure 4 Line plot of adjusted data</p>
 </section>
 <section id="importance-of-key-variables-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="importance-of-key-variables-analysis">Importance of Key Variables Analysis</h3>
 <p>The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation are CPI and gold price. Meanwhile, since this study is to explore whether the RBA’s recent suspension of raising the cash rate target has deemed the previous deflationary measures to be effective. So the cash rate target becomes one of the key variables. Below we focus on analyzing these three variables:</p>
 <ul>
-<li>CPI: As Table 3 shows, using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.</li>
+<li>CPI: As Table 2 shows, using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.</li>
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -436,7 +400,7 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 </div>
-<p>Table 3 Inflation Rate 2023</p>
+<p>Table 2 Inflation Rate 2023</p>
 <ul>
 <li>Gold price: Observing the trend charts of gold prices and cpi in the past three years, we can see that the trends of the two are almost consistent, so we believe that it is reasonable to use international gold prices as inflation expectations. Although the gold price is denominated in US dollars, the inclusion of the Australian dollar against the US dollar exchange rate in the data set makes it feasible to convert the gold price into a measure of its impact on the Australian market.</li>
 </ul>
@@ -449,7 +413,7 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </div>
-<p>Figure 4 CPI and Gold Price Last 3 Yrs Plot</p>
+<p>Figure 5 CPI and Gold Price Last 3 Yrs Plot</p>
 <ul>
 <li>Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.21), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 35). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA’s monetary tightening policy have already been reflected.</li>
 </ul>
@@ -509,14 +473,14 @@ ul.task-list li input[type="checkbox"] {
 
 </div>
 </div>
-<p>Table 4 Cash Rate Target vs Inflation Rate</p>
-<p>In summary, based on the above analysis, it is expected that gold prices and CPI will have a positive correlation, but the cash rate target will have a negative correlation. This is also consistent with the correlations in Table 1.</p>
+<p>Table 3 Cash Rate Target vs Inflation Rate</p>
+<p>In summary, based on the above analysis, it is expected that gold prices and CPI will have a positive correlation, but the cash rate target will have a negative correlation. This is also consistent with the correlations in Figure 1.</p>
 </section>
 </section>
 <section id="model-and-hypothesis" class="level2">
 <h2 class="anchored" data-anchor-id="model-and-hypothesis">Model and Hypothesis</h2>
 <p><br>
-Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting <span class="citation" data-cites="stock2001">(<a href="#ref-stock2001" role="doc-biblioref"><strong>stock2001?</strong></a>)</span>.</p>
+Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting <span class="citation" data-cites="stock2001">(<a href="#ref-stock2001" role="doc-biblioref">Stock and Watson 2001</a>)</span>.</p>
 <p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.</p>
 <p><span class="math display">\[y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t\]</span></p>
 <p><span class="math display">\[\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(0_{10}, \Sigma)\]</span></p>
@@ -531,42 +495,42 @@ Regarding model selection, the VAR model, capable of concurrently integrating th
 <p><span class="math display">\[
 Y=
 \begin{bmatrix}
-y_{lcpi,1} &amp; y_{gold,1} &amp; y_{gdp,1} &amp; y_{crt,1} &amp; y_{unemp,1} &amp; y_{nloan,1} &amp; y_{lexport,1} &amp; y_{limport,1} &amp; y_{aord,1} &amp; y_{lexr,1}\\
-\ y_{lcpi,2} &amp; y_{gold,2} &amp; y_{gdp,2} &amp; y_{crt,2} &amp; y_{unemp,2} &amp; y_{nloan,2} &amp; y_{lexport,2} &amp; y_{limport,2} &amp; y_{aord,2} &amp; y_{lexr,2} \\
+y_{lcpi,1} &amp; y_{lgold,1} &amp; y_{lgdp,1} &amp; y_{crt,1} &amp; y_{unemp,1} &amp; y_{labn,1} &amp; y_{lexport,1} &amp; y_{limport,1} &amp; y_{laord,1} &amp; y_{exr,1}\\
+\ y_{lcpi,2} &amp; y_{lgold,2} &amp; y_{lgdp,2} &amp; y_{crt,2} &amp; y_{unemp,2} &amp; y_{labn,2} &amp; y_{lexport,2} &amp; y_{limport,2} &amp; y_{laord,2} &amp; y_{exr,2} \\
 \vdots  &amp; \vdots  &amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots &amp; \vdots  \\
-y_{lcpi,T} &amp; y_{gold,T} &amp; y_{gdp,T} &amp; y_{crt,T} &amp; y_{unemp,T} &amp; y_{nloan,T} &amp; y_{lexport,T} &amp; y_{limport,T} &amp; y_{aord,T} &amp; y_{lexr,T}\\
+y_{lcpi,T} &amp; y_{lgold,T} &amp; y_{lgdp,T} &amp; y_{crt,T} &amp; y_{unemp,T} &amp; y_{labn,T} &amp; y_{lexport,T} &amp; y_{limport,T} &amp; y_{laord,T} &amp; y_{exr,T}\\
 \end{bmatrix}_{T \times 10}
 \]</span></p>
 <p><span class="math display">\[
 X=\begin{bmatrix}
-1 &amp; y_{lcpi,t-1} &amp; y_{gold,t-1} &amp; \ldots &amp; y_{lexr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{gold,t-p} &amp; \ldots &amp;  y_{lexr,t-p} \\
-1 &amp; y_{lcpi,t-2} &amp; y_{gold,t-2} &amp; \ldots &amp; y_{lexr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{gold,t-p-1} &amp; \ldots &amp;  y_{lexr,t-p-1} \\
+1 &amp; y_{lcpi,t-1} &amp; y_{lgold,t-1} &amp; \ldots &amp; y_{exr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{lgold,t-p} &amp; \ldots &amp;  y_{exr,t-p} \\
+1 &amp; y_{lcpi,t-2} &amp; y_{lgold,t-2} &amp; \ldots &amp; y_{exr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{lgold,t-p-1} &amp; \ldots &amp;  y_{exr,t-p-1} \\
 \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp;  \ddots &amp; \vdots \\
-1 &amp; y_{lcpi,1} &amp; y_{gold,1} &amp; \ldots &amp; y_{lexr,1} &amp; \ldots &amp; y_{lcpi,1-p} &amp; y_{gold,1-p} &amp; \ldots &amp;  y_{lexr,1-p}\\
+1 &amp; y_{lcpi,1} &amp; y_{lgold,1} &amp; \ldots &amp; y_{exr,1} &amp; \ldots &amp; y_{lcpi,1-p} &amp; y_{lgold,1-p} &amp; \ldots &amp;  y_{exr,1-p}\\
 \end{bmatrix}_{T\times (1+10p)}
 \]</span></p>
 <p><span class="math display">\[
 A = \begin{bmatrix}
 \mu_{lcpi} &amp; \mu_{gold} &amp; \ldots &amp; \mu_{lexr} \\
-A_{1,lcpi}^{(1)} &amp; A_{1,gold}^{(1)} &amp; \ldots &amp; A_{1,lexr}^{(1)} \\
-A_{2,lpci}^{(1)} &amp; A_{2,gold}^{(1)} &amp; \ldots &amp; A_{2,lexr}^{(1)} \\
+A_{1,lcpi}^{(1)} &amp; A_{1,lgold}^{(1)} &amp; \ldots &amp; A_{1,exr}^{(1)} \\
+A_{2,lpci}^{(1)} &amp; A_{2,lgold}^{(1)} &amp; \ldots &amp; A_{2,exr}^{(1)} \\
 \vdots  &amp; \vdots  &amp; \ddots &amp; \vdots  \\
-A_{10,lcpi}^{(1)} &amp; A_{10,gold}^{(1)} &amp; \ldots &amp; A_{10,lexr}^{(1)} \\
+A_{10,lcpi}^{(1)} &amp; A_{10, lgold}^{(1)} &amp; \ldots &amp; A_{10,exr}^{(1)} \\
 \vdots  &amp; \vdots  &amp; \ddots &amp; \vdots  \\
-A_{1,lcpi}^{(p)} &amp; A_{1,gold}^{(p)} &amp; \ldots &amp; A_{1,lexr}^{(p)} \\
-A_{2,lcpi}^{(p)} &amp; A_{2,gold}^{(p)} &amp; \ldots &amp; A_{2,lexr}^{(p)} \\
+A_{1,lcpi}^{(p)} &amp; A_{1,lgold}^{(p)} &amp; \ldots &amp; A_{1,exr}^{(p)} \\
+A_{2,lcpi}^{(p)} &amp; A_{2,lgold}^{(p)} &amp; \ldots &amp; A_{2,exr}^{(p)} \\
 \vdots  &amp; \vdots  &amp; \ddots &amp; \vdots  \\
-A_{10,lcpi}^{(p)} &amp; A_{10,gold}^{(p)} &amp; \ldots &amp; A_{10,lexr}^{(p)} \\
+A_{10,lcpi}^{(p)} &amp; A_{10,lgold}^{(p)} &amp; \ldots &amp; A_{10,exr}^{(p)} \\
 \end{bmatrix}_{(1 + 10p)\times 10}
 \]</span></p>
 <p><span class="math display">\[
 \begin{align*}
 E &amp;=
 \begin{bmatrix}
-\epsilon_{1,lcpi} &amp; \epsilon_{1,gold} &amp; \ldots &amp; \epsilon_{1,lexr} \\
-\epsilon_{2,lcpi} &amp; \epsilon_{2,gold} &amp; \ldots &amp; \epsilon_{2,lexr} \\
+\epsilon_{1,lcpi} &amp; \epsilon_{1,lgold} &amp; \ldots &amp; \epsilon_{1,exr} \\
+\epsilon_{2,lcpi} &amp; \epsilon_{2,lgold} &amp; \ldots &amp; \epsilon_{2,exr} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-\epsilon_{T,lcpi} &amp; \epsilon_{T,gold} &amp; \ldots &amp; \epsilon_{T,lexr}
+\epsilon_{T,lcpi} &amp; \epsilon_{T,lgold} &amp; \ldots &amp; \epsilon_{T,exr}
 \end{bmatrix}_{T\times 10}
 \\
 \end{align*}
@@ -577,14 +541,28 @@ E &amp;=
 <p>In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as <span class="math inline">\(lcpi_{T+h|T}\)</span>. Subsequently, we’ll utilize the forecasted (log) CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.</p>
 </section>
 </section>
-<section id="section" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="section"></h2>
+<section id="references" class="level2 unnumbered">
+
+
 
 
 </section>
 </section>
 
-</main> <!-- /main -->
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-bernoth2021" class="csl-entry" role="listitem">
+Bernoth, Kerstin, and Gökhan Ider. 2021. <span>“Inflation in the Euro Area: Factors Mostly Have Only a Temporary Effect, but Risk of Prolonged Elevated Inflation Remains.”</span> <em>DIW Weekly Report</em>. <a href="https://doi.org/10.18723/DIW_DWR:2021-41-1">https://doi.org/10.18723/DIW_DWR:2021-41-1</a>.
+</div>
+<div id="ref-EuropeanParliament.2022" class="csl-entry" role="listitem">
+European Parliament. Directorate General for Internal Policies of the Union. 2022. <em>Inflation expectations in the euro area: trends and policy considerations : monetary dialogue papers : February 2022.</em> LU: Publications Office. <a href="https://doi.org/10.2861/744032">https://doi.org/10.2861/744032</a>.
+</div>
+<div id="ref-kalemli-ozcan2020" class="csl-entry" role="listitem">
+Kalemli-Ozcan, Sebnem, Pierre-Olivier Gourinchas, Veronika Penciakova, and Nick Sander. 2020. <span>“COVID-19 and SME Failures.”</span> <em>IMF Working Papers</em> 2020 (207): 1. <a href="https://doi.org/10.5089/9781513557748.001">https://doi.org/10.5089/9781513557748.001</a>.
+</div>
+<div id="ref-stock2001" class="csl-entry" role="listitem">
+Stock, James H, and Mark W Watson. 2001. <span>“Vector Autoregressions.”</span> <em>Journal of Economic Perspectives</em> 15 (4): 101–15. <a href="https://doi.org/10.1257/jep.15.4.101">https://doi.org/10.1257/jep.15.4.101</a>.
+</div>
+</div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

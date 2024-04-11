@@ -8,7 +8,7 @@ execute:
 bibliography: references.bib
 ---
 
-> **Abstract.** The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model.
+> **Abstract.** The purpose of this research is to explore the trend in Australia's inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model.
 >
 > **Keywords.** bsvars, quarto, R, Australia inflation rate
 
@@ -22,7 +22,7 @@ bibliography: references.bib
 
 Will Australia's inflation rate fall back to the 2-3% inflation target range in 2025?
 
-Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country [@bernoth2021]. The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026 (Reserve Bank of Australia, 2024). Influenced by the COVID-19 pandemic, Blot et al. deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates (BLOT et al., 2022). Therefore, this study will assess the reasonableness of the RBA's inflation rate forecast for the next two years. During the COVID-19 period, Australia's inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.
+Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country [@bernoth2021]. The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026. Influenced by the COVID-19 pandemic, Blot et al. deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates [@europeanparliament.directorategeneralforinternalpoliciesoftheunion.2022]. Therefore, this study will assess the reasonableness of the RBA's inflation rate forecast for the next two years. During the COVID-19 period, Australia's inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.
 
 ```{r Library}
 #| echo: false
@@ -219,7 +219,7 @@ colnames(all_data)   = c("cpi_data",    "gold_data",
                          "aord_data",   "exr_data")
 ```
 
-Following Table shows the correlation between CPI and other variables. It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US (Kalemli-Ozcan et al., 2020). This impact can be seen as an indirect effect of rising unemployment rates on inflation.
+Following Table shows the correlation between CPI and other variables. It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US [@kalemli-ozcan2020]. This impact can be seen as an indirect effect of rising unemployment rates on inflation.
 
 ```{r Corr Plot, fig.pos="H"}
 #| echo: false
@@ -594,7 +594,7 @@ In summary, based on the above analysis, it is expected that gold prices and CPI
 ## Model and Hypothesis
 
 \
-Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting(Stock & Watson, 2001).
+Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting [@stock2001].
 
 Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.
 
@@ -667,14 +667,4 @@ Based on the model above, we will employ VAR of order p to carry out forecasts f
 
 In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as $lcpi_{T+h|T}$. Subsequently, we'll utilize the forecasted (log) CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.
 
-## References {.unnumbered}
-
-Bernoth, K., & Ider, G. (2021). Inflation in the euro area: factors mostly have only a temporary effect, but risk of prolonged elevated inflation remains. *DIW Weekly Report* , *11*(41/42), 315--323. https://doi.org/10.18723/diw_dwr:2021-41-1
-
-BLOT, C., BOZOU, C., & CREEL, J. (2022, January 3). *Inflation expectations in the euro area: Trends and policy considerations: Think tank: European parliament*. Think Tank \| European Parliament. https://www.europarl.europa.eu/thinktank/en/document/IPOL_IDA(2022)703341
-
-Kalemli-Ozcan, S., Gourinchas, P.-O., Penciakova, V., & Sander, N. (2020). Covid-19 and SME Failures. *IMF Working Papers*, *2020*(207), 1. https://doi.org/10.5089/9781513557748.001
-
-Reserve Bank of Australia. (2024a, February 6). *Statement on monetary policy -- February 2024*. https://www.rba.gov.au/publications/smp/2024/feb/
-
-Stock, J. H., & Watson, M. W. (2001). Vector autoregressions. *Journal of Economic Perspectives*, *15*(4), 101--115. https://doi.org/10.1257/jep.15.4.101
+##  {.unnumbered}

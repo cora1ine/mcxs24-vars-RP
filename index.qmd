@@ -86,7 +86,7 @@ color6 = "steelblue"       # #4682B4
 
     It indicate the level of slack in the labor market, influencing wage-push inflation.
 
-    6.  $abn_i$: All banknotes issued by denomination
+    6.  $m_i$: M2 Money aggregate from RBA.
 
     When banks issue more banknotes, it generally signifies an increase in the money supply. According to the Quantity Theory of Money, if the increase in money supply exceeds the demand for economic growth, it could lead to inflation, that is, an increase in the level of prices.
 

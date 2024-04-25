@@ -39,6 +39,8 @@ library(corrplot)     # cor plot
 library(fUnitRoots)   # ADF test - adfTest
 library(tidyverse)    # for table
 library(kableExtra)   # for print table
+library(zoo)
+library(ggplot2)      # plot in same graph
 ```
 
 ```{r colour}
@@ -60,51 +62,51 @@ color6 = "steelblue"       # #4682B4
 
 -   **Direct Inflationary Indicators:**
 
-    1.$cpi_i$: Consumer Price Index (CPI) from ABS.
+    1.$cpi_t$: Consumer Price Index (CPI) from ABS.
 
     CPI directly measure inflation by follow formula:
 
-    $$Inflation  = \frac{CPI_{Quarter \ of \ These \ Year}}{CPI_{Quarter \ of \ Previous \ Year} )}\times 100$$ {#eq-1}
+    $$Inflation  = (\frac{CPI_{Quarter \ of \ These \ Year}}{CPI_{Quarter \ of \ Previous \ Year} } - 1 )\times 100$$ {#eq-1}
 
     CPI is the basic data for measuring inflation. It is more stable and less affected by seasonal factors and short-term fluctuations than the annual inflation rate from which it is derived. In VAR, raw time series data rather than rates of change are used to capture and model the dynamic nature of the data.
 
-    2.$gold_i$: Gold price from yahoo finance.
+    2.$infexp_t$: Business inflation expectations -- 3-months ahead from RBA
 
-    Gold is widely viewed as a safe-haven asset, meaning investors are likely to buy it as a store of value during s of economic uncertainty and rising inflation expectations. Such purchases will increase the price of gold.
+    Inflation expectations often guide consumer and business behavior; if inflation is expected to rise, they might make purchases and raise prices in advance, thus driving actual inflation up in the short term. Meanwhile, central banks closely monitor inflation expectations, adjusting monetary policies to influence these expectations and control actual inflation to maintain price stability.
 
 -   **Economic Activity and Policy Indicators:**
 
-    3.  $gdp_i$: Gross Domestic Product (GDP) from ABS.
+    3.  $gdp_t$: Gross Domestic Product (GDP) from ABS.
 
     GDP reflects the size and growth rate of a country's economy. When GDP increases, it indicates increased economic activity, which can lead to demand-pull inflation because increased demand may exceed current production capacity, pushing up prices.
 
-    4.  $crt_i$: Cash rate target published by RBA.
+    4.  $crt_t$: Cash rate target published by RBA.
 
     This is the main tool used by the RBA to influence economic activity. Raising the cash rate is usually aimed at reducing borrowing and spending, thereby reducing inflationary pressures.
 
-    5.  $unemp_i$: Unemployment rate from ABS.
+    5.  $unemp_t$: Unemployment rate from ABS.
 
     It indicate the level of slack in the labor market, influencing wage-push inflation.
 
-    6.  $m_i$: M2 Money aggregate from RBA.
+    6.  $m_t$: Money aggregate (Broad money) from RBA.
 
-    When banks issue more banknotes, it generally signifies an increase in the money supply. According to the Quantity Theory of Money, if the increase in money supply exceeds the demand for economic growth, it could lead to inflation, that is, an increase in the level of prices.
+    'Broad money' is defined as 'M3' plus 'Other borrowings from private sector by AFIs'. When the growth rate of broad money supply in an economy exceeds the growth rate of its real output, it leads to more money chasing the same amount of goods and services, causing price levels to rise, i.e., inflation. Therefore, central banks like the Reserve Bank of Australia (RBA) adjust interest rates and other tools to control the growth of broad money to achieve their inflation targets.
 
 -   **Market and External Trade Indicators:**
 
-    7.  $export_i$: International exports from ABS.
+    7.  $export_t$: International exports from ABS.
 
     It affects trade balance and currency strength, influencing imported inflation.
 
-    8.  $import_i$: International imports from ABS.
+    8.  $import_t$: International imports from ABS.
 
     Directly affect inflation through the cost of imported goods.
 
-    9.  $aord_i$: All Ordinaries Index (AORD) from yahoo finance.
+    9.  $aord_t$: All Ordinaries Index (AORD) from yahoo finance.
 
     It reflects investor confidence and economic activity which can be pre-emptive indicators of inflation.
 
-    10. $exr_i$: AUD/USD exchange rate from yahoo finance.
+    10. $exr_t$: AUD/USD exchange rate from RBA.
 
     It affects the price of imports and exports, contributing to inflation.
 
@@ -183,34 +185,30 @@ correct_dates       = seq(as.Date("1971-10-01"), by="quarter", length.out=length
 correct_dates       = floor_date(correct_dates, "month") - days(1)
 index(import_data)  = correct_dates
 
-# 7. All banknotes
-# A6 RESERVE BANK OF AUSTRALIA – BANKNOTES ON ISSUE BY DENOMINATION
-# Series ID: ARBABTM: Total banknotes on issue, by value ($ million)
+# 7. Broad money
+# D3 MONETARY AGGREGATES
+# Series ID: DMABMN: Broad money – For series breaks see Series Breaks 'Broad money' is defined as 'M3' plus ‘Other borrowings from private sector by AFIs.
 
-abn_download      = read_rba(series_id = "ARBABTM")   
-abn_data          = xts(abn_download$value, abn_download$date)
-quarter_ends      = endpoints(abn_data , on = "quarters")
-abn_data          = abn_data[quarter_ends]
-correct_dates     = seq(as.Date("1984-04-01"), by="quarter", length.out=length(abn_data))
+m_download        = read_rba(series_id = "DMABMN")   
+m_data            = xts(m_download$value, m_download$date)
+quarter_ends      = endpoints(m_data , on = "quarters")
+m_data            = m_data[quarter_ends]
+correct_dates     = seq(as.Date("1976-10-01"), by="quarter", length.out=length(m_data))
 correct_dates     = floor_date(correct_dates, "month") - days(1)
-index(abn_data)   = correct_dates
+index(m_data)     = correct_dates
 
 
+# 8. Business inflation expectations – 3-months ahead
+# G3 INFLATION EXPECTATIONS 
+# Series ID: GBUSEXP: Survey measure of business expectations; Increase in final prices for 3-months ahead; Annualised
 
-# 8.Gold price
-gold_link           = "https://query1.finance.yahoo.com/v7/finance/download/GC%3DF?period1=967680000&period2=1712793600&interval=1d&filter=history&frequency=1mo&includeAdjustedClose=true"
-gold_download       = read.csv(gold_link)
-gold_data           = data.frame(gold_download[,1], gold_download[,6])
-colnames(gold_data) = c('date', 'gol')
-gold_data$date      = as.Date(as.character(gold_data$date),format="%Y-%m-%d") 
-gold_data$gol       = as.numeric(na_if(gold_data$gol, "null"))
-gold_data           = na.omit(gold_data)
-gold_data           = xts(gold_data$gol, gold_data$date)
-gold_data           = to.quarterly(gold_data, OHLC = FALSE)
-correct_dates       = seq(as.Date("2000-10-01"), by="quarter", length.out=length(gold_data))
-correct_dates       = floor_date(correct_dates, "month") - days(1)
-index(gold_data)    = correct_dates
-
+infexp_download      = read_rba(series_id = "GBUSEXP")   
+infexp_data          = xts(infexp_download$value, infexp_download$date)
+quarter_ends         = endpoints(infexp_data , on = "quarters")
+infexp_data          = infexp_data[quarter_ends]
+correct_dates        = seq(as.Date("1989-10-01"), by="quarter", length.out=length(infexp_data))
+correct_dates        = floor_date(correct_dates, "month") - days(1)
+index(infexp_data)   = correct_dates
 
 # 9.AORD
 aord_link           = "https://query1.finance.yahoo.com/v7/finance/download/%5EAORD?period1=460339200&period2=1712793600&interval=1mo&filter=history&frequency=1mo&includeAdjustedClose=true"
@@ -245,22 +243,26 @@ index(exr_data)   = correct_dates
 #| warning: false
 
 # All Variables
-all_data             = na.omit(merge(cpi_data,    gold_data, 
+all_data             = na.omit(merge(cpi_data,    infexp_data, 
                                      gdp_data,    crt_data, 
-                                     unemp_data,  abn_data,  
+                                     unemp_data,  m_data,  
                                      export_data, import_data, 
                                      aord_data,   exr_data ))
 
-colnames(all_data)   = c("cpi_data",    "gold_data", 
+colnames(all_data)   = c("cpi_data",    "infexp_data", 
                          "gdp_data",    "crt_data", 
-                         "unemp_data",  "abn_data", 
+                         "unemp_data",  "m_data", 
                          "export_data", "import_data",
                          "aord_data",   "exr_data")
 ```
 
-Following Table shows the correlation between CPI and other variables. It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US [@kalemli-ozcan2020]. This impact can be seen as an indirect effect of rising unemployment rates on inflation. Therefore, despite the weak correlation between unemployment rate and CPI, it is still important to include it in the model for a comprehensive analysis.
+Following Table shows the correlation between CPI and other variables.
 
-Despite the low direct correlation between exchange rates and CPI, this does not mean exchange rates have no impact on inflation. On the contrary, by adjusting the impact of the gold price (priced in USD) on Australia's CPI, exchange rate fluctuations play a significant role in the model. This approach highlights the mechanism by which exchange rates indirectly affect domestic inflation levels through the cost of imported goods (gold prices). Therefore, even though the direct correlation between exchange rates and CPI may be minor, considering the impact of exchange rates on the conversion of foreign-currency-priced goods (like gold prices) to the domestic currency, the indirect effect of exchange rate changes on inflation is significant.
+Despite the low direct correlation between inflation expectations and CPI, inflation expectations may more closely reflect concerns about core inflation, which excludes volatile items like food and energy, whereas the CPI includes all items. If the trends between core inflation and overall inflation differ, this discrepancy can reduce the correlation between inflation expectations and the CPI. However, inflation expectations provide additional insight into how future economic conditions are perceived by consumers, businesses, and investors. This forward-looking perspective is important as it might influence economic decisions that are not immediately apparent through current CPI data.
+
+Exchange rate fluctuations are typically sensitive to immediate market sentiment and short-term capital flows, whereas the CPI, as a measure of past price level changes, often exhibits a lag in responding to market changes. Even if the correlation between the CPI and the AUD/USD exchange rate is low, including this variable can help researchers understand economic changes from a broader perspective. For example, changes in the exchange rate can indirectly affect domestic price levels through the cost of imports, especially in open economies.
+
+It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US [@kalemli-ozcan2020]. This impact can be seen as an indirect effect of rising unemployment rates on inflation. Therefore, despite the weak correlation between unemployment rate and CPI, it is still important to include it in the model for a comprehensive analysis.
 
 ```{r Corr Plot, fig.pos="H"}
 #| echo: false
@@ -277,7 +279,7 @@ corrplot(cor_matrix, method = "color",
          tl.col = "black",
          tl.cex = 0.6,  
          col = colorRampPalette(c("darkblue", "#FFFFFF", "darkred"))(200), 
-         addCoef.col = "grey", 
+         addCoef.col = "darkgrey", 
          number.cex = 0.5,     
          diag = FALSE, 
          title = "Correlation Matrix", 
@@ -290,7 +292,7 @@ corrplot(cor_matrix, method = "color",
 
 Figure 1 Correlation Matrix
 
-In summary, the dataset included data from 2000Q3 to 2023Q4, total 94 observation points with 10 variables.
+In summary, the dataset included data from 1990Q2 to 2023Q4, total 135 observation points with 10 variables.
 
 ### Data Transformation
 
@@ -300,7 +302,7 @@ All data have been quarterly converted by selecting the data on the last day of 
 
 -   **Log Transformation**
 
-Based on the line graph of the original data below (Figure 2), we can observe that exponentially growing variables need to be linearized, such as $cpi_i$, $gold_i$, $gdp_i$, $abn_i$, $export_i$, $import_i$, $aord_i$. Therefore, its logarithmically transformed form will be used in the following analysis.
+Based on the line graph of the original data below (Figure 2), we can observe that exponentially growing variables need to be linearized, such as $cpi_t$, $gdp_t$, $m_t$, $export_t$, $import_t$, $aord_t$. Therefore, its logarithmically transformed form will be used in the following analysis.
 
 ```{r Data plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -325,23 +327,22 @@ Figure 2 Line plot of original data
 ## log transformation for exp data
 
 lcpi_data     = log(cpi_data)
-lgold_data    = log(gold_data)
 lgdp_data     = log(gdp_data)
-labn_data     = log(abn_data)
+lm_data       = log(m_data)
 lexport_data  = log(export_data)
 limport_data  = log(import_data)
 laord_data    = log(aord_data)
 
 # All Variables after log
-all_data             = na.omit(merge(lcpi_data,     lgold_data, 
+all_data             = na.omit(merge(lcpi_data,     infexp_data, 
                                      lgdp_data,     crt_data, 
-                                     unemp_data,    labn_data,  
+                                     unemp_data,    lm_data,  
                                      lexport_data,  limport_data, 
                                      laord_data,    exr_data ))
 
-colnames(all_data)   = c("lcpi_data",      "lgold_data", 
+colnames(all_data)   = c("lcpi_data",      "infexp_data", 
                          "lgdp_data",      "crt_data", 
-                         "unemp_data",     "abn_data", 
+                         "unemp_data",     "lm_data", 
                          "lexport_data",   "limport_data",
                          "laord_data",     "exr_data")
 ```
@@ -368,7 +369,7 @@ Figure 3 ACF Plot for all data
 
 Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).
 
-According to Table 1, we can see that $labn_i$, $lexport_i$, require more than first order integration, while other require first-order integration(under 5% level of confidence).
+According to Table 1, we can see that $infexp_t$, $lm_t$, require more than first order integration, while other require first-order integration(under 5% level of confidence).
 
 ```{r ACF test, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -389,33 +390,33 @@ for (i in 1:ncol(all_data)) {
 ## ADF test
 
 # ol.cpi.aic.ar$order
-adf.cpi   = adfTest(all_data[,1], lags=2, type="c")              # don't reject -> non-stationary
-dadf.cpi  = adfTest(diff(all_data[,1]), lags=1, type="nc")        # reject -> (I1 is stationary)
+adf.cpi   = adfTest(all_data[,1], lags=5, type="c")              # don't reject -> non-stationary
+dadf.cpi  = adfTest(diff(all_data[,1]), lags=4, type="nc")        # don't reject -> non-stationary
 
-# ol.gold.aic.ar$order
-adf.gold   = adfTest(all_data[,2], lags=1, type="c")               # don't reject -> non-stationary
-dadf.gold  = adfTest(diff(all_data[,2]), lags=0, type="nc")        # reject -> (I1 is stationary)
+# ol.infexp.aic.ar$order
+adf.infexp   = adfTest(all_data[,2], lags=5, type="c")               # don't reject -> non-stationary
+dadf.infexp  = adfTest(diff(all_data[,2]), lags=4, type="nc")        # reject -> (I1 is stationary)
 
 # ol.gdp.aic.ar$order
-adf.gdp   = adfTest(all_data[,3], lags=1, type="c")              # don't reject -> non-stationary
-dadf.gdp  = adfTest(diff(all_data[,3]), lags=0, type="nc")       # reject -> (I1 is stationary)
+adf.gdp   = adfTest(all_data[,3], lags=7, type="c")              # don't reject -> non-stationary
+dadf.gdp  = adfTest(diff(all_data[,3]), lags=6, type="nc")       # reject -> (I1 is stationary)
 
 # ol.crt.aic.ar$order
-adf.crt  = adfTest(all_data[,4], lags=3, type="c")               # don't reject -> non-stationary
-dadf.crt = adfTest(diff(all_data[,4]), lags=2, type="nc")        # reject -> (I1 is stationary)
+adf.crt  = adfTest(all_data[,4], lags=20, type="c")               # don't reject -> non-stationary
+dadf.crt = adfTest(diff(all_data[,4]), lags=19, type="nc")        # reject -> (I1 is stationary)
 
 # ol.unemp.aic.ar$order
-adf.unemp  = adfTest(all_data[,5], lags=2, type="c")           # don't reject -> non-stationary
-dadf.unemp = adfTest(diff(all_data[,5]), lags=1, type="nc")    # reject -> (I1 is stationary)
+adf.unemp  = adfTest(all_data[,5], lags=5, type="c")           # don't reject -> non-stationary
+dadf.unemp = adfTest(diff(all_data[,5]), lags=4, type="nc")    # reject -> (I1 is stationary)
 
 
-# ol.abn.aic.ar$order
-adf.abn  = adfTest(all_data[,6], lags=14, type="c")           # don't reject -> non-stationary
-dadf.abn = adfTest(diff(all_data[,6]), lags=13, type="nc")    # don't reject -> non-stationary
+# ol.m.aic.ar$order
+adf.m      = adfTest(all_data[,6], lags=5, type="c")           # don't reject -> non-stationary
+dadf.m     = adfTest(diff(all_data[,6]), lags=4, type="nc")    # don't reject -> non-stationary
 
 # ol.export.aic.ar$order
-adf.export  = adfTest(all_data[,7], lags=13, type="c")           # don't reject -> non-stationary
-dadf.export = adfTest(diff(all_data[,7]), lags=12, type="nc")    # don't reject -> non-stationary
+adf.export  = adfTest(all_data[,7], lags=6, type="c")           # don't reject -> non-stationary
+dadf.export = adfTest(diff(all_data[,7]), lags=5, type="nc")    # don't reject -> non-stationary
 
 
 # ol.import.aic.ar$order
@@ -432,25 +433,25 @@ adf.exr   = adfTest(all_data[,10], lags=1, type="c")               # don't rejec
 dadf.exr  = adfTest(diff(all_data[,10]), lags=0, type="nc")        # reject -> (I1 is stationary)
 
 Unit_Root_Test_table <- 
-  tibble( " " = c("lcpi", "lgold", "lgdp", "crt", "unemp", "labn", "lexport","limport", "laord", "exr"),
+  tibble( " " = c("lcpi", "infexp", "lgdp", "crt", "unemp", "lm", "lexport", "limport", "laord", "exr"),
           "p value of ADF test of AR" 
-          = round(c(adf.cpi@test$p.value,    adf.gold@test$p.value,
+          = round(c(adf.cpi@test$p.value,    adf.infexp@test$p.value,
                     adf.gdp@test$p.value,    adf.crt@test$p.value,    
-                    adf.unemp@test$p.value,  adf.abn@test$p.value,
+                    adf.unemp@test$p.value,  adf.m@test$p.value,
                     adf.export@test$p.value, adf.import@test$p.value,
                     adf.aord@test$p.value,   adf.exr@test$p.value),4),
           "p value of ADF test of diff-AR" 
-          = round(c(dadf.cpi@test$p.value,    dadf.gold@test$p.value,
+          = round(c(dadf.cpi@test$p.value,    dadf.infexp@test$p.value,
                     dadf.gdp@test$p.value,    dadf.crt@test$p.value,    
-                    dadf.unemp@test$p.value,  dadf.abn@test$p.value,
+                    dadf.unemp@test$p.value,  dadf.m@test$p.value,
                     dadf.export@test$p.value, dadf.import@test$p.value,   
                     dadf.aord@test$p.value,   dadf.exr@test$p.value),4),
           
           "conclusion" 
-          = c("lcpi~I(1)",     "lgold~I(1)", 
+          = c("lcpi~I(n)",     "infexp~I(1)", 
               "lgdp~I(1)",     "crt~I(1)",    
-              "unemp~I(1)",    "labn~I(n)", 
-              "lexport~I(n)",  "limport~I(1)", 
+              "unemp~I(1)",    "lm~I(n)", 
+              "lexport~I(1)",  "limport~I(1)", 
               "laord~I(1)",    "exr~I(1)"
           ),
   )
@@ -467,11 +468,19 @@ kable(Unit_Root_Test_table, align = "c") %>%
 
 Table 1 Unit root test for all data
 
-Given that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted not to apply differencing to any of the data sets.
+Given that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply first differencing to all of the data sets.
 
--   Minnesota prior method we will talk about later
+```{r Diff Data, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
 
-After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). Even after first order difference processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 50-60).
+all_data         = na.omit(diff(all_data))
+
+
+```
+
+After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). Even after first order difference processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 120).
 
 ```{r Data Plot 2, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -491,118 +500,48 @@ Figure 4 Line plot of adjusted data
 
 ### Importance of Key Variables Analysis
 
-The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation are CPI and gold price. Meanwhile, since this study is to explore whether the RBA's recent suspension of raising the cash rate target has deemed the previous deflationary measures to be effective. So the cash rate target becomes one of the key variables. Below we focus on analyzing these three variables:
+```{r compute inf, fig.align='center',fig.pos='H'}
+cpi_lag4 = lag(cpi_data, 4)
+inf_data = ((cpi_data / cpi_lag4)-1)*100
+inf_data = na.omit(inf_data)
 
--   CPI: As Table 2 shows, using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.
-
-```{r CPI compute, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
-## compute CPI
-
-inflation_table  = tibble(" " = "Inflation rate")
-current_year     = 2023
-dates            = c("03", "06", "09", "12")
-
-for (i in 1:4) {
-  inflation_rate <- round((cpi_data[nrow(cpi_data) - (4 - i), 1][[1]] / 
-                           cpi_data[nrow(cpi_data) - (8 - i), 1][[1]] - 1) * 100, 2)
-  date_label <- paste(current_year, dates[i], sep = "/")
-  inflation_table[[date_label]] <- inflation_rate
-}
-
-kable(inflation_table, align = "c") %>% 
-  kable_styling(font_size = 8, 
-                fixed_thead = TRUE, 
-                full_width = FALSE, 
-                position = "center",
-                latex_options = c("HOLD_position"),
-                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 ```
 
-Table 2 Inflation Rate 2023
-
--   Gold price: Observing the trend charts of gold prices and cpi in the past three years, we can see that the trends of the two are almost consistent, so we believe that it is reasonable to use international gold prices as inflation expectations. Although the gold price is denominated in US dollars, the inclusion of the Australian dollar against the US dollar exchange rate in the data set makes it feasible to convert the gold price into a measure of its impact on the Australian market.
-
-```{r gold compute, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
-
-## gold plot
-cpi_last_12 <- tail(cpi_data, 12)
-gold_last_12 <- tail(gold_data, 12)
-
-common_time_index <- index(cpi_last_12)
-
-par(mfcol = c(2, 1), mar=c(2,2,2,2))
-
-plot(cpi_last_12, type="l", col="blue", xlab="Date", ylab="CPI Value", xlim=range(common_time_index))
-title(main = "CPI last 3yrs", line = 0.5)
-
-plot(gold_last_12, type="l", col="red", xlab="Date", ylab="Gold Price", xlim=range(common_time_index))
-title(main = "Gold price 3yrs", line = 0.5)
+```{r combine key data, fig.align='center',fig.pos='H'}
+key_data           = na.omit(merge(inf_data, infexp_data, crt_data))
+colnames(key_data) = c("inf_data", "infexp_data", "crt_data")
+                        
 ```
 
-Figure 5 CPI and Gold Price Last 3 Yrs Plot
+The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation is inflation and inflation target. Meanwhile, because we use CPI as key variable, we first need to calculate quarterly inflation through CPI. Below we focus on analyzing these two variables:
 
--   Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.21), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 35). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA's monetary tightening policy have already been reflected.
+-   The actual and expected inflation rates appear to move in tandem over much of the time period, suggesting that expectations may be influenced by current and past inflation rates, or vice versa. At the same time, we see that people's expectations for inflation are relatively conservative. For example, during the COVID, the expected inflation was around 5%, but the actual inflation later surged to about 7.8%.
 
-```{r cash rate vs cpi, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
+-   Regarding the specific inflation zone of 2-3%, it appears that both the expected and actual inflation rates oscillate into this range periodically. However, it seems that starting just before 2020, there's a pronounced peak where expected inflation sharply rises above the actual inflation rate, which then converges back into the 2-3% range shortly after (although actual inflation rate still need some time). So we can foresee that inflation will indeed fall back to the 2-3% range in the near future.
+
+```{r plot inf and infexp, fig.align='center',fig.pos='H'}
+
+data_df <- fortify.zoo(key_data)
 
 
-## cash rate data
+ggplot(data_df, aes(x = Index)) +
+  geom_ribbon(aes(ymin = 2, ymax = 3, fill = "Target Inflation Zone"), 
+              fill = color2, alpha = 0.5) +
+  geom_line(aes(y = inf_data, colour = "Inflation Rate")) +
+  geom_line(aes(y = infexp_data, colour = "Expected Inflation Rate")) +
+  scale_fill_manual(values = c("Target Inflation Zone" = color2), 
+                    name = "Legend", 
+                    guide = guide_legend(override.aes = list(alpha = 0.5))) +
+  scale_color_manual(values = c("Inflation Rate" = color1, 
+                                "Expected Inflation Rate" = color4)) +
+  labs(title = "Inflation Rate vs Expected Inflation Rate", 
+       x = "Date", y = "Rate (%)") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
 
-final2021.inf = (cpi_data[nrow(cpi_data) - 8, 1][[1]]/cpi_data[nrow(cpi_data) - 12, 1][[1]] -1 )*100
-final2022.inf = (cpi_data[nrow(cpi_data) - 4, 1][[1]]/cpi_data[nrow(cpi_data) - 8, 1][[1]] -1 )*100
-final2023.inf = (cpi_data[nrow(cpi_data), 1][[1]]/cpi_data[nrow(cpi_data) - 4, 1][[1]] -1 )*100
-
-final2021.crt = crt_data[nrow(crt_data) - 8, 1][[1]]
-final2022.crt = crt_data[nrow(crt_data) - 4, 1][[1]]
-final2023.crt = crt_data[nrow(crt_data), 1][[1]]
-
-cash_rate_table <-
-  tibble( " " = c("Inflation rate","Cash rate target"),
-          "2021/12" = c(round((cpi_data[nrow(cpi_data) - 8, 1][[1]]/cpi_data[nrow(cpi_data) - 12, 1][[1]] -1 )*100, 2),
-                        round((crt_data[nrow(crt_data) - 8, 1][[1]]), 2)),
-          "2022/03" = c(round((cpi_data[nrow(cpi_data) - 7, 1][[1]]/cpi_data[nrow(cpi_data) - 11, 1][[1]] -1 )*100, 2),
-                        round((crt_data[nrow(crt_data) - 7, 1][[1]]), 2)),
-          "2022/06" = c(round((cpi_data[nrow(cpi_data) - 6, 1][[1]]/cpi_data[nrow(cpi_data) - 10, 1][[1]] -1 )*100 ,2),
-                        round((crt_data[nrow(crt_data) - 6, 1][[1]]), 2)),
-          "2022/09" = c(round((cpi_data[nrow(cpi_data) - 5, 1][[1]]/cpi_data[nrow(cpi_data) - 9, 1][[1]] -1 )*100 ,2),
-                        round((crt_data[nrow(crt_data) - 5, 1][[1]]), 2)),
-          "2022/12" = c(round((cpi_data[nrow(cpi_data) - 4, 1][[1]]/cpi_data[nrow(cpi_data) - 8, 1][[1]] -1 )*100 ,2),
-                        round((crt_data[nrow(crt_data) - 4, 1][[1]]), 2)),
-          "2022 annual change" = c(round((final2022.inf - final2021.inf)/final2021.inf ,2),
-                                   round((final2022.crt - final2021.crt)/final2021.crt ,2)),
-          "2023/03" = c(round((cpi_data[nrow(cpi_data) - 3, 1][[1]]/cpi_data[nrow(cpi_data) - 7, 1][[1]] -1 )*100, 2),
-                        round((crt_data[nrow(crt_data) - 3, 1][[1]]), 2)),
-          "2023/06" = c(round((cpi_data[nrow(cpi_data) - 2, 1][[1]]/cpi_data[nrow(cpi_data) - 6, 1][[1]] -1 )*100 ,2),
-                        round((crt_data[nrow(crt_data) - 2, 1][[1]]), 2)),
-          "2023/09" = c(round((cpi_data[nrow(cpi_data) - 1, 1][[1]]/cpi_data[nrow(cpi_data) - 5, 1][[1]] -1 )*100 ,2),
-                        round((crt_data[nrow(crt_data) - 1, 1][[1]]), 2)),
-          "2023/12" = c(round((cpi_data[nrow(cpi_data), 1][[1]]/cpi_data[nrow(cpi_data) - 4, 1][[1]] -1 )*100 ,2),
-                        round((crt_data[nrow(crt_data), 1][[1]]), 2)),
-          "2023 annual change" = c(round((final2023.inf - final2022.inf)/final2022.inf ,2),
-                                   round((final2023.crt - final2022.crt)/final2022.crt ,2)),
-  )
-
-kable(cash_rate_table, align = "c") %>% 
-  kable_styling(font_size = 8, 
-                fixed_thead = TRUE, 
-                full_width = FALSE, 
-                position = "center",
-                latex_options = c("HOLD_position"),
-                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 ```
 
-Table 3 Cash Rate Target vs Inflation Rate
-
-In summary, based on the above analysis, it is expected that gold prices and CPI will have a positive correlation, but the cash rate target will have a negative correlation. This is also consistent with the correlations in Figure 1.
+Figure 5 Inflation Rate vs Expected Inflation Rate
 
 ## Model and Hypothesis
 
@@ -630,34 +569,34 @@ $$E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)$$
 $$
 Y=
 \begin{bmatrix}
-y_{lcpi,1} & y_{lgold,1} & y_{lgdp,1} & y_{crt,1} & y_{unemp,1} & y_{labn,1} & y_{lexport,1} & y_{limport,1} & y_{laord,1} & y_{exr,1}\\
-\ y_{lcpi,2} & y_{lgold,2} & y_{lgdp,2} & y_{crt,2} & y_{unemp,2} & y_{labn,2} & y_{lexport,2} & y_{limport,2} & y_{laord,2} & y_{exr,2} \\
+y_{lcpi,1} & y_{infexp,1} & y_{lgdp,1} & y_{crt,1} & y_{unemp,1} & y_{lm,1} & y_{lexport,1} & y_{limport,1} & y_{laord,1} & y_{exr,1}\\
+\ y_{lcpi,2} & y_{infexp,2} & y_{lgdp,2} & y_{crt,2} & y_{unemp,2} & y_{lm,2} & y_{lexport,2} & y_{limport,2} & y_{laord,2} & y_{exr,2} \\
 \vdots  & \vdots  & \vdots& \vdots& \vdots& \vdots& \vdots& \vdots& \vdots & \vdots  \\
-y_{lcpi,T} & y_{lgold,T} & y_{lgdp,T} & y_{crt,T} & y_{unemp,T} & y_{labn,T} & y_{lexport,T} & y_{limport,T} & y_{laord,T} & y_{exr,T}\\
+y_{lcpi,T} & y_{infexp,T} & y_{lgdp,T} & y_{crt,T} & y_{unemp,T} & y_{lm,T} & y_{lexport,T} & y_{limport,T} & y_{laord,T} & y_{exr,T}\\
 \end{bmatrix}_{T \times 10}
 $$
 
 $$
 X=\begin{bmatrix}
-1 & y_{lcpi,t-1} & y_{lgold,t-1} & \ldots & y_{exr,t-1} & \ldots & y_{lcpi,t-p} & y_{lgold,t-p} & \ldots &  y_{exr,t-p} \\
-1 & y_{lcpi,t-2} & y_{lgold,t-2} & \ldots & y_{exr,t-2} & \ldots & y_{lcpi,t-p-1} & y_{lgold,t-p-1} & \ldots &  y_{exr,t-p-1} \\
+1 & y_{lcpi,t-1} & y_{infexp,t-1} & \ldots & y_{exr,t-1} & \ldots & y_{lcpi,t-p} & y_{lgold,t-p} & \ldots &  y_{exr,t-p} \\
+1 & y_{lcpi,t-2} & y_{infexp,t-2} & \ldots & y_{exr,t-2} & \ldots & y_{lcpi,t-p-1} & y_{lgold,t-p-1} & \ldots &  y_{exr,t-p-1} \\
 \vdots & \vdots & \vdots & \ddots & \vdots & \ddots & \vdots & \vdots &  \ddots & \vdots \\
-1 & y_{lcpi,1} & y_{lgold,1} & \ldots & y_{exr,1} & \ldots & y_{lcpi,1-p} & y_{lgold,1-p} & \ldots &  y_{exr,1-p}\\
+1 & y_{lcpi,1} & y_{infexp,1} & \ldots & y_{exr,1} & \ldots & y_{lcpi,1-p} & y_{lgold,1-p} & \ldots &  y_{exr,1-p}\\
 \end{bmatrix}_{T\times (1+10p)}
 $$
 
 $$
 A = \begin{bmatrix}
 \mu_{lcpi} & \mu_{gold} & \ldots & \mu_{lexr} \\
-A_{1,lcpi}^{(1)} & A_{1,lgold}^{(1)} & \ldots & A_{1,exr}^{(1)} \\
-A_{2,lpci}^{(1)} & A_{2,lgold}^{(1)} & \ldots & A_{2,exr}^{(1)} \\
+A_{1,lcpi}^{(1)} & A_{1,infexp}^{(1)} & \ldots & A_{1,exr}^{(1)} \\
+A_{2,lpci}^{(1)} & A_{2,infexp}^{(1)} & \ldots & A_{2,exr}^{(1)} \\
 \vdots  & \vdots  & \ddots & \vdots  \\
-A_{10,lcpi}^{(1)} & A_{10, lgold}^{(1)} & \ldots & A_{10,exr}^{(1)} \\
+A_{10,lcpi}^{(1)} & A_{10, infexp}^{(1)} & \ldots & A_{10,exr}^{(1)} \\
 \vdots  & \vdots  & \ddots & \vdots  \\
-A_{1,lcpi}^{(p)} & A_{1,lgold}^{(p)} & \ldots & A_{1,exr}^{(p)} \\
-A_{2,lcpi}^{(p)} & A_{2,lgold}^{(p)} & \ldots & A_{2,exr}^{(p)} \\
+A_{1,lcpi}^{(p)} & A_{1,infexp}^{(p)} & \ldots & A_{1,exr}^{(p)} \\
+A_{2,lcpi}^{(p)} & A_{2,infexp}^{(p)} & \ldots & A_{2,exr}^{(p)} \\
 \vdots  & \vdots  & \ddots & \vdots  \\
-A_{10,lcpi}^{(p)} & A_{10,lgold}^{(p)} & \ldots & A_{10,exr}^{(p)} \\
+A_{10,lcpi}^{(p)} & A_{10,infexp}^{(p)} & \ldots & A_{10,exr}^{(p)} \\
 \end{bmatrix}_{(1 + 10p)\times 10}
 $$
 
@@ -665,10 +604,10 @@ $$
 \begin{align*}
 E &= 
 \begin{bmatrix}
-\epsilon_{1,lcpi} & \epsilon_{1,lgold} & \ldots & \epsilon_{1,exr} \\
-\epsilon_{2,lcpi} & \epsilon_{2,lgold} & \ldots & \epsilon_{2,exr} \\
+\epsilon_{1,lcpi} & \epsilon_{1,infexp} & \ldots & \epsilon_{1,exr} \\
+\epsilon_{2,lcpi} & \epsilon_{2,infexp} & \ldots & \epsilon_{2,exr} \\
 \vdots & \vdots & \ddots & \vdots \\
-\epsilon_{T,lcpi} & \epsilon_{T,lgold} & \ldots & \epsilon_{T,exr}
+\epsilon_{T,lcpi} & \epsilon_{T,infexp} & \ldots & \epsilon_{T,exr}
 \end{bmatrix}_{T\times 10}
 \\
 \end{align*}

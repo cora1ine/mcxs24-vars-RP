@@ -127,6 +127,11 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#model-application-and-objective-fulfillment" id="toc-model-application-and-objective-fulfillment" class="nav-link" data-scroll-target="#model-application-and-objective-fulfillment">Model Application and Objective Fulfillment</a></li>
   </ul></li>
+  <li><a href="#estimation-procedure-and-algorithm" id="toc-estimation-procedure-and-algorithm" class="nav-link" data-scroll-target="#estimation-procedure-and-algorithm">Estimation Procedure and Algorithm</a>
+  <ul class="collapse">
+  <li><a href="#basic-model" id="toc-basic-model" class="nav-link" data-scroll-target="#basic-model">Basic Model</a></li>
+  <li><a href="#model-extension" id="toc-model-extension" class="nav-link" data-scroll-target="#model-extension">Model Extension</a></li>
+  </ul></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul></li>
   </ul>
@@ -177,49 +182,51 @@ div.csl-indent {
 <h3 class="anchored" data-anchor-id="data-selection-and-rationale">Data Selection and Rationale</h3>
 <ul>
 <li><p><strong>Direct Inflationary Indicators:</strong></p>
-<p>1.<span class="math inline">\(cpi_i\)</span>: Consumer Price Index (CPI) from ABS.</p>
+<p>1.<span class="math inline">\(cpi_t\)</span>: Consumer Price Index (CPI) from ABS.</p>
 <p>CPI directly measure inflation by follow formula:</p>
-<p><span id="eq-1"><span class="math display">\[Inflation  = \frac{CPI_{Quarter \ of \ These \ Year}}{CPI_{Quarter \ of \ Previous \ Year} )}\times 100 \tag{1}\]</span></span></p>
+<p><span id="eq-1"><span class="math display">\[Inflation  = (\frac{CPI_{Quarter \ of \ These \ Year}}{CPI_{Quarter \ of \ Previous \ Year} } - 1 )\times 100 \tag{1}\]</span></span></p>
 <p>CPI is the basic data for measuring inflation. It is more stable and less affected by seasonal factors and short-term fluctuations than the annual inflation rate from which it is derived. In VAR, raw time series data rather than rates of change are used to capture and model the dynamic nature of the data.</p>
-<p>2.<span class="math inline">\(gold_i\)</span>: Gold price from yahoo finance.</p>
-<p>Gold is widely viewed as a safe-haven asset, meaning investors are likely to buy it as a store of value during s of economic uncertainty and rising inflation expectations. Such purchases will increase the price of gold.</p></li>
+<p>2.<span class="math inline">\(infexp_t\)</span>: Business inflation expectations – 3-months ahead from RBA</p>
+<p>Inflation expectations often guide consumer and business behavior; if inflation is expected to rise, they might make purchases and raise prices in advance, thus driving actual inflation up in the short term. Meanwhile, central banks closely monitor inflation expectations, adjusting monetary policies to influence these expectations and control actual inflation to maintain price stability.</p></li>
 <li><p><strong>Economic Activity and Policy Indicators:</strong></p>
 <ol start="3" type="1">
-<li><span class="math inline">\(gdp_i\)</span>: Gross Domestic Product (GDP) from ABS.</li>
+<li><span class="math inline">\(gdp_t\)</span>: Gross Domestic Product (GDP) from ABS.</li>
 </ol>
 <p>GDP reflects the size and growth rate of a country’s economy. When GDP increases, it indicates increased economic activity, which can lead to demand-pull inflation because increased demand may exceed current production capacity, pushing up prices.</p>
 <ol start="4" type="1">
-<li><span class="math inline">\(crt_i\)</span>: Cash rate target published by RBA.</li>
+<li><span class="math inline">\(crt_t\)</span>: Cash rate target published by RBA.</li>
 </ol>
 <p>This is the main tool used by the RBA to influence economic activity. Raising the cash rate is usually aimed at reducing borrowing and spending, thereby reducing inflationary pressures.</p>
 <ol start="5" type="1">
-<li><span class="math inline">\(unemp_i\)</span>: Unemployment rate from ABS.</li>
+<li><span class="math inline">\(unemp_t\)</span>: Unemployment rate from ABS.</li>
 </ol>
 <p>It indicate the level of slack in the labor market, influencing wage-push inflation.</p>
 <ol start="6" type="1">
-<li><span class="math inline">\(abn_i\)</span>: All banknotes issued by denomination</li>
+<li><span class="math inline">\(m_t\)</span>: Money aggregate (Broad money) from RBA.</li>
 </ol>
-<p>When banks issue more banknotes, it generally signifies an increase in the money supply. According to the Quantity Theory of Money, if the increase in money supply exceeds the demand for economic growth, it could lead to inflation, that is, an increase in the level of prices.</p></li>
+<p>‘Broad money’ is defined as ‘M3’ plus ‘Other borrowings from private sector by AFIs’. When the growth rate of broad money supply in an economy exceeds the growth rate of its real output, it leads to more money chasing the same amount of goods and services, causing price levels to rise, i.e., inflation. Therefore, central banks like the Reserve Bank of Australia (RBA) adjust interest rates and other tools to control the growth of broad money to achieve their inflation targets.</p></li>
 <li><p><strong>Market and External Trade Indicators:</strong></p>
 <ol start="7" type="1">
-<li><span class="math inline">\(export_i\)</span>: International exports from ABS.</li>
+<li><span class="math inline">\(export_t\)</span>: International exports from ABS.</li>
 </ol>
 <p>It affects trade balance and currency strength, influencing imported inflation.</p>
 <ol start="8" type="1">
-<li><span class="math inline">\(import_i\)</span>: International imports from ABS.</li>
+<li><span class="math inline">\(import_t\)</span>: International imports from ABS.</li>
 </ol>
 <p>Directly affect inflation through the cost of imported goods.</p>
 <ol start="9" type="1">
-<li><span class="math inline">\(aord_i\)</span>: All Ordinaries Index (AORD) from yahoo finance.</li>
+<li><span class="math inline">\(aord_t\)</span>: All Ordinaries Index (AORD) from yahoo finance.</li>
 </ol>
 <p>It reflects investor confidence and economic activity which can be pre-emptive indicators of inflation.</p>
 <ol start="10" type="1">
-<li><span class="math inline">\(exr_i\)</span>: AUD/USD exchange rate from yahoo finance.</li>
+<li><span class="math inline">\(exr_t\)</span>: AUD/USD exchange rate from RBA.</li>
 </ol>
 <p>It affects the price of imports and exports, contributing to inflation.</p></li>
 </ul>
-<p>Following Table shows the correlation between CPI and other variables. It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US <span class="citation" data-cites="kalemli-ozcan2020">(<a href="#ref-kalemli-ozcan2020" role="doc-biblioref">Kalemli-Ozcan et al. 2020</a>)</span>. This impact can be seen as an indirect effect of rising unemployment rates on inflation. Therefore, despite the weak correlation between unemployment rate and CPI, it is still important to include it in the model for a comprehensive analysis.</p>
-<p>Despite the low direct correlation between exchange rates and CPI, this does not mean exchange rates have no impact on inflation. On the contrary, by adjusting the impact of the gold price (priced in USD) on Australia’s CPI, exchange rate fluctuations play a significant role in the model. This approach highlights the mechanism by which exchange rates indirectly affect domestic inflation levels through the cost of imported goods (gold prices). Therefore, even though the direct correlation between exchange rates and CPI may be minor, considering the impact of exchange rates on the conversion of foreign-currency-priced goods (like gold prices) to the domestic currency, the indirect effect of exchange rate changes on inflation is significant.</p>
+<p>Following Table shows the correlation between CPI and other variables.</p>
+<p>Despite the low direct correlation between inflation expectations and CPI, inflation expectations may more closely reflect concerns about core inflation, which excludes volatile items like food and energy, whereas the CPI includes all items. If the trends between core inflation and overall inflation differ, this discrepancy can reduce the correlation between inflation expectations and the CPI. However, inflation expectations provide additional insight into how future economic conditions are perceived by consumers, businesses, and investors. This forward-looking perspective is important as it might influence economic decisions that are not immediately apparent through current CPI data.</p>
+<p>Exchange rate fluctuations are typically sensitive to immediate market sentiment and short-term capital flows, whereas the CPI, as a measure of past price level changes, often exhibits a lag in responding to market changes. Even if the correlation between the CPI and the AUD/USD exchange rate is low, including this variable can help researchers understand economic changes from a broader perspective. For example, changes in the exchange rate can indirectly affect domestic price levels through the cost of imports, especially in open economies.</p>
+<p>It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US <span class="citation" data-cites="kalemli-ozcan2020">(<a href="#ref-kalemli-ozcan2020" role="doc-biblioref">Kalemli-Ozcan et al. 2020</a>)</span>. This impact can be seen as an indirect effect of rising unemployment rates on inflation. Therefore, despite the weak correlation between unemployment rate and CPI, it is still important to include it in the model for a comprehensive analysis.</p>
 <div class="cell">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -230,7 +237,7 @@ div.csl-indent {
 </div>
 </div>
 <p>Figure 1 Correlation Matrix</p>
-<p>In summary, the dataset included data from 2000Q3 to 2023Q4, total 94 observation points with 10 variables.</p>
+<p>In summary, the dataset included data from 1990Q2 to 2023Q4, total 135 observation points with 10 variables.</p>
 </section>
 <section id="data-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="data-transformation">Data Transformation</h3>
@@ -241,7 +248,7 @@ div.csl-indent {
 <ul>
 <li><strong>Log Transformation</strong></li>
 </ul>
-<p>Based on the line graph of the original data below (Figure 2), we can observe that exponentially growing variables need to be linearized, such as <span class="math inline">\(cpi_i\)</span>, <span class="math inline">\(gold_i\)</span>, <span class="math inline">\(gdp_i\)</span>, <span class="math inline">\(abn_i\)</span>, <span class="math inline">\(export_i\)</span>, <span class="math inline">\(import_i\)</span>, <span class="math inline">\(aord_i\)</span>. Therefore, its logarithmically transformed form will be used in the following analysis.</p>
+<p>Based on the line graph of the original data below (Figure 2), we can observe that exponentially growing variables need to be linearized, such as <span class="math inline">\(cpi_t\)</span>, <span class="math inline">\(gdp_t\)</span>, <span class="math inline">\(m_t\)</span>, <span class="math inline">\(export_t\)</span>, <span class="math inline">\(import_t\)</span>, <span class="math inline">\(aord_t\)</span>. Therefore, its logarithmically transformed form will be used in the following analysis.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -267,7 +274,7 @@ div.csl-indent {
 </div>
 <p>Figure 3 ACF Plot for all data</p>
 <p>Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).</p>
-<p>According to Table 1, we can see that <span class="math inline">\(labn_i\)</span>, <span class="math inline">\(lexport_i\)</span>, require more than first order integration, while other require first-order integration(under 5% level of confidence).</p>
+<p>According to Table 1, we can see that <span class="math inline">\(infexp_t\)</span>, <span class="math inline">\(lm_t\)</span>, require more than first order integration, while other require first-order integration(under 5% level of confidence).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -283,61 +290,61 @@ div.csl-indent {
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">lcpi</td>
-<td style="text-align: center;">0.9799</td>
-<td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">lcpi~I(1)</td>
+<td style="text-align: center;">0.9864</td>
+<td style="text-align: center;">0.1132</td>
+<td style="text-align: center;">lcpi~I(n)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">lgold</td>
-<td style="text-align: center;">0.3901</td>
+<td style="text-align: center;">infexp</td>
+<td style="text-align: center;">0.0123</td>
 <td style="text-align: center;">0.0100</td>
-<td style="text-align: center;">lgold~I(1)</td>
+<td style="text-align: center;">infexp~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">lgdp</td>
-<td style="text-align: center;">0.3543</td>
+<td style="text-align: center;">0.0223</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">lgdp~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">crt</td>
-<td style="text-align: center;">0.4818</td>
-<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">0.5912</td>
+<td style="text-align: center;">0.0111</td>
 <td style="text-align: center;">crt~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">unemp</td>
-<td style="text-align: center;">0.1256</td>
+<td style="text-align: center;">0.3029</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">unemp~I(1)</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">labn</td>
-<td style="text-align: center;">0.8804</td>
-<td style="text-align: center;">0.2618</td>
-<td style="text-align: center;">labn~I(n)</td>
+<td style="text-align: center;">lm</td>
+<td style="text-align: center;">0.9054</td>
+<td style="text-align: center;">0.2152</td>
+<td style="text-align: center;">lm~I(n)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">lexport</td>
-<td style="text-align: center;">0.4611</td>
-<td style="text-align: center;">0.0817</td>
-<td style="text-align: center;">lexport~I(n)</td>
+<td style="text-align: center;">0.4567</td>
+<td style="text-align: center;">0.0100</td>
+<td style="text-align: center;">lexport~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">limport</td>
-<td style="text-align: center;">0.9502</td>
+<td style="text-align: center;">0.9341</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">limport~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">laord</td>
-<td style="text-align: center;">0.5183</td>
+<td style="text-align: center;">0.5570</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">laord~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">exr</td>
-<td style="text-align: center;">0.3001</td>
+<td style="text-align: center;">0.2857</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">exr~I(1)</td>
 </tr>
@@ -349,11 +356,8 @@ div.csl-indent {
 </div>
 </div>
 <p>Table 1 Unit root test for all data</p>
-<p>Given that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted not to apply differencing to any of the data sets.</p>
-<ul>
-<li>Minnesota prior method we will talk about later</li>
-</ul>
-<p>After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). Even after first order difference processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 50-60).</p>
+<p>Given that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply first differencing to all of the data sets.</p>
+<p>After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). Even after first order difference processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 120).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -367,113 +371,21 @@ div.csl-indent {
 </section>
 <section id="importance-of-key-variables-analysis" class="level3">
 <h3 class="anchored" data-anchor-id="importance-of-key-variables-analysis">Importance of Key Variables Analysis</h3>
-<p>The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation are CPI and gold price. Meanwhile, since this study is to explore whether the RBA’s recent suspension of raising the cash rate target has deemed the previous deflationary measures to be effective. So the cash rate target becomes one of the key variables. Below we focus on analyzing these three variables:</p>
+<p>The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation is inflation and inflation target. Meanwhile, because we use CPI as key variable, we first need to calculate quarterly inflation through CPI. Below we focus on analyzing these two variables:</p>
 <ul>
-<li>CPI: As Table 2 shows, using the last eight data in cpi to calculate the inflation rate in 2023, we found that it has shown a downward trend and reached the lowest value of this inflation of 4.05% in December 2023. Therefore, we have reason to believe that this downward trend will continue in 2024, and it is possible to fall back to the target range in 2025.</li>
-</ul>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="table-responsive">
-<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/03</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/06</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/09</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/12</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Inflation rate</td>
-<td style="text-align: center;">7.02</td>
-<td style="text-align: center;">6.03</td>
-<td style="text-align: center;">5.37</td>
-<td style="text-align: center;">4.05</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-</div>
-</div>
-<p>Table 2 Inflation Rate 2023</p>
-<ul>
-<li>Gold price: Observing the trend charts of gold prices and cpi in the past three years, we can see that the trends of the two are almost consistent, so we believe that it is reasonable to use international gold prices as inflation expectations. Although the gold price is denominated in US dollars, the inclusion of the Australian dollar against the US dollar exchange rate in the data set makes it feasible to convert the gold price into a measure of its impact on the Australian market.</li>
+<li><p>The actual and expected inflation rates appear to move in tandem over much of the time period, suggesting that expectations may be influenced by current and past inflation rates, or vice versa. At the same time, we see that people’s expectations for inflation are relatively conservative. For example, during the COVID, the expected inflation was around 5%, but the actual inflation later surged to about 7.8%.</p></li>
+<li><p>Regarding the specific inflation zone of 2-3%, it appears that both the expected and actual inflation rates oscillate into this range periodically. However, it seems that starting just before 2020, there’s a pronounced peak where expected inflation sharply rises above the actual inflation rate, which then converges back into the 2-3% range shortly after (although actual inflation rate still need some time). So we can foresee that inflation will indeed fall back to the 2-3% range in the near future.</p></li>
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/gold compute-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/plot inf and infexp-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Figure 5 CPI and Gold Price Last 3 Yrs Plot</p>
-<ul>
-<li>Cash rate target: By comparing the cash rate target (quarterly average) over the past 2 year with the inflation rate, we can see that the cash rate target has increased by 1 percentage point over the past year (percentage change is 0.21), which is a decrease from the almost 3 percentage point increase in 2022 (percentage change nearly 35). The inflation rate has indeed shown a significant downward trend in 2023. There are reasons to believe that the effects of the RBA’s monetary tightening policy have already been reflected.</li>
-</ul>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="table-responsive">
-<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
-<thead>
-<tr class="header">
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2021/12</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2022/03</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2022/06</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2022/09</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2022/12</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2022 annual change</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/03</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/06</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/09</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023/12</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">2023 annual change</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: center;">Inflation rate</td>
-<td style="text-align: center;">3.50</td>
-<td style="text-align: center;">5.09</td>
-<td style="text-align: center;">6.14</td>
-<td style="text-align: center;">7.27</td>
-<td style="text-align: center;">7.83</td>
-<td style="text-align: center;">1.24</td>
-<td style="text-align: center;">7.02</td>
-<td style="text-align: center;">6.03</td>
-<td style="text-align: center;">5.37</td>
-<td style="text-align: center;">4.05</td>
-<td style="text-align: center;">-0.48</td>
-</tr>
-<tr class="even">
-<td style="text-align: center;">Cash rate target</td>
-<td style="text-align: center;">0.85</td>
-<td style="text-align: center;">2.35</td>
-<td style="text-align: center;">3.10</td>
-<td style="text-align: center;">3.60</td>
-<td style="text-align: center;">4.10</td>
-<td style="text-align: center;">3.82</td>
-<td style="text-align: center;">4.10</td>
-<td style="text-align: center;">4.35</td>
-<td style="text-align: center;">4.35</td>
-<td style="text-align: center;">4.35</td>
-<td style="text-align: center;">0.06</td>
-</tr>
-</tbody>
-</table>
-</div>
-
-
-</div>
-</div>
-<p>Table 3 Cash Rate Target vs Inflation Rate</p>
-<p>In summary, based on the above analysis, it is expected that gold prices and CPI will have a positive correlation, but the cash rate target will have a negative correlation. This is also consistent with the correlations in Figure 1.</p>
+<p>Figure 5 Inflation Rate vs Expected Inflation Rate</p>
 </section>
 </section>
 <section id="model-and-hypothesis" class="level2">
@@ -494,42 +406,42 @@ Regarding model selection, the VAR model, capable of concurrently integrating th
 <p><span class="math display">\[
 Y=
 \begin{bmatrix}
-y_{lcpi,1} &amp; y_{lgold,1} &amp; y_{lgdp,1} &amp; y_{crt,1} &amp; y_{unemp,1} &amp; y_{labn,1} &amp; y_{lexport,1} &amp; y_{limport,1} &amp; y_{laord,1} &amp; y_{exr,1}\\
-\ y_{lcpi,2} &amp; y_{lgold,2} &amp; y_{lgdp,2} &amp; y_{crt,2} &amp; y_{unemp,2} &amp; y_{labn,2} &amp; y_{lexport,2} &amp; y_{limport,2} &amp; y_{laord,2} &amp; y_{exr,2} \\
+y_{lcpi,1} &amp; y_{infexp,1} &amp; y_{lgdp,1} &amp; y_{crt,1} &amp; y_{unemp,1} &amp; y_{lm,1} &amp; y_{lexport,1} &amp; y_{limport,1} &amp; y_{laord,1} &amp; y_{exr,1}\\
+\ y_{lcpi,2} &amp; y_{infexp,2} &amp; y_{lgdp,2} &amp; y_{crt,2} &amp; y_{unemp,2} &amp; y_{lm,2} &amp; y_{lexport,2} &amp; y_{limport,2} &amp; y_{laord,2} &amp; y_{exr,2} \\
 \vdots  &amp; \vdots  &amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots&amp; \vdots &amp; \vdots  \\
-y_{lcpi,T} &amp; y_{lgold,T} &amp; y_{lgdp,T} &amp; y_{crt,T} &amp; y_{unemp,T} &amp; y_{labn,T} &amp; y_{lexport,T} &amp; y_{limport,T} &amp; y_{laord,T} &amp; y_{exr,T}\\
+y_{lcpi,T} &amp; y_{infexp,T} &amp; y_{lgdp,T} &amp; y_{crt,T} &amp; y_{unemp,T} &amp; y_{lm,T} &amp; y_{lexport,T} &amp; y_{limport,T} &amp; y_{laord,T} &amp; y_{exr,T}\\
 \end{bmatrix}_{T \times 10}
 \]</span></p>
 <p><span class="math display">\[
 X=\begin{bmatrix}
-1 &amp; y_{lcpi,t-1} &amp; y_{lgold,t-1} &amp; \ldots &amp; y_{exr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{lgold,t-p} &amp; \ldots &amp;  y_{exr,t-p} \\
-1 &amp; y_{lcpi,t-2} &amp; y_{lgold,t-2} &amp; \ldots &amp; y_{exr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{lgold,t-p-1} &amp; \ldots &amp;  y_{exr,t-p-1} \\
+1 &amp; y_{lcpi,t-1} &amp; y_{infexp,t-1} &amp; \ldots &amp; y_{exr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{lgold,t-p} &amp; \ldots &amp;  y_{exr,t-p} \\
+1 &amp; y_{lcpi,t-2} &amp; y_{infexp,t-2} &amp; \ldots &amp; y_{exr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{lgold,t-p-1} &amp; \ldots &amp;  y_{exr,t-p-1} \\
 \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp;  \ddots &amp; \vdots \\
-1 &amp; y_{lcpi,1} &amp; y_{lgold,1} &amp; \ldots &amp; y_{exr,1} &amp; \ldots &amp; y_{lcpi,1-p} &amp; y_{lgold,1-p} &amp; \ldots &amp;  y_{exr,1-p}\\
+1 &amp; y_{lcpi,1} &amp; y_{infexp,1} &amp; \ldots &amp; y_{exr,1} &amp; \ldots &amp; y_{lcpi,1-p} &amp; y_{lgold,1-p} &amp; \ldots &amp;  y_{exr,1-p}\\
 \end{bmatrix}_{T\times (1+10p)}
 \]</span></p>
 <p><span class="math display">\[
 A = \begin{bmatrix}
 \mu_{lcpi} &amp; \mu_{gold} &amp; \ldots &amp; \mu_{lexr} \\
-A_{1,lcpi}^{(1)} &amp; A_{1,lgold}^{(1)} &amp; \ldots &amp; A_{1,exr}^{(1)} \\
-A_{2,lpci}^{(1)} &amp; A_{2,lgold}^{(1)} &amp; \ldots &amp; A_{2,exr}^{(1)} \\
+A_{1,lcpi}^{(1)} &amp; A_{1,infexp}^{(1)} &amp; \ldots &amp; A_{1,exr}^{(1)} \\
+A_{2,lpci}^{(1)} &amp; A_{2,infexp}^{(1)} &amp; \ldots &amp; A_{2,exr}^{(1)} \\
 \vdots  &amp; \vdots  &amp; \ddots &amp; \vdots  \\
-A_{10,lcpi}^{(1)} &amp; A_{10, lgold}^{(1)} &amp; \ldots &amp; A_{10,exr}^{(1)} \\
+A_{10,lcpi}^{(1)} &amp; A_{10, infexp}^{(1)} &amp; \ldots &amp; A_{10,exr}^{(1)} \\
 \vdots  &amp; \vdots  &amp; \ddots &amp; \vdots  \\
-A_{1,lcpi}^{(p)} &amp; A_{1,lgold}^{(p)} &amp; \ldots &amp; A_{1,exr}^{(p)} \\
-A_{2,lcpi}^{(p)} &amp; A_{2,lgold}^{(p)} &amp; \ldots &amp; A_{2,exr}^{(p)} \\
+A_{1,lcpi}^{(p)} &amp; A_{1,infexp}^{(p)} &amp; \ldots &amp; A_{1,exr}^{(p)} \\
+A_{2,lcpi}^{(p)} &amp; A_{2,infexp}^{(p)} &amp; \ldots &amp; A_{2,exr}^{(p)} \\
 \vdots  &amp; \vdots  &amp; \ddots &amp; \vdots  \\
-A_{10,lcpi}^{(p)} &amp; A_{10,lgold}^{(p)} &amp; \ldots &amp; A_{10,exr}^{(p)} \\
+A_{10,lcpi}^{(p)} &amp; A_{10,infexp}^{(p)} &amp; \ldots &amp; A_{10,exr}^{(p)} \\
 \end{bmatrix}_{(1 + 10p)\times 10}
 \]</span></p>
 <p><span class="math display">\[
 \begin{align*}
 E &amp;=
 \begin{bmatrix}
-\epsilon_{1,lcpi} &amp; \epsilon_{1,lgold} &amp; \ldots &amp; \epsilon_{1,exr} \\
-\epsilon_{2,lcpi} &amp; \epsilon_{2,lgold} &amp; \ldots &amp; \epsilon_{2,exr} \\
+\epsilon_{1,lcpi} &amp; \epsilon_{1,infexp} &amp; \ldots &amp; \epsilon_{1,exr} \\
+\epsilon_{2,lcpi} &amp; \epsilon_{2,infexp} &amp; \ldots &amp; \epsilon_{2,exr} \\
 \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
-\epsilon_{T,lcpi} &amp; \epsilon_{T,lgold} &amp; \ldots &amp; \epsilon_{T,exr}
+\epsilon_{T,lcpi} &amp; \epsilon_{T,infexp} &amp; \ldots &amp; \epsilon_{T,exr}
 \end{bmatrix}_{T\times 10}
 \\
 \end{align*}
@@ -538,6 +450,47 @@ E &amp;=
 <h3 class="anchored" data-anchor-id="model-application-and-objective-fulfillment">Model Application and Objective Fulfillment</h3>
 <p>Based on the model above, we will employ VAR of order p to carry out forecasts for the next two years. Given that the data is quarterly, setting the forecast horizon (h) to 8 quarters for our iterative forecasting process.</p>
 <p>In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as <span class="math inline">\(lcpi_{T+h|T}\)</span>. Subsequently, we’ll utilize the forecasted (log) CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.</p>
+</section>
+</section>
+<section id="estimation-procedure-and-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="estimation-procedure-and-algorithm">Estimation Procedure and Algorithm</h2>
+<section id="basic-model" class="level3">
+<h3 class="anchored" data-anchor-id="basic-model">Basic Model</h3>
+<p>The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution. Minnesota prior with some stylised facts about the macroeconomic time series, since <span class="math inline">\(cpi_t\)</span> and <span class="math inline">\(m_t\)</span> are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.</p>
+<p>The estimation procedures to draw from the posterior follows the steps below:</p>
+<p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span> and <span class="math inline">\(\underline{v}\)</span>.</p>
+<p><span class="math display">\[
+p(A,\Sigma) = p(A|\Sigma)p(\Sigma)
+\]</span></p>
+<p><span class="math display">\[A|\Sigma \sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V} ) \]</span> <span class="math display">\[\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{v})\]</span></p>
+<ul>
+<li><span class="math inline">\(\underline{A}\)</span> is a <span class="math inline">\(K \times N\)</span> matrix, reflect the random walk with no drift process on the first lag of <span class="math inline">\(cpi_{t}\)</span>, and 0 elsewhere.</li>
+</ul>
+<p><span class="math display">\[
+\underline{A} = \left[
+\underbrace{\textbf{0}_{10\times 1}}_{intercept} \quad
+\underbrace{\textbf{I}_{10} \quad\begin{matrix}
+0 &amp; \cdots  &amp;  0\\
+\vdots  &amp; \ddots  &amp; \vdots  \\
+0 &amp; \cdots  &amp; 0
+\end{matrix}_{10\times10(p-1))}}_{N\times(K-1)} \quad
+\right]'
+\]</span></p>
+<ul>
+<li><p><span class="math inline">\(\underline{V}\)</span> represents the shrinking level of the specified <span class="math inline">\(\underline{A}\)</span>.</p>
+<p>It’s a <span class="math inline">\(K\)</span> vector diagonal matrix with the diagonal elements set to be the desired shrinking level.</p></li>
+</ul>
+<p><span class="math display">\[
+\underline{V} = diag\left[ \underbrace{\kappa_{2}}_{intercept} \quad \underbrace{\kappa_{1}(\textbf{p} ^{-2}\otimes l^{'}_{N})}_{A_{1} \ to \ A_{p}}  \right]
+\]</span></p>
+<ul>
+<li><p><span class="math inline">\(\underline{S}\)</span> is <span class="math inline">\(10\times10\)</span> symmetric matrix where the diagonal represents the variances of individual variables and the off-diagonals represent the covariances between the variables.</p></li>
+<li><p><span class="math inline">\(\underline{v}\)</span> is degree of freedom <span class="math inline">\(N+1\)</span>, and it is a single values because variance is assumed to be the same for all elements of <span class="math inline">\(\Sigma\)</span><br>
+.</p></li>
+</ul>
+</section>
+<section id="model-extension" class="level3">
+<h3 class="anchored" data-anchor-id="model-extension">Model Extension</h3>
 </section>
 </section>
 <section id="references" class="level2 unnumbered">

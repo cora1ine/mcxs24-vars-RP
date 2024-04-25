@@ -619,4 +619,47 @@ Based on the model above, we will employ VAR of order p to carry out forecasts f
 
 In the forecasting process, we will concentrate on determining the conditional mean and confidence interval of the projected CPI, denoted as $lcpi_{T+h|T}$. Subsequently, we'll utilize the forecasted (log) CPI values to calculate the inflation rate and assess whether it aligns with the target inflation range of 2-3%.
 
+## Estimation Procedure and Algorithm
+
+### Basic Model
+
+The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution. Minnesota prior with some stylised facts about the macroeconomic time series, since $cpi_t$ and $m_t$ are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.
+
+The estimation procedures to draw from the posterior follows the steps below:
+
+**Step 1**: Prior distribution is presented below. We will specify $\underline{A}$, $\underline{V}$, $\underline{S}$ and $\underline{v}$.
+
+$$
+p(A,\Sigma) = p(A|\Sigma)p(\Sigma)
+$$
+
+$$A|\Sigma \sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V} ) $$ $$\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{v})$$
+
+-   $\underline{A}$ is a $K \times N$ matrix, reflect the random walk with no drift process on the first lag of $cpi_{t}$, and 0 elsewhere.
+
+$$
+\underline{A} = \left[ 
+\underbrace{\textbf{0}_{10\times 1}}_{intercept} \quad 
+\underbrace{\textbf{I}_{10} \quad\begin{matrix}
+0 & \cdots  &  0\\
+\vdots  & \ddots  & \vdots  \\
+0 & \cdots  & 0
+\end{matrix}_{10\times10(p-1))}}_{N\times(K-1)} \quad 
+\right]'
+$$
+
+-   $\underline{V}$ represents the shrinking level of the specified $\underline{A}$.
+
+    It's a $K$ vector diagonal matrix with the diagonal elements set to be the desired shrinking level.
+
+$$
+\underline{V} = diag\left[ \underbrace{\kappa_{2}}_{intercept} \quad \underbrace{\kappa_{1}(\textbf{p} ^{-2}\otimes l^{'}_{N})}_{A_{1} \ to \ A_{p}}  \right]
+$$
+
+-   $\underline{S}$ is $10\times10$ symmetric matrix where the diagonal represents the variances of individual variables and the off-diagonals represent the covariances between the variables.
+
+-   $\underline{v}$ is degree of freedom $N+1$, and it is a single values because variance is assumed to be the same for all elements of $\Sigma$.\
+
+### Model Extension
+
 ## References {.unnumbered}

@@ -414,10 +414,10 @@ y_{lcpi,T} &amp; y_{infexp,T} &amp; y_{lgdp,T} &amp; y_{crt,T} &amp; y_{unemp,T}
 \]</span></p>
 <p><span class="math display">\[
 X=\begin{bmatrix}
-1 &amp; y_{lcpi,t-1} &amp; y_{infexp,t-1} &amp; \ldots &amp; y_{exr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{lgold,t-p} &amp; \ldots &amp;  y_{exr,t-p} \\
-1 &amp; y_{lcpi,t-2} &amp; y_{infexp,t-2} &amp; \ldots &amp; y_{exr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{lgold,t-p-1} &amp; \ldots &amp;  y_{exr,t-p-1} \\
+1 &amp; y_{lcpi,t-1} &amp; y_{infexp,t-1} &amp; \ldots &amp; y_{exr,t-1} &amp; \ldots &amp; y_{lcpi,t-p} &amp; y_{infexp,t-p} &amp; \ldots &amp;  y_{exr,t-p} \\
+1 &amp; y_{lcpi,t-2} &amp; y_{infexp,t-2} &amp; \ldots &amp; y_{exr,t-2} &amp; \ldots &amp; y_{lcpi,t-p-1} &amp; y_{infexp,t-p-1} &amp; \ldots &amp;  y_{exr,t-p-1} \\
 \vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp;  \ddots &amp; \vdots \\
-1 &amp; y_{lcpi,1} &amp; y_{infexp,1} &amp; \ldots &amp; y_{exr,1} &amp; \ldots &amp; y_{lcpi,1-p} &amp; y_{lgold,1-p} &amp; \ldots &amp;  y_{exr,1-p}\\
+1 &amp; y_{lcpi,1} &amp; y_{infexp,1} &amp; \ldots &amp; y_{exr,1} &amp; \ldots &amp; y_{lcpi,1-p} &amp; y_{infexp,1-p} &amp; \ldots &amp;  y_{exr,1-p}\\
 \end{bmatrix}_{T\times (1+10p)}
 \]</span></p>
 <p><span class="math display">\[
@@ -485,8 +485,8 @@ p(A,\Sigma) = p(A|\Sigma)p(\Sigma)
 \]</span></p>
 <ul>
 <li><p><span class="math inline">\(\underline{S}\)</span> is <span class="math inline">\(10\times10\)</span> symmetric matrix where the diagonal represents the variances of individual variables and the off-diagonals represent the covariances between the variables.</p></li>
-<li><p><span class="math inline">\(\underline{v}\)</span> is degree of freedom <span class="math inline">\(N+1\)</span>, and it is a single values because variance is assumed to be the same for all elements of <span class="math inline">\(\Sigma\)</span><br>
-.</p></li>
+<li><p><span class="math inline">\(\underline{v}\)</span> is degree of freedom <span class="math inline">\(N+1\)</span>, and it is a single values because variance is assumed to be the same for all elements of <span class="math inline">\(\Sigma\)</span>.<br>
+</p></li>
 </ul>
 </section>
 <section id="model-extension" class="level3">

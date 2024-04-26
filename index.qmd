@@ -416,7 +416,8 @@ dadf.m     = adfTest(diff(all_data[,6]), lags=4, type="nc")    # don't reject ->
 
 # ol.export.aic.ar$order
 adf.export  = adfTest(all_data[,7], lags=6, type="c")           # don't reject -> non-stationary
-dadf.export = adfTest(diff(all_data[,7]), lags=5, type="nc")    # don't reject -> non-stationary
+dadf.export = adfTest(diff(all_data[,7]), lags=5, type="nc")    # reject -> (I1 is stationary)
+
 
 
 # ol.import.aic.ar$order
@@ -435,11 +436,11 @@ dadf.exr  = adfTest(diff(all_data[,10]), lags=0, type="nc")        # reject -> (
 Unit_Root_Test_table <- 
   tibble( " " = c("lcpi", "infexp", "lgdp", "crt", "unemp", "lm", "lexport", "limport", "laord", "exr"),
           "p value of ADF test of AR" 
-          = round(c(adf.cpi@test$p.value,    adf.infexp@test$p.value,
-                    adf.gdp@test$p.value,    adf.crt@test$p.value,    
-                    adf.unemp@test$p.value,  adf.m@test$p.value,
-                    adf.export@test$p.value, adf.import@test$p.value,
-                    adf.aord@test$p.value,   adf.exr@test$p.value),4),
+          = round(c(adf.cpi@test$p.value,     adf.infexp@test$p.value,
+                    adf.gdp@test$p.value,     adf.crt@test$p.value,    
+                    adf.unemp@test$p.value,   adf.m@test$p.value,
+                    adf.export@test$p.value,  adf.import@test$p.value,
+                    adf.aord@test$p.value,    adf.exr@test$p.value),4),
           "p value of ADF test of diff-AR" 
           = round(c(dadf.cpi@test$p.value,    dadf.infexp@test$p.value,
                     dadf.gdp@test$p.value,    dadf.crt@test$p.value,    
@@ -552,13 +553,13 @@ Based on the above analysis, all 10 variables play an important role in the fitt
 
 $$y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t$$
 
-$$\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(0_{10}, \Sigma)$$
+$$\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(\textbf{0}_{10}, \Sigma)$$
 
 In matrix notation:
 
 $$Y = X A +E$$
 
-$$E|X\sim \mathcal{MN}_{T\times 10}(0,\Sigma,I_T)$$
+$$E|X\sim \mathcal{MN}_{T\times 10}(\textbf{0},\Sigma,I_T)$$
 
 -   $Y$ is $T\times 10$matrix of dependent variables.
 
@@ -635,7 +636,7 @@ $$
 
 $$A|\Sigma \sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V} ) $$ $$\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{v})$$
 
--   $\underline{A}$ is a $K \times N$ matrix, reflect the random walk with no drift process on the first lag of $cpi_{t}$, and 0 elsewhere.
+-   $\underline{A}$ is a $K \times 10$ matrix, reflect the random walk with no drift process on the first lag of $cpi_{t}$, and 0 elsewhere.
 
 $$
 \underline{A} = \left[ 
@@ -658,7 +659,30 @@ $$
 
 -   $\underline{S}$ is $10\times10$ symmetric matrix where the diagonal represents the variances of individual variables and the off-diagonals represent the covariances between the variables.
 
--   $\underline{v}$ is degree of freedom $N+1$, and it is a single values because variance is assumed to be the same for all elements of $\Sigma$.\
+-   $\underline{v}$ is degree of freedom, and it is a single values because variance is assumed to be the same for all elements of $\Sigma$.
+
+**Step 2**: Posterior distribution shows below with the implementation of the specification in Step 1
+
+$$
+p(A,\Sigma | Y,X) = p(A|Y,X,\Sigma)p(\Sigma|Y,X)
+$$ $$
+p(A|Y,X,\Sigma)\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma,\overline{V} ) 
+$$ $$
+p(\Sigma|Y,X)\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
+$$ $$
+\overline{V} = (X'X + \underline{V}^{-1})^{-1}
+$$ $$
+\overline{A} = \overline{V}(X'Y+\underline{V}^{-1}\underline{A}) 
+$$ $$
+\overline{v} = T + \underline{v}
+$$ $$
+\overline{S} = \underline{S}+Y'Y+\underline{A'} \ \underline{V}^{-1}\underline{A}-\overline{A'}\overline{V}^{-1}\overline{A} 
+$$
+
+**Step 3**: As $\overline{A}$, $\overline{V}$, $\overline{S}$ and $\overline{v}$ are specified:
+
+-   firstly draw $\Sigma$ from $\mathcal{IW}_{10}(\overline{S}, \overline{v})$, and take $\Sigma$ as known
+-   insert it in $\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma,\overline{V} )$ to draw $A$
 
 ### Model Extension
 

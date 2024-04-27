@@ -9,18 +9,18 @@ bibliography: references.bib
 ---
 
 > **Abstract.** The purpose of this research is to explore the trend in Australia's inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model.
->
+
 > **Keywords.** bsvars, quarto, R, Australia inflation rate
 
 # Introduction
 
 ## Question Objective and Motivation
 
-**Objective:**
-
 **Question:**
 
 Will Australia's inflation rate fall back to the 2-3% inflation target range in 2025?
+
+**Objective and Motivation:**
 
 Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country [@bernoth2021]. The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026. Influenced by the COVID-19 pandemic, Blot et al. deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates [@EuropeanParliament.2022]. Therefore, this study will assess the reasonableness of the RBA's inflation rate forecast for the next two years. During the COVID-19 period, Australia's inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.
 
@@ -43,17 +43,24 @@ library(zoo)
 library(ggplot2)      # plot in same graph
 ```
 
-```{r colour}
+```{r Colour}
 #| echo: false
 #| message: false
 #| warning: false
-#| 
-color1 = "blue"            # #0000FF
-color2 = "lightblue"       # #ADD8E6
-color3 = "royalblue"       # #4169E1
-color4 = "deepskyblue"     # #00BFFF
-color5 = "dodgerblue"      # #1E90FF
-color6 = "steelblue"       # #4682B4
+
+blue1 = "blue"            # #0000FF
+blue2 = "lightblue"       # #ADD8E6
+blue3 = "royalblue"       # #4169E1
+blue4 = "deepskyblue"     # #00BFFF
+blue5 = "dodgerblue"      # #1E90FF
+blue6 = "steelblue"       # #4682B4
+
+
+green1  = "#05386B"
+green2  = "#379683"
+green3  = "#5CDB95"
+green4  = "#8EE4AF"
+green5  = "#EDF5E1"
 ```
 
 ## Data and Data Properties
@@ -110,7 +117,7 @@ color6 = "steelblue"       # #4682B4
 
     It affects the price of imports and exports, contributing to inflation.
 
-```{r Data downloading, fig.pos="H"}
+```{r Data Downloading, fig.pos="H"}
 #| echo: false
 #| message: false
 #| warning: false
@@ -237,7 +244,7 @@ index(exr_data)   = correct_dates
 
 ```
 
-```{r Data combine, fig.pos="H"}
+```{r Data Combine, fig.pos="H"}
 #| echo: false
 #| message: false
 #| warning: false
@@ -292,7 +299,7 @@ corrplot(cor_matrix, method = "color",
 
 Figure 1 Correlation Matrix
 
-In summary, the dataset included data from 1990Q2 to 2023Q4, total 135 observation points with 10 variables.
+In summary, the dataset included data from 1990Q2 to 2023Q4, total 136 observation points with 10 variables.
 
 ### Data Transformation
 
@@ -316,7 +323,7 @@ par(mfcol = c(5, 2), mar = c(2, 2, 2, 2))
 
 for (i in 1:10) {
   ts.plot(all_data[, i], main = colnames(all_data)[i], 
-          ylab = "", xlab = "", col = color1)
+          ylab = "", xlab = "", col = blue1)
 }
 ```
 
@@ -493,7 +500,7 @@ par(mfcol = c(5, 2), mar = c(2, 2, 2, 2))
 
 for (i in 1:10) {
   ts.plot(all_data[, i], main = colnames(all_data)[i], 
-          ylab = "", xlab = "", col = color3)
+          ylab = "", xlab = "", col = green3)
 }
 ```
 
@@ -501,14 +508,14 @@ Figure 4 Line plot of adjusted data
 
 ### Importance of Key Variables Analysis
 
-```{r compute inf, fig.align='center',fig.pos='H'}
+```{r Compute inf, fig.align='center',fig.pos='H'}
 cpi_lag4 = lag(cpi_data, 4)
 inf_data = ((cpi_data / cpi_lag4)-1)*100
 inf_data = na.omit(inf_data)
 
 ```
 
-```{r combine key data, fig.align='center',fig.pos='H'}
+```{r Combine Key Data, fig.align='center',fig.pos='H'}
 key_data           = na.omit(merge(inf_data, infexp_data, crt_data))
 colnames(key_data) = c("inf_data", "infexp_data", "crt_data")
                         
@@ -520,21 +527,21 @@ The model selects ten variables related to Australian inflation. Among the varia
 
 -   Regarding the specific inflation zone of 2-3%, it appears that both the expected and actual inflation rates oscillate into this range periodically. However, it seems that starting just before 2020, there's a pronounced peak where expected inflation sharply rises above the actual inflation rate, which then converges back into the 2-3% range shortly after (although actual inflation rate still need some time). So we can foresee that inflation will indeed fall back to the 2-3% range in the near future.
 
-```{r plot inf and infexp, fig.align='center',fig.pos='H'}
+```{r Plot inf and infexp, fig.align='center',fig.pos='H'}
 
 data_df <- fortify.zoo(key_data)
 
 
 ggplot(data_df, aes(x = Index)) +
   geom_ribbon(aes(ymin = 2, ymax = 3, fill = "Target Inflation Zone"), 
-              fill = color2, alpha = 0.5) +
+              fill = blue2, alpha = 0.5) +
   geom_line(aes(y = inf_data, colour = "Inflation Rate")) +
   geom_line(aes(y = infexp_data, colour = "Expected Inflation Rate")) +
-  scale_fill_manual(values = c("Target Inflation Zone" = color2), 
+  scale_fill_manual(values = c("Target Inflation Zone" = blue2), 
                     name = "Legend", 
                     guide = guide_legend(override.aes = list(alpha = 0.5))) +
-  scale_color_manual(values = c("Inflation Rate" = color1, 
-                                "Expected Inflation Rate" = color4)) +
+  scale_color_manual(values = c("Inflation Rate" = blue1, 
+                                "Expected Inflation Rate" = blue4)) +
   labs(title = "Inflation Rate vs Expected Inflation Rate", 
        x = "Date", y = "Rate (%)") +
   theme_minimal() +
@@ -546,10 +553,9 @@ Figure 5 Inflation Rate vs Expected Inflation Rate
 
 ## Model and Hypothesis
 
-\
 Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting [@stock2001].
 
-Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.
+Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10, T=135.
 
 $$y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t$$
 
@@ -624,7 +630,7 @@ In the forecasting process, we will concentrate on determining the conditional m
 
 ### Basic Model
 
-The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution. Minnesota prior with some stylised facts about the macroeconomic time series, since $cpi_t$ and $m_t$ are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.
+The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution [@wozniakBsvarsBayesianEstimation2022]. Minnesota prior with some stylised facts about the macroeconomic time series, since $cpi_t$ and $m_t$ are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.
 
 The estimation procedures to draw from the posterior follows the steps below:
 
@@ -654,10 +660,10 @@ $$
     It's a $K$ vector diagonal matrix with the diagonal elements set to be the desired shrinking level.
 
 $$
-\underline{V} = diag\left[ \underbrace{\kappa_{2}}_{intercept} \quad \underbrace{\kappa_{1}(\textbf{p} ^{-2}\otimes l^{'}_{N})}_{A_{1} \ to \ A_{p}}  \right]
+\underline{V} = diag\left[ \underbrace{\kappa_{2}}_{intercept} \quad \underbrace{\kappa_{1}(\textbf{p} ^{-2}\otimes I^{'}_{N})}_{A_{1} \ to \ A_{p}}  \right]
 $$
 
--   $\underline{S}$ is $10\times10$ symmetric matrix where the diagonal represents the variances of individual variables and the off-diagonals represent the covariances between the variables.
+-   $\underline{S}$ is $10\times10$ symmetric matrix where the diagonal represents the variances of individual variables (diagonal of $\Sigma$) and the off-diagonals are 0.
 
 -   $\underline{v}$ is degree of freedom, and it is a single values because variance is assumed to be the same for all elements of $\Sigma$.
 
@@ -665,17 +671,27 @@ $$
 
 $$
 p(A,\Sigma | Y,X) = p(A|Y,X,\Sigma)p(\Sigma|Y,X)
-$$ $$
+$$ 
+
+$$
 p(A|Y,X,\Sigma)\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma,\overline{V} ) 
-$$ $$
+$$ 
+
+$$
 p(\Sigma|Y,X)\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
-$$ $$
+$$
+
+Therefore we can get: 
+$$
 \overline{V} = (X'X + \underline{V}^{-1})^{-1}
-$$ $$
+$$ 
+$$
 \overline{A} = \overline{V}(X'Y+\underline{V}^{-1}\underline{A}) 
-$$ $$
+$$ 
+$$
 \overline{v} = T + \underline{v}
-$$ $$
+$$ 
+$$
 \overline{S} = \underline{S}+Y'Y+\underline{A'} \ \underline{V}^{-1}\underline{A}-\overline{A'}\overline{V}^{-1}\overline{A} 
 $$
 
@@ -683,6 +699,106 @@ $$
 
 -   firstly draw $\Sigma$ from $\mathcal{IW}_{10}(\overline{S}, \overline{v})$, and take $\Sigma$ as known
 -   insert it in $\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma,\overline{V} )$ to draw $A$
+
+
+
+```{r Stat Setup, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+## Create Y and X
+y             = ts(all_data[,1:ncol(all_data)])     # 10col, 135row
+Y             = ts(y[5:nrow(y),], frequency=4)      # 10col, 131row
+X             = matrix(1,nrow(Y),1)
+for (i in 1:frequency(Y)){
+  X           = cbind(X,y[5:nrow(y)-i,])            # 10*4+1=41col, 131row
+}
+ 
+## Pre-setup 
+N             = ncol(Y)                             # N=10
+p             = frequency(Y)                        # p=4
+A.hat         = solve(t(X)%*%X)%*%t(X)%*%Y
+Sigma.hat     = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+
+# round(A.hat,3)
+# round(Sigma.hat,3)
+# round(cov2cor(Sigma.hat),3)
+
+
+# Prior distribution (with Minnesota prior)
+kappa.1       = 1                                     # shrinkage for A1 to Ap
+kappa.2       = 100                                   # shrinkage for constant 
+A.prior       = matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:11,] = diag(10)                             #?
+V.prior       = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+S.prior       = diag(diag(Sigma.hat))
+nu.prior      = N+1                                   #?
+```
+
+
+```{r Basic Model 1, fig.align='center',fig.pos='H'}
+#| echo: true
+#| message: false
+#| warning: false
+
+## Posterior sample draw function for basic model(posterior.draws)
+
+
+posterior.draws       = function (S, Y, X){
+    # normal-inverse Wishard posterior parameters
+    V.bar.inv         = t(X)%*%X + diag(1/diag(V.prior))
+    V.bar             = solve(V.bar.inv)
+    A.bar             = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
+    nu.bar            = nrow(Y) + nu.prior
+    S.bar             = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+    S.bar.inv         = solve(S.bar)
+    
+nu.prior
+  
+    # posterior draws 
+    Sigma.posterior   = rWishart(S, df=nu.bar, Sigma=S.bar.inv)
+    Sigma.posterior   = apply(Sigma.posterior,3,solve)
+    Sigma.posterior   = array(Sigma.posterior,c(N,N,S))
+    A.posterior       = array(rnorm(prod(c(dim(A.bar),S))),c(dim(A.bar),S))
+    L                 = t(chol(V.bar))
+    
+
+    for (s in 1:S){
+      A.posterior[,,s]= A.bar + L%*%A.posterior[,,s]%*%chol(Sigma.posterior[,,s])
+    }
+
+ 
+    output            = list(A.posterior=A.posterior, Sigma.posterior=Sigma.posterior)
+    return(output)
+}
+
+## Function Applying
+posterior.sample.draws = posterior.draws(S=50000, Y=Y, X=X) # sample use S=50000
+
+# Presenting output
+
+head(round(apply(posterior.sample.draws$A.posterior, 1:2, mean),5))           # posterior draw A
+head(round(apply(posterior.sample.draws$Sigma.posterior, 1:2, mean),5))       # posterior draw sigma
+```
+
+
+
+Below are the trace plots and histograms posterior to draws on $A$ and $\Sigma$. It is clear from the trace plots that the inflation has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1. 
+
+
+```{r, fig.align='center',fig.pos='H'}
+par(mfcol = c(2, 2), mar = c(4, 2, 2, 2))
+plot.ts(posterior.sample.draws[["A.posterior"]][2,1,], xlab = "Simulation times S", ylab = "CPI", col = blue6)    # 2 row 1 col of matrix A 
+hist(posterior.sample.draws[["A.posterior"]][2,1,], xlab = "CPI", col = blue2, main = '')
+plot.ts(posterior.sample.draws[["Sigma.posterior"]][1,1,], xlab = "Simulation times S", ylab = "CPI sigma", col = green4) 
+hist(posterior.sample.draws[["Sigma.posterior"]][1,1,], xlab = "CPI sigma", col = green2, main = '')
+```
+
+Figure 6 CPI simulation of basic model
+
+
+
 
 ### Model Extension
 

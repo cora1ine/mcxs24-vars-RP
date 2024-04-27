@@ -557,15 +557,11 @@ Regarding model selection, the VAR model, capable of concurrently integrating th
 
 Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10, T=135.
 
-$$y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t$$
-
-$$\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(\textbf{0}_{10}, \Sigma)$$
+$$y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t \\ \epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(\textbf{0}_{10}, \Sigma)$$ {#eq-2}
 
 In matrix notation:
 
-$$Y = X A +E$$
-
-$$E|X\sim \mathcal{MN}_{T\times 10}(\textbf{0},\Sigma,I_T)$$
+$$Y = X A +E \\ E|X\sim \mathcal{MN}_{T\times 10}(\textbf{0},\Sigma,I_T)$$ {#eq-3}
 
 -   $Y$ is $T\times 10$matrix of dependent variables.
 
@@ -637,13 +633,21 @@ The estimation procedures to draw from the posterior follows the steps below:
 **Step 1**: Prior distribution is presented below. We will specify $\underline{A}$, $\underline{V}$, $\underline{S}$ and $\underline{v}$.
 
 $$
-p(A,\Sigma) = p(A|\Sigma)p(\Sigma)
-$$
+\begin{align}
+p(A,\Sigma) &\propto L(A,\Sigma | Y,X) \ p(A|\Sigma) \ p(\Sigma) 
+\\
+p(A,\Sigma|Y,X) &= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X) 
+\\
 
-$$A|\Sigma \sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V} ) $$ $$\Sigma \sim \mathcal{IW}_{N}(\underline{S}, \underline{v})$$
+
+\\
+A|\Sigma &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V}) 
+\\ 
+\Sigma &\sim \mathcal{IW}_{N}(\underline{S}, \underline{v})
+\end{align}
+$$ {#eq-4}
 
 -   $\underline{A}$ is a $K \times 10$ matrix, reflect the random walk with no drift process on the first lag of $lcpi_{t}$ and $lm_{t}$, and 0 elsewhere.
-
 
 $$
 \underline{A} = \left[ \underbrace{\textbf{0}_{10\times 1}}_{intercept} \quad  
@@ -667,9 +671,7 @@ _{10\times10(p-1))}}_{N\times(K-1)}
 
 
 \right]'
-
 $$
-
 
 -   $\underline{V}$ represents the shrinking level of the specified $\underline{A}$.
 
@@ -686,35 +688,31 @@ $$
 **Step 2**: Posterior distribution shows below with the implementation of the specification in Step 1
 
 $$
-p(A,\Sigma | Y,X) = p(A|Y,X,\Sigma)p(\Sigma|Y,X)
-$$
+\begin{align}
+p(A,\Sigma | Y,X) &= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X) 
+\\
+ p(A|Y,X,\Sigma) &\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma,\overline{V} ) 
+\\
+ p(\Sigma|Y,X) &\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
+ \end{align}
+$$ {#eq-5}
 
-$$
-p(A|Y,X,\Sigma)\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma,\overline{V} ) 
-$$
-
-$$
-p(\Sigma|Y,X)\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
-$$
-
-Therefore we can get: $$
-\overline{V} = (X'X + \underline{V}^{-1})^{-1}
-$$ 
+Therefore we can get: 
 
 
 $$
-\overline{A} = \overline{V}(X'Y+\underline{V}^{-1}\underline{A}) 
-$$ 
-
-
+\begin{align}
+\overline{A} &= \overline{V}(X'Y+\underline{V}^{-1}\underline{A}) 
+\\
+\overline{V} &= (X'X + \underline{V}^{-1})^{-1} 
+\\ 
+\overline{S} &= \underline{S}+Y'Y+\underline{A'} \ \underline{V}^{-1}\underline{A}-\overline{A'}\overline{V}^{-1}\overline{A} 
+\\ 
+\overline{v} &= T + \underline{v}
+\end{align}
 $$
-\overline{v} = T + \underline{v}
-$$ 
 
 
-$$
-\overline{S} = \underline{S}+Y'Y+\underline{A'} \ \underline{V}^{-1}\underline{A}-\overline{A'}\overline{V}^{-1}\overline{A} 
-$$
 
 **Step 3**: As $\overline{A}$, $\overline{V}$, $\overline{S}$ and $\overline{v}$ are specified:
 
@@ -755,9 +753,6 @@ V.prior       = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior       = diag(diag(Sigma.hat))
 nu.prior      = N+1                                   #?
 ```
-
-
-
 
 ```{r Basic Model 1, fig.align='center',fig.pos='H'}
 #| echo: true
@@ -814,5 +809,35 @@ hist(posterior.sample.draws[["Sigma.posterior"]][1,1,], xlab = "CPI sigma", col 
 Figure 6 CPI simulation of basic model
 
 ### Model Extension
+
+
+The model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda $\lambda$ is introduced to adjust kappa $\kappa$.
+
+**Step 1**: Prior distribution is presented below. We will specify $\underline{A}$, $\underline{V}$, $\underline{S}$, $\underline{v}$ by Minnesota shrinkage parameter lambda $\lambda$.
+
+$$
+
+\begin{align}
+p(A,\Sigma, \lambda |Y,X) &\propto L(A,\Sigma | Y,X) \ p(A,\Sigma, \lambda) \\
+&\propto L(A,\Sigma | Y,X)  \ p(A |\Sigma, \lambda) \ p(\Sigma) \ p(\lambda)
+\end{align}
+
+
+$$
+where, each $p(A |\Sigma, k)$, $p(\Sigma)$, $p(k)$ is specified below:
+
+$$
+\begin{align}
+A |\Sigma, \lambda &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V})\\
+\Sigma &\sim \mathcal{IW}_{N}(\underline{S},\underline{v})\\
+\lambda &\sim \mathcal{Gamma}(\underline{S_{\lambda}}, \underline{v_{\lambda}} ) \\ 
+\end{align}
+$$
+
+
+The prior distribution is shown in the same way as the Step 1 of  basic model.
+
+**Step 2**: Posterior distribution shows below with the implementation of the specification in Step 1 by multiply $L(A,\Sigma | Y,X)  \ p(A |\Sigma, \lambda) \ p(\Sigma) \ p(\lambda)$
+
 
 ## References {.unnumbered}

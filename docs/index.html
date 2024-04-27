@@ -428,9 +428,20 @@ div.csl-indent {
 <h2 class="anchored" data-anchor-id="model-and-hypothesis">Model and Hypothesis</h2>
 <p>Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting <span class="citation" data-cites="stock2001">(<a href="#ref-stock2001" role="doc-biblioref">Stock and Watson 2001</a>)</span>.</p>
 <p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10, T=135.</p>
-<p><span id="eq-2"><span class="math display">\[y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t \\ \epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(\textbf{0}_{10}, \Sigma) \tag{2}\]</span></span></p>
+<p><span id="eq-2"><span class="math display">\[
+\begin{align}
+y_t &amp;= \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t
+\\
+\epsilon_t|Y_{t-1} &amp;\sim iid \mathcal{N}_{10}(\textbf{0}_{10}, \Sigma)
+\end{align}
+\tag{2}\]</span></span></p>
 <p>In matrix notation:</p>
-<p><span id="eq-3"><span class="math display">\[Y = X A +E \\ E|X\sim \mathcal{MN}_{T\times 10}(\textbf{0},\Sigma,I_T) \tag{3}\]</span></span></p>
+<p>$$ <span class="math display">\[\begin{align}
+Y &amp;= X A +E
+\\
+E|X &amp;\sim \mathcal{MN}_{T\times 10}(\textbf{0},\Sigma,I_T)
+
+\end{align}\]</span> $$ {#eq-3}</p>
 <ul>
 <li><p><span class="math inline">\(Y\)</span> is <span class="math inline">\(T\times 10\)</span>matrix of dependent variables.</p></li>
 <li><p><span class="math inline">\(X\)</span> is <span class="math inline">\(T \times (1 + 10p)\)</span> matrix of independent variables.</p></li>
@@ -492,25 +503,39 @@ E &amp;=
 <p>The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution <span class="citation" data-cites="wozniakBsvarsBayesianEstimation2022">(<a href="#ref-wozniakBsvarsBayesianEstimation2022" role="doc-biblioref">Woźniak 2022</a>)</span>. Minnesota prior with some stylised facts about the macroeconomic time series, since <span class="math inline">\(lcpi_t\)</span> and <span class="math inline">\(lm_t\)</span> are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.</p>
 <p>The estimation procedures to draw from the posterior follows the steps below:</p>
 <p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span> and <span class="math inline">\(\underline{v}\)</span>.</p>
-<p>$$ <span class="math display">\[\begin{align}
+<p><span class="math display">\[\begin{align}
 p(A,\Sigma) &amp;\propto L(A,\Sigma | Y,X) \ p(A|\Sigma) \ p(\Sigma)
 \\
 p(A,\Sigma|Y,X) &amp;= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
 \\
-
-
 \\
 A|\Sigma &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V})
 \\
 \Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S}, \underline{v})
-\end{align}\]</span> $$ {#eq-4}</p>
+\end{align}\]</span></p>
 <ul>
 <li><span class="math inline">\(\underline{A}\)</span> is a <span class="math inline">\(K \times 10\)</span> matrix, reflect the random walk with no drift process on the first lag of <span class="math inline">\(lcpi_{t}\)</span> and <span class="math inline">\(lm_{t}\)</span>, and 0 elsewhere.</li>
 </ul>
-<p>$$ = ’ $$</p>
+<p><span class="math display">\[
+\underline{A} = \left[ \underbrace{\textbf{0}_{10\times 1}}_{intercept} \quad  
+\underbrace{
+\begin{matrix}
+1 &amp; \cdots  &amp;  0 &amp; \cdots &amp;  0 \\
+\vdots  &amp; \ddots  &amp; \vdots  &amp; \ddots&amp;  \vdots \\
+0 &amp; \cdots  &amp; 1 &amp; \cdots&amp;  0 \\
+\vdots  &amp; \ddots  &amp; \vdots  &amp; \ddots&amp;  \vdots \\
+0 &amp; \cdots  &amp;  0 &amp; \cdots &amp;  0\\
+\end{matrix}_{10\times10} \quad
+\begin{matrix}
+0 &amp; \cdots  &amp;  0\\
+\vdots  &amp; \ddots  &amp; \vdots  \\
+0 &amp; \cdots  &amp; 0
+\end{matrix}
+_{10\times10(p-1))}}_{N\times(K-1)}
+\right]'
+\]</span></p>
 <ul>
-<li><p><span class="math inline">\(\underline{V}\)</span> represents the shrinking level of the specified <span class="math inline">\(\underline{A}\)</span>.</p>
-<p>It’s a <span class="math inline">\(K\)</span> vector diagonal matrix with the diagonal elements set to be the desired shrinking level.</p></li>
+<li><span class="math inline">\(\underline{V}\)</span> represents the shrinking level of the specified <span class="math inline">\(\underline{A}\)</span>. It’s a <span class="math inline">\(K\)</span> vector diagonal matrix with the diagonal elements set to be the desired shrinking level.</li>
 </ul>
 <p><span class="math display">\[
 \underline{V} = diag\left[ \underbrace{\kappa_{2}}_{intercept} \quad \underbrace{\kappa_{1}(\textbf{p} ^{-2}\otimes I^{'}_{N})}_{A_{1} \ to \ A_{p}}  \right]
@@ -528,7 +553,7 @@ p(A|Y,X,\Sigma) &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma,\overlin
 \\
 p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 \end{align}
-\tag{4}\]</span></span></p>
+\tag{3}\]</span></span></p>
 <p>Therefore we can get:</p>
 <p><span class="math display">\[
 \begin{align}
@@ -589,12 +614,13 @@ p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 <h3 class="anchored" data-anchor-id="model-extension">Model Extension</h3>
 <p>The model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span> is introduced to adjust kappa <span class="math inline">\(\kappa\)</span>.</p>
 <p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span>, <span class="math inline">\(\underline{v}\)</span> by Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span>.</p>
-<p>$$</p>
-<p><span class="math display">\[\begin{align}
+<p><span class="math display">\[
+\begin{align}
 p(A,\Sigma, \lambda |Y,X) &amp;\propto L(A,\Sigma | Y,X) \ p(A,\Sigma, \lambda) \\
 &amp;\propto L(A,\Sigma | Y,X)  \ p(A |\Sigma, \lambda) \ p(\Sigma) \ p(\lambda)
-\end{align}\]</span></p>
-<p>$$ where, each <span class="math inline">\(p(A |\Sigma, k)\)</span>, <span class="math inline">\(p(\Sigma)\)</span>, <span class="math inline">\(p(k)\)</span> is specified below:</p>
+\end{align}
+\]</span></p>
+<p>where, each <span class="math inline">\(p(A |\Sigma, k)\)</span>, <span class="math inline">\(p(\Sigma)\)</span>, <span class="math inline">\(p(k)\)</span> is specified below:</p>
 <p><span class="math display">\[
 \begin{align}
 A |\Sigma, \lambda &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V})\\

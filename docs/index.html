@@ -436,12 +436,13 @@ y_t &amp;= \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t
 \end{align}
 \tag{2}\]</span></span></p>
 <p>In matrix notation:</p>
-<p>$$ <span class="math display">\[\begin{align}
+<p><span id="eq-3"><span class="math display">\[
+\begin{align}
 Y &amp;= X A +E
 \\
 E|X &amp;\sim \mathcal{MN}_{T\times 10}(\textbf{0},\Sigma,I_T)
-
-\end{align}\]</span> $$ {#eq-3}</p>
+\end{align}
+\tag{3}\]</span></span></p>
 <ul>
 <li><p><span class="math inline">\(Y\)</span> is <span class="math inline">\(T\times 10\)</span>matrix of dependent variables.</p></li>
 <li><p><span class="math inline">\(X\)</span> is <span class="math inline">\(T \times (1 + 10p)\)</span> matrix of independent variables.</p></li>
@@ -545,7 +546,7 @@ _{10\times10(p-1))}}_{N\times(K-1)}
 <li><p><span class="math inline">\(\underline{v}\)</span> is degree of freedom, and it is a single values because variance is assumed to be the same for all elements of <span class="math inline">\(\Sigma\)</span>.</p></li>
 </ul>
 <p><strong>Step 2</strong>: Posterior distribution shows below with the implementation of the specification in Step 1</p>
-<p><span id="eq-5"><span class="math display">\[
+<p><span class="math display">\[
 \begin{align}
 p(A,\Sigma | Y,X) &amp;= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
 \\
@@ -553,7 +554,7 @@ p(A|Y,X,\Sigma) &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma,\overlin
 \\
 p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 \end{align}
-\tag{3}\]</span></span></p>
+\]</span></p>
 <p>Therefore we can get:</p>
 <p><span class="math display">\[
 \begin{align}

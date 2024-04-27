@@ -567,12 +567,13 @@ $$ {#eq-2}
 
 In matrix notation:
 
-\$\$ \begin{align}
+$$
+\begin{align}
 Y &= X A +E 
 \\
 E|X &\sim \mathcal{MN}_{T\times 10}(\textbf{0},\Sigma,I_T)
-
-\end{align} \$\$ {#eq-3}
+\end{align} 
+$$ {#eq-3}
 
 -   $Y$ is $T\times 10$matrix of dependent variables.
 
@@ -695,7 +696,7 @@ p(A,\Sigma | Y,X) &= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
 \\
  p(\Sigma|Y,X) &\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
  \end{align}
-$$ {#eq-5}
+$$
 
 Therefore we can get:
 

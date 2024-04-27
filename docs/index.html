@@ -21,6 +21,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 /* CSS for citations */
 div.csl-bib-body { }
 div.csl-entry {
@@ -165,15 +199,17 @@ div.csl-indent {
 
 <blockquote class="blockquote">
 <p><strong>Abstract.</strong> The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model.</p>
+</blockquote>
+<blockquote class="blockquote">
 <p><strong>Keywords.</strong> bsvars, quarto, R, Australia inflation rate</p>
 </blockquote>
 <section id="introduction" class="level1">
 <h1>Introduction</h1>
 <section id="question-objective-and-motivation" class="level2">
 <h2 class="anchored" data-anchor-id="question-objective-and-motivation">Question Objective and Motivation</h2>
-<p><strong>Objective:</strong></p>
 <p><strong>Question:</strong></p>
 <p>Will Australia’s inflation rate fall back to the 2-3% inflation target range in 2025?</p>
+<p><strong>Objective and Motivation:</strong></p>
 <p>Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country <span class="citation" data-cites="bernoth2021">(<a href="#ref-bernoth2021" role="doc-biblioref">Bernoth and Ider 2021</a>)</span>. The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026. Influenced by the COVID-19 pandemic, Blot et al.&nbsp;deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates <span class="citation" data-cites="EuropeanParliament.2022">(<a href="#ref-EuropeanParliament.2022" role="doc-biblioref">European Parliament. Directorate General for Internal Policies of the Union. 2022</a>)</span>. Therefore, this study will assess the reasonableness of the RBA’s inflation rate forecast for the next two years. During the COVID-19 period, Australia’s inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.</p>
 </section>
 <section id="data-and-data-properties" class="level2">
@@ -237,7 +273,7 @@ div.csl-indent {
 </div>
 </div>
 <p>Figure 1 Correlation Matrix</p>
-<p>In summary, the dataset included data from 1990Q2 to 2023Q4, total 135 observation points with 10 variables.</p>
+<p>In summary, the dataset included data from 1990Q2 to 2023Q4, total 136 observation points with 10 variables.</p>
 </section>
 <section id="data-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="data-transformation">Data Transformation</h3>
@@ -380,7 +416,7 @@ div.csl-indent {
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/plot inf and infexp-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/Plot inf and infexp-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -390,9 +426,8 @@ div.csl-indent {
 </section>
 <section id="model-and-hypothesis" class="level2">
 <h2 class="anchored" data-anchor-id="model-and-hypothesis">Model and Hypothesis</h2>
-<p><br>
-Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting <span class="citation" data-cites="stock2001">(<a href="#ref-stock2001" role="doc-biblioref">Stock and Watson 2001</a>)</span>.</p>
-<p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10.</p>
+<p>Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting <span class="citation" data-cites="stock2001">(<a href="#ref-stock2001" role="doc-biblioref">Stock and Watson 2001</a>)</span>.</p>
+<p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10, T=135.</p>
 <p><span class="math display">\[y_t = \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t\]</span></p>
 <p><span class="math display">\[\epsilon_t|Y_{t-1} \sim iid \mathcal{N}_{10}(\textbf{0}_{10}, \Sigma)\]</span></p>
 <p>In matrix notation:</p>
@@ -456,7 +491,7 @@ E &amp;=
 <h2 class="anchored" data-anchor-id="estimation-procedure-and-algorithm">Estimation Procedure and Algorithm</h2>
 <section id="basic-model" class="level3">
 <h3 class="anchored" data-anchor-id="basic-model">Basic Model</h3>
-<p>The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution. Minnesota prior with some stylised facts about the macroeconomic time series, since <span class="math inline">\(cpi_t\)</span> and <span class="math inline">\(m_t\)</span> are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.</p>
+<p>The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution <span class="citation" data-cites="wozniakBsvarsBayesianEstimation2022">(<a href="#ref-wozniakBsvarsBayesianEstimation2022" role="doc-biblioref">Woźniak 2022</a>)</span>. Minnesota prior with some stylised facts about the macroeconomic time series, since <span class="math inline">\(cpi_t\)</span> and <span class="math inline">\(m_t\)</span> are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.</p>
 <p>The estimation procedures to draw from the posterior follows the steps below:</p>
 <p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span> and <span class="math inline">\(\underline{v}\)</span>.</p>
 <p><span class="math display">\[
@@ -481,20 +516,23 @@ p(A,\Sigma) = p(A|\Sigma)p(\Sigma)
 <p>It’s a <span class="math inline">\(K\)</span> vector diagonal matrix with the diagonal elements set to be the desired shrinking level.</p></li>
 </ul>
 <p><span class="math display">\[
-\underline{V} = diag\left[ \underbrace{\kappa_{2}}_{intercept} \quad \underbrace{\kappa_{1}(\textbf{p} ^{-2}\otimes l^{'}_{N})}_{A_{1} \ to \ A_{p}}  \right]
+\underline{V} = diag\left[ \underbrace{\kappa_{2}}_{intercept} \quad \underbrace{\kappa_{1}(\textbf{p} ^{-2}\otimes I^{'}_{N})}_{A_{1} \ to \ A_{p}}  \right]
 \]</span></p>
 <ul>
-<li><p><span class="math inline">\(\underline{S}\)</span> is <span class="math inline">\(10\times10\)</span> symmetric matrix where the diagonal represents the variances of individual variables and the off-diagonals represent the covariances between the variables.</p></li>
+<li><p><span class="math inline">\(\underline{S}\)</span> is <span class="math inline">\(10\times10\)</span> symmetric matrix where the diagonal represents the variances of individual variables (diagonal of <span class="math inline">\(\Sigma\)</span>) and the off-diagonals are 0.</p></li>
 <li><p><span class="math inline">\(\underline{v}\)</span> is degree of freedom, and it is a single values because variance is assumed to be the same for all elements of <span class="math inline">\(\Sigma\)</span>.</p></li>
 </ul>
 <p><strong>Step 2</strong>: Posterior distribution shows below with the implementation of the specification in Step 1</p>
 <p><span class="math display">\[
 p(A,\Sigma | Y,X) = p(A|Y,X,\Sigma)p(\Sigma|Y,X)
-\]</span> <span class="math display">\[
+\]</span></p>
+<p><span class="math display">\[
 p(A|Y,X,\Sigma)\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma,\overline{V} )
-\]</span> <span class="math display">\[
+\]</span></p>
+<p><span class="math display">\[
 p(\Sigma|Y,X)\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
-\]</span> <span class="math display">\[
+\]</span></p>
+<p>Therefore we can get: <span class="math display">\[
 \overline{V} = (X'X + \underline{V}^{-1})^{-1}
 \]</span> <span class="math display">\[
 \overline{A} = \overline{V}(X'Y+\underline{V}^{-1}\underline{A})
@@ -508,6 +546,89 @@ p(\Sigma|Y,X)\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 <li>firstly draw <span class="math inline">\(\Sigma\)</span> from <span class="math inline">\(\mathcal{IW}_{10}(\overline{S}, \overline{v})\)</span>, and take <span class="math inline">\(\Sigma\)</span> as known</li>
 <li>insert it in <span class="math inline">\(\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma,\overline{V} )\)</span> to draw <span class="math inline">\(A\)</span></li>
 </ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Posterior sample draw function for basic model(posterior.draws)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>posterior.draws       <span class="ot">=</span> <span class="cf">function</span> (S, Y, X){</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># normal-inverse Wishard posterior parameters</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    V.bar.inv         <span class="ot">=</span> <span class="fu">t</span>(X)<span class="sc">%*%</span>X <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    V.bar             <span class="ot">=</span> <span class="fu">solve</span>(V.bar.inv)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    A.bar             <span class="ot">=</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>A.prior)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    nu.bar            <span class="ot">=</span> <span class="fu">nrow</span>(Y) <span class="sc">+</span> nu.prior</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    S.bar             <span class="ot">=</span> S.prior <span class="sc">+</span> <span class="fu">t</span>(Y)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">t</span>(A.prior)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>A.prior <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    S.bar.inv         <span class="ot">=</span> <span class="fu">solve</span>(S.bar)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>nu.prior</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># posterior draws </span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    Sigma.posterior   <span class="ot">=</span> <span class="fu">rWishart</span>(S, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span>S.bar.inv)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    Sigma.posterior   <span class="ot">=</span> <span class="fu">apply</span>(Sigma.posterior,<span class="dv">3</span>,solve)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    Sigma.posterior   <span class="ot">=</span> <span class="fu">array</span>(Sigma.posterior,<span class="fu">c</span>(N,N,S))</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    A.posterior       <span class="ot">=</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S))),<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),S))</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    L                 <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar))</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>      A.posterior[,,s]<span class="ot">=</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.posterior[,,s]<span class="sc">%*%</span><span class="fu">chol</span>(Sigma.posterior[,,s])</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    output            <span class="ot">=</span> <span class="fu">list</span>(<span class="at">A.posterior=</span>A.posterior, <span class="at">Sigma.posterior=</span>Sigma.posterior)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(output)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Function Applying</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>posterior.sample.draws <span class="ot">=</span> <span class="fu">posterior.draws</span>(<span class="at">S=</span><span class="dv">50000</span>, <span class="at">Y=</span>Y, <span class="at">X=</span>X) <span class="co"># sample use S=50000</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Presenting output</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">round</span>(<span class="fu">apply</span>(posterior.sample.draws<span class="sc">$</span>A.posterior, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, mean),<span class="dv">5</span>))           <span class="co"># posterior draw A</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]     [,8]
+[1,]  0.00014 -0.03734  0.00100 -0.04927 -0.03278  0.00076  0.00489  0.00704
+[2,]  0.99733  0.01273 -0.00154  0.02272  0.03566 -0.00119  0.00109  0.00032
+[3,]  0.00440 -0.27211  0.00177  0.09515 -0.07547  0.00407  0.00181 -0.01128
+[4,] -0.00087  0.00816  0.99123 -0.05380 -0.04371  0.00097 -0.00780 -0.01499
+[5,]  0.00078  0.18035 -0.00150  0.37172 -0.22437 -0.00020  0.02095  0.01706
+[6,]  0.00616 -0.30535  0.02039 -0.26062  0.13142  0.00297 -0.00131 -0.03451
+         [,9]    [,10]
+[1,]  0.00444 -0.00075
+[2,] -0.00375 -0.00028
+[3,] -0.00634 -0.01573
+[4,]  0.00675  0.00192
+[5,] -0.00381 -0.01228
+[6,] -0.01775 -0.00197</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">round</span>(<span class="fu">apply</span>(posterior.sample.draws<span class="sc">$</span>Sigma.posterior, <span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>, mean),<span class="dv">5</span>))       <span class="co"># posterior draw sigma</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]     [,8]
+[1,]  0.00004 -0.00004  0.00002  0.00011 -0.00054  0.00000 -0.00006  0.00007
+[2,] -0.00004  0.24085  0.00089  0.03549 -0.04155 -0.00039  0.00334  0.01276
+[3,]  0.00002  0.00089  0.00017  0.00083 -0.00143 -0.00001  0.00010  0.00033
+[4,]  0.00011  0.03549  0.00083  0.15893 -0.00423 -0.00069 -0.00051 -0.00213
+[5,] -0.00054 -0.04155 -0.00143 -0.00423  0.08566  0.00003 -0.00022 -0.00151
+[6,]  0.00000 -0.00039 -0.00001 -0.00069  0.00003  0.00021  0.00005  0.00007
+         [,9]    [,10]
+[1,] -0.00002 -0.00002
+[2,] -0.00711 -0.00147
+[3,] -0.00017 -0.00005
+[4,]  0.00227  0.00223
+[5,]  0.00641  0.00033
+[6,] -0.00002 -0.00010</code></pre>
+</div>
+</div>
+<p>Below are the trace plots and histograms posterior to draws on <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>. It is clear from the trace plots that the inflation has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 6 CPI simulation of basic model</p>
 </section>
 <section id="model-extension" class="level3">
 <h3 class="anchored" data-anchor-id="model-extension">Model Extension</h3>
@@ -533,6 +654,9 @@ Kalemli-Ozcan, Sebnem, Pierre-Olivier Gourinchas, Veronika Penciakova, and Nick 
 </div>
 <div id="ref-stock2001" class="csl-entry" role="listitem">
 Stock, James H, and Mark W Watson. 2001. <span>“Vector Autoregressions.”</span> <em>Journal of Economic Perspectives</em> 15 (4): 101–15. <a href="https://doi.org/10.1257/jep.15.4.101">https://doi.org/10.1257/jep.15.4.101</a>.
+</div>
+<div id="ref-wozniakBsvarsBayesianEstimation2022" class="csl-entry" role="listitem">
+Woźniak, Tomasz. 2022. <em>Bsvars: Bayesian Estimation of Structural Vector Autoregressive Models</em>. R Package. <a href="https://cran.r-project.org/package=bsvars">https://cran.r-project.org/package=bsvars</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

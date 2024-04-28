@@ -41,7 +41,8 @@ library(tidyverse)    # for table
 library(kableExtra)   # for print table
 library(zoo)
 library(ggplot2)      # plot in same graph
-```
+library(GIGrvg)       # GIG distribution
+``` 
 
 ```{r Colour}
 #| echo: false
@@ -531,16 +532,17 @@ The model selects ten variables related to Australian inflation. Among the varia
 
 data_df <- fortify.zoo(key_data)
 
-
+par(mfcol = c(1, 1), mar = c(4, 2, 2, 2))
 ggplot(data_df, aes(x = Index)) +
-  geom_rect(aes(xmin = min(Index), xmax = max(Index), ymin = 2, ymax = 3), fill = blue2, alpha = 0.5) +
+  annotate("rect", xmin = min(data_df$Index), xmax = max(data_df$Index), 
+           ymin = 2, ymax = 3, fill = blue2, alpha = 0.5) +
   geom_line(aes(y = inf_data, colour = "Inflation Rate")) +
   geom_line(aes(y = infexp_data, colour = "Expected Inflation Rate")) +
-  scale_color_manual(values = c("Inflation Rate" = blue1, "Expected Inflation Rate" = blue4)) +
+  scale_color_manual(name = "",
+                     values = c("Inflation Rate" = blue1, "Expected Inflation Rate" = blue4)) +
   labs(title = "Inflation Rate vs Expected Inflation Rate", x = "Date", y = "Rate (%)") +
   theme_minimal() +
-  theme(legend.position="bottom")  
-
+  theme(legend.position = "bottom")
 ```
 
 Figure 5 Inflation Rate vs Expected Inflation Rate
@@ -710,10 +712,19 @@ $$
 
 **Step 3**: As $\overline{A}$, $\overline{V}$, $\overline{S}$ and $\overline{v}$ are specified:
 
--   Firstly, draw $\Sigma$ from $\mathcal{IW}_{10}(\overline{S}, \overline{v})$, and take $\Sigma$ as known
--   Secondly, insert it in $\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma,\overline{V} )$ to draw $A$
+At each iteration $s$:
 
-```{r Stat Setup, fig.align='center',fig.pos='H'}
+1.  Draw $\Sigma^{(s)}$ from $\mathcal{IW}_{10}(\overline{S}, \overline{v})$, and take $\Sigma^{(s)}$ as known
+
+2.  Draw $A^{(s)}$  from $\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma,\overline{V} )$ by insert $\Sigma^{(s)}$ 
+
+
+
+Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
+
+
+
+```{r Stat Setup for Basic Model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -748,7 +759,10 @@ S.prior       = diag(diag(Sigma.hat))
 nu.prior      = N+1                                   #?
 ```
 
-```{r Basic Model 1, fig.align='center',fig.pos='H'}
+
+Function below is `posterior.draws`:
+
+```{r Basic Model, fig.align='center',fig.pos='H'}
 #| echo: true
 #| message: false
 #| warning: false
@@ -781,6 +795,9 @@ posterior.draws       = function (S, Y, X){
 ```
 
 ```{r Function Applying, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
 ## Function Applying
 posterior.sample.draws = posterior.draws(S=50000, Y=Y, X=X) # sample use S=50000
 
@@ -792,7 +809,11 @@ posterior.sample.draws = posterior.draws(S=50000, Y=Y, X=X) # sample use S=50000
 
 Below are the trace plots and histograms posterior to draws on $A$ and $\Sigma$. It is clear from the trace plots that CPI has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1.
 
-```{r, fig.align='center',fig.pos='H'}
+```{r Basic Model Plot, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
 par(mfcol = c(3, 2), mar = c(4, 2, 2, 2))
 # 2 row 1 col of matrix A 
 
@@ -806,7 +827,7 @@ hist(posterior.sample.draws[["Sigma.posterior"]][1,2,], xlab = "Inflation Expect
 hist(posterior.sample.draws[["Sigma.posterior"]][1,6,], xlab = "M3 sigma", col = green2, main = '')
 ```
 
-Figure 6 CPI simulation of basic model
+Figure 6 Model Simulation of Basic Model
 
 ### Model Extension
 
@@ -835,13 +856,17 @@ The prior distribution is shown in the same way as the Step 1 of basic model.
 
 **Step 2**: Posterior distribution shows below with the implementation of the specification in Step 1 by multiply $L(A,\Sigma | Y,X) \ p(A |\Sigma, \lambda) \ p(\Sigma) \ p(\lambda)$
 
-Since probability density function of Gamma distribution is:
+The probability density function of Gamma distribution is:
 
 $$
-f(x;k,\theta)= \frac{x^{k-1}e^{-\frac{x}{\theta}}}{\theta^k \ \Gamma(k)} \quad  \quad   for  \ x>0, and \  k,\theta >0
+f(x;k,\theta) = \frac{x^{k-1}e^{-\frac{x}{\theta}}}{\theta^k \ \Gamma(k)} \quad  \quad   for  \ x>0, and \  k,\theta >0
 $$
 
-We can figure out the kernel is: $x^{k-1}e^{-\frac{x}{\theta}}$
+The kernel of  Gamma distribution is: 
+
+$$
+p(x|k,\theta) \propto x^{k-1}e^{-\frac{x}{\theta}}
+$$
 
 Therefore all kernel shows as follow:
 
@@ -868,10 +893,12 @@ Now, we can get:
 
 $$
 \begin{align}
-\overline{V} &= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
 \overline{A} &= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
-\overline{v} &= T+\underline{v}\\
-\overline{S} &= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}
+\overline{V} &= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
+
+
+\overline{S} &= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} \\
+\overline{v} &= T+\underline{v}
 \end{align}
 $$
 
@@ -912,16 +939,16 @@ $$
 f(x;a,b,p)=\frac{(a/b)^{p/2}}{2K_p(\sqrt{ab})}x^{(p-1)}e^{-(ax+b/x)/2}, \quad \quad    x>0
 $$
 
-Kernel of GIG:
+The kernel of GIG:
 
 $$
-p(x;a,b,p)=x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}, \quad \quad    x>0
+p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 $$
 
 Hence, the full-conditional posterior distribution of $\lambda$ follows a Generalised Inverse Gaussian distribution.
 
 $$
-\lambda|T,X,A,\Sigma \sim \mathcal{GIG}(\overline{a},\overline{b},\overline{p})
+\lambda|Y,X,A,\Sigma \sim \mathcal{GIG}(\overline{a},\overline{b},\overline{p})
 $$
 
 Therefore we can get:
@@ -935,5 +962,147 @@ $$
 \overline{p} &= -\frac{N}{2} + \underline{k_{\lambda}}
 \end{align}
 $$
+
+**Step 3**: As $\overline{A}$, $\overline{V}$, $\overline{S}$, $\overline{v}$, $\overline{a}$, $\overline{b}$, $\overline{p}$ are specified:
+
+Initialize $\lambda$ at $\lambda^{(0)}$.
+
+At each iteration $s$:
+
+1.  Draw random matrices for $A^{(s)}$ and $\Sigma^{(s)}$ from $p(A,\Sigma|Y,X,\lambda^{(s-1)})$.
+
+2.  Draw a random number for $\lambda^{(s)}$ from $p(\lambda |Y,X,A^{(s)},\Sigma^{(s)})$.
+
+Repeat steps 1 and 2 $S_{1} + S_{2}$ times.
+
+Discard the first $S_{1}$ draws that allows the algorithm to converge to the stationary posterior distribution.
+
+Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}, \lambda^{(s)}} \right\}^{S_{1}+S_{2}}_{s=S_{1}+1}$.
+
+```{r Stat Setup for Extend model}
+#| echo: false
+#| message: false
+#| warning: false
+# setup 
+S1                = 5000                             # determine the burn-in draws
+S2                = 45000                            # number of draws from the final simulation
+total_S           = S1+S2
+A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
+Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
+lambda.posterior  = matrix(NA, S1+S2, 1)
+
+# initial value of lambda
+lambda.posterior[1] = 10                               # set lambda0 
+
+# Prior Gamma distribution: k, theta
+lambda.priors = list(
+  k = 1,
+  theta = .1
+)
+
+# Prior GIG distribution: a,b,p
+a.lambda.prior         = 2
+b.lambda.prior         = 1
+p.lambda.prior         = 0.1
+```
+
+
+Function below is `posterior.draws.exten`:
+```{r Model Exten}
+#| echo: true
+#| message: false
+#| warning: false
+
+## Posterior sample draw function for extended model(posterior.draws.exten)
+posterior.draws.exten = function (total_S, Y, X){
+for (s in 1:total_S){
+    # NIW posterior parameters
+    V.bar.inv              = t(X)%*%X + diag(1/diag(lambda.posterior[s]* V.prior)) 
+    V.bar                  = solve(V.bar.inv)
+    A.bar                  = V.bar%*%(t(X)%*%Y + diag(1/diag(lambda.posterior[s]* V.prior))%*%A.prior)
+    nu.bar                 = nrow(Y) + nu.prior
+    S.bar                  = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(lambda.posterior[s]* V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+    S.bar.inv              = solve(S.bar)
+  
+    # posterior draws for A and Sigma
+    Sigma.posterior.IW     = rWishart(1, df=nu.bar, Sigma=S.bar.inv)
+    Sigma.posterior.draw   = apply(Sigma.posterior.IW,3,solve)
+    Sigma.posterior[,,s]   = Sigma.posterior.draw
+    A.posterior[,,s]       = array(rnorm(prod(c(dim(A.bar),1))),c(dim(A.bar),1))
+    L                      = t(chol(V.bar))
+    A.posterior[,,s]       = A.bar + L%*%A.posterior[,,s]%*%chol(Sigma.posterior[,,s])
+    
+    
+    # Update parameters for kappa posterior
+    p       = lambda.priors$k - (N)/2              # N=10
+    diff_A  = A.posterior[,,s] - A.prior
+    product = t(diff_A) %*% solve(V.prior) %*% diff_A
+    b       = sum(diag(solve(Sigma.posterior[,,s] %*% product)))
+    a       = 2 / lambda.priors$theta
+    
+
+    
+    # Draw next period value for lambda from GIG distribution
+    if (s!=total_S){
+      lambda.posterior[s+1] = GIGrvg::rgig(n=1, lambda = p, chi = b, psi = a)
+    }
+  }
+  
+    output                 = list(A.posterior.exten = A.posterior, 
+                                  Sigma.posterior.exten = Sigma.posterior, 
+                                  lambda.posterior.exten = lambda.posterior)
+    return(output)
+}
+```
+
+```{r Extension Function Applying}
+#| echo: false
+#| message: false
+#| warning: false
+
+## Applying function 
+posterior.extend.draws = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
+
+# Presenting output
+# head(round(apply(posterior.extend.draw$A.posterior.exten[,,(S1+1):total_S], 1:2, mean),6))
+```
+
+
+
+
+
+By including the $\lambda$ in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, A of Extend model's variance is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model's 0.98 to 1.01. 
+
+
+```{r Extension Model Plot}
+#| echo: false
+#| message: false
+#| warning: false
+
+par(mfcol = c(3, 2), mar = c(4, 2, 2, 2))
+# 2 row 1 col of matrix A 
+
+hist(posterior.extend.draws[["A.posterior.exten"]][2,1,], xlab = "CPI", col = blue2, main = '')
+hist(posterior.extend.draws[["A.posterior.exten"]][2,2,], xlab = "Inflation Expectation", col = blue2, main = '')
+hist(posterior.extend.draws[["A.posterior.exten"]][2,6,], xlab = "M3", col = blue2, main = '')
+
+
+hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,1,], xlab = "CPI sigma", col = green2, main = '')
+hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,2,], xlab = "Inflation Expectation sigma", col = green2, main = '')
+hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,6,], xlab = "M3 sigma", col = green2, main = '')
+```
+
+Figure 7 Model Simulation of Extend Model
+
+```{r Extension Model lambda Plot}
+#| echo: false
+#| message: false
+#| warning: false
+par(mfcol = c(1, 2), mar = c(4, 2, 14, 2))
+plot.ts(posterior.extend.draws[["lambda.posterior.exten"]][(S1+1):total_S], xlab = "Simulation times S", ylab = "lambda", col = blue1)   
+hist(posterior.extend.draws[["lambda.posterior.exten"]][(S1+1):total_S], xlab = "lambda", col = green1, main = '')
+```
+
+Figure 6 Model Simulation of Extend Model (lambda)
 
 ## References {.unnumbered}

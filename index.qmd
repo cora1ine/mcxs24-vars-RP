@@ -979,7 +979,7 @@ Discard the first $S_{1}$ draws that allows the algorithm to converge to the sta
 
 Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}, \lambda^{(s)}} \right\}^{S_{1}+S_{2}}_{s=S_{1}+1}$.
 
-```{r Stat Setup for Extend model}
+```{r Stat Setup for Extend model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1008,7 +1008,7 @@ p.lambda.prior         = 0.1
 
 
 Function below is `posterior.draws.exten`:
-```{r Model Exten}
+```{r Model Exten, fig.align='center',fig.pos='H'}
 #| echo: true
 #| message: false
 #| warning: false
@@ -1055,7 +1055,7 @@ for (s in 1:total_S){
 }
 ```
 
-```{r Extension Function Applying}
+```{r Extension Function Applying, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1074,10 +1074,11 @@ posterior.extend.draws = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
 By including the $\lambda$ in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, A of Extend model's variance is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model's 0.98 to 1.01. 
 
 
-```{r Extension Model Plot}
+```{r Extension Model Plot, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
+
 
 par(mfcol = c(3, 2), mar = c(4, 2, 2, 2))
 # 2 row 1 col of matrix A 
@@ -1094,7 +1095,7 @@ hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,6,], xlab = "M3 sigma",
 
 Figure 7 Model Simulation of Extend Model
 
-```{r Extension Model lambda Plot}
+```{r Extension Model lambda Plot, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false

@@ -533,19 +533,13 @@ data_df <- fortify.zoo(key_data)
 
 
 ggplot(data_df, aes(x = Index)) +
-  geom_ribbon(aes(ymin = 2, ymax = 3, fill = "Target Inflation Zone"), 
-              fill = blue2, alpha = 0.5) +
+  geom_rect(aes(xmin = min(Index), xmax = max(Index), ymin = 2, ymax = 3), fill = blue2, alpha = 0.5) +
   geom_line(aes(y = inf_data, colour = "Inflation Rate")) +
   geom_line(aes(y = infexp_data, colour = "Expected Inflation Rate")) +
-  scale_fill_manual(values = c("Target Inflation Zone" = blue2), 
-                    name = "Legend", 
-                    guide = guide_legend(override.aes = list(alpha = 0.5))) +
-  scale_color_manual(values = c("Inflation Rate" = blue1, 
-                                "Expected Inflation Rate" = blue4)) +
-  labs(title = "Inflation Rate vs Expected Inflation Rate", 
-       x = "Date", y = "Rate (%)") +
+  scale_color_manual(values = c("Inflation Rate" = blue1, "Expected Inflation Rate" = blue4)) +
+  labs(title = "Inflation Rate vs Expected Inflation Rate", x = "Date", y = "Rate (%)") +
   theme_minimal() +
-  theme(legend.position = "bottom")
+  theme(legend.position="bottom")  
 
 ```
 
@@ -822,15 +816,91 @@ $$
 where, each $p(A |\Sigma, k)$, $p(\Sigma)$, $p(k)$ is specified below:
 
 $$
+
 \begin{align}
 A |\Sigma, \lambda &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V})\\
 \Sigma &\sim \mathcal{IW}_{N}(\underline{S},\underline{v})\\
-\lambda &\sim \mathcal{Gamma}(\underline{S_{\lambda}}, \underline{v_{\lambda}} ) \\ 
+\lambda &\sim \mathcal{Gamma}(\underline{k_{\lambda}}, \underline{\theta_{\lambda}} ) \\ 
 \end{align}
 $$
 
 The prior distribution is shown in the same way as the Step 1 of basic model.
 
 **Step 2**: Posterior distribution shows below with the implementation of the specification in Step 1 by multiply $L(A,\Sigma | Y,X) \ p(A |\Sigma, \lambda) \ p(\Sigma) \ p(\lambda)$
+
+Since probability density function of Gamma distribution is:
+
+$$
+f(x;k,\theta)= \frac{x^{k-1}e^{-\frac{x}{\theta}}}{\theta^k \ \Gamma(k)} \quad  \quad   for  \ x>0, and \  k,\theta >0
+$$ 
+
+
+We can figure out the kernel is: $x^{k-1}e^{-\frac{x}{\theta}}$
+
+Therefore all kernel shows as follow:
+
+$$
+\begin{align}
+
+L(A,\Sigma | Y,X) &= det(\Sigma)^{-\frac{T}{2}}\times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(A-\widehat{A})'X'X (A-\widehat{A})\right]\right\} \times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(Y-X\widehat{A})'(Y-X\widehat{A})\right]\right\} \\
+
+p(A |\Sigma, \lambda) &= det(\Sigma)^{-\frac{K}{2}}det(\lambda \underline{V} )^{-\frac{N}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\} \\ 
+
+p(\Sigma) &= det(\Sigma)^{\frac{\underline{v}+N+1}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} \underline{S}\right]\right\}  \\
+
+p(\lambda) &= \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}}
+
+\end{align}
+$$
+
+
+
+
+-   The kernel of the fully conditional posterior distribution of $A$ and $\Sigma$:
+
+$$
+\begin{align}
+p(A,\Sigma |Y,X, \lambda) &\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Sigma) \\
+&\propto \det(\Sigma)^{-\frac{T+N+K+\underline{v}+1}{2}} \\
+&\times \exp\left\{ -\frac{1}{2} \mathrm{tr}[\Sigma^{-1}[(A-\overline{A})'\overline{V}^{-1}(A-\overline{A})+\underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}]  ] \right\} \\
+\end{align}
+$$
+
+
+-   The kernel of the fully conditional posterior distribution of $\lambda$:
+
+$$
+
+\begin{align}
+p(\lambda |Y,X,A,\Sigma ) &\propto L(Y,X|A,\Sigma)p(A,\Sigma, \lambda)\\
+&\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Sigma)p(\lambda) \\
+&\propto p(A |\Sigma, \lambda)p(\lambda) 
+\end{align}
+
+$$
+
+
+$$
+
+\begin{align}
+p(\lambda |Y,X,A,\Sigma ) 
+&\propto p(A |\Sigma, \lambda)p(\lambda) \\
+&\propto 
+det(\lambda \underline{V} )^{-\frac{N}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}} \\ 
+
+&\propto 
+det(\underline{V} )^{-\frac{N}{2}} \lambda^{-\frac{N}{2}} exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}exp \left\{ -\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\ 
+
+&\propto 
+ \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
+ 
+&\propto 
+ \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2\lambda} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} 
+
+
+\end{align}
+
+$$
+
 
 ## References {.unnumbered}

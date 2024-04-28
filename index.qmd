@@ -740,7 +740,7 @@ kappa.1       = 1                                     # shrinkage for A1 to Ap
 kappa.2       = 100                                   # shrinkage for constant 
 A.prior       = matrix(0,nrow(A.hat),ncol(A.hat))
 A.prior[2,1]  = 1
-A.prior[7,6]  = 1                           #?
+A.prior[7,6]  = 1                           
 V.prior       = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior       = diag(diag(Sigma.hat))
 nu.prior      = N+1                                   #?
@@ -791,11 +791,17 @@ posterior.sample.draws = posterior.draws(S=50000, Y=Y, X=X) # sample use S=50000
 Below are the trace plots and histograms posterior to draws on $A$ and $\Sigma$. It is clear from the trace plots that CPI has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1.
 
 ```{r, fig.align='center',fig.pos='H'}
-par(mfcol = c(2, 2), mar = c(4, 2, 2, 2))
-plot.ts(posterior.sample.draws[["A.posterior"]][2,1,], xlab = "Simulation times S", ylab = "CPI", col = blue6)    # 2 row 1 col of matrix A 
+par(mfcol = c(3, 2), mar = c(4, 2, 2, 2))
+# 2 row 1 col of matrix A 
+
 hist(posterior.sample.draws[["A.posterior"]][2,1,], xlab = "CPI", col = blue2, main = '')
-plot.ts(posterior.sample.draws[["Sigma.posterior"]][1,1,], xlab = "Simulation times S", ylab = "CPI sigma", col = green4) 
+hist(posterior.sample.draws[["A.posterior"]][2,2,], xlab = "Inflation Expectation", col = blue2, main = '')
+hist(posterior.sample.draws[["A.posterior"]][2,6,], xlab = "M3", col = blue2, main = '')
+
+
 hist(posterior.sample.draws[["Sigma.posterior"]][1,1,], xlab = "CPI sigma", col = green2, main = '')
+hist(posterior.sample.draws[["Sigma.posterior"]][1,2,], xlab = "Inflation Expectation sigma", col = green2, main = '')
+hist(posterior.sample.draws[["Sigma.posterior"]][1,6,], xlab = "M3 sigma", col = green2, main = '')
 ```
 
 Figure 6 CPI simulation of basic model
@@ -816,10 +822,9 @@ $$
 where, each $p(A |\Sigma, k)$, $p(\Sigma)$, $p(k)$ is specified below:
 
 $$
-
 \begin{align}
-A |\Sigma, \lambda &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V})\\
-\Sigma &\sim \mathcal{IW}_{N}(\underline{S},\underline{v})\\
+A |\Sigma, \lambda &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V}) \\
+\Sigma &\sim \mathcal{IW}_{N}(\underline{S},\underline{v}) \\
 \lambda &\sim \mathcal{Gamma}(\underline{k_{\lambda}}, \underline{\theta_{\lambda}} ) \\ 
 \end{align}
 $$
@@ -841,19 +846,12 @@ Therefore all kernel shows as follow:
 
 $$
 \begin{align}
-
 L(A,\Sigma | Y,X) &= det(\Sigma)^{-\frac{T}{2}}\times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(A-\widehat{A})'X'X (A-\widehat{A})\right]\right\} \times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(Y-X\widehat{A})'(Y-X\widehat{A})\right]\right\} \\
-
 p(A |\Sigma, \lambda) &= det(\Sigma)^{-\frac{K}{2}}det(\lambda \underline{V} )^{-\frac{N}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\} \\ 
-
 p(\Sigma) &= det(\Sigma)^{\frac{\underline{v}+N+1}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} \underline{S}\right]\right\}  \\
-
 p(\lambda) &= \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}}
-
 \end{align}
 $$
-
-
 
 
 -   The kernel of the fully conditional posterior distribution of $A$ and $\Sigma$:
@@ -870,36 +868,27 @@ $$
 -   The kernel of the fully conditional posterior distribution of $\lambda$:
 
 $$
-
 \begin{align}
 p(\lambda |Y,X,A,\Sigma ) &\propto L(Y,X|A,\Sigma)p(A,\Sigma, \lambda)\\
 &\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Sigma)p(\lambda) \\
 &\propto p(A |\Sigma, \lambda)p(\lambda) 
 \end{align}
-
 $$
 
 
 $$
-
 \begin{align}
 p(\lambda |Y,X,A,\Sigma ) 
 &\propto p(A |\Sigma, \lambda)p(\lambda) \\
 &\propto 
 det(\lambda \underline{V} )^{-\frac{N}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}} \\ 
-
 &\propto 
-det(\underline{V} )^{-\frac{N}{2}} \lambda^{-\frac{N}{2}} exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}exp \left\{ -\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\ 
-
+det(\underline{V} )^{-\frac{N}{2}} \lambda^{-\frac{N}{2}} exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}exp \left\{ -\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
 &\propto 
  \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
- 
 &\propto 
  \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2\lambda} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} 
-
-
 \end{align}
-
 $$
 
 

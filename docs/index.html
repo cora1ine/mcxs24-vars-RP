@@ -622,12 +622,13 @@ p(A,\Sigma, \lambda |Y,X) &amp;\propto L(A,\Sigma | Y,X) \ p(A,\Sigma, \lambda) 
 \end{align}
 \]</span></p>
 <p>where, each <span class="math inline">\(p(A |\Sigma, k)\)</span>, <span class="math inline">\(p(\Sigma)\)</span>, <span class="math inline">\(p(k)\)</span> is specified below:</p>
-<p>$$</p>
-<p><span class="math display">\[\begin{align}
-A |\Sigma, \lambda &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V})\\
-\Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S},\underline{v})\\
+<p><span class="math display">\[
+\begin{align}
+A |\Sigma, \lambda &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V}) \\
+\Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S},\underline{v}) \\
 \lambda &amp;\sim \mathcal{Gamma}(\underline{k_{\lambda}}, \underline{\theta_{\lambda}} ) \\
-\end{align}\]</span> $$</p>
+\end{align}
+\]</span></p>
 <p>The prior distribution is shown in the same way as the Step 1 of basic model.</p>
 <p><strong>Step 2</strong>: Posterior distribution shows below with the implementation of the specification in Step 1 by multiply <span class="math inline">\(L(A,\Sigma | Y,X) \ p(A |\Sigma, \lambda) \ p(\Sigma) \ p(\lambda)\)</span></p>
 <p>Since probability density function of Gamma distribution is:</p>
@@ -636,17 +637,14 @@ f(x;k,\theta)= \frac{x^{k-1}e^{-\frac{x}{\theta}}}{\theta^k \ \Gamma(k)} \quad  
 \]</span></p>
 <p>We can figure out the kernel is: <span class="math inline">\(x^{k-1}e^{-\frac{x}{\theta}}\)</span></p>
 <p>Therefore all kernel shows as follow:</p>
-<p>$$ <span class="math display">\[\begin{align}
-
+<p><span class="math display">\[
+\begin{align}
 L(A,\Sigma | Y,X) &amp;= det(\Sigma)^{-\frac{T}{2}}\times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(A-\widehat{A})'X'X (A-\widehat{A})\right]\right\} \times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(Y-X\widehat{A})'(Y-X\widehat{A})\right]\right\} \\
-
 p(A |\Sigma, \lambda) &amp;= det(\Sigma)^{-\frac{K}{2}}det(\lambda \underline{V} )^{-\frac{N}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\} \\
-
 p(\Sigma) &amp;= det(\Sigma)^{\frac{\underline{v}+N+1}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} \underline{S}\right]\right\}  \\
-
 p(\lambda) &amp;= \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}}
-
-\end{align}\]</span> $$</p>
+\end{align}
+\]</span></p>
 <ul>
 <li>The kernel of the fully conditional posterior distribution of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>:</li>
 </ul>
@@ -660,31 +658,27 @@ p(A,\Sigma |Y,X, \lambda) &amp;\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Si
 <ul>
 <li>The kernel of the fully conditional posterior distribution of <span class="math inline">\(\lambda\)</span>:</li>
 </ul>
-<p>$$</p>
-<p><span class="math display">\[\begin{align}
+<p><span class="math display">\[
+\begin{align}
 p(\lambda |Y,X,A,\Sigma ) &amp;\propto L(Y,X|A,\Sigma)p(A,\Sigma, \lambda)\\
 &amp;\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Sigma)p(\lambda) \\
 &amp;\propto p(A |\Sigma, \lambda)p(\lambda)
-\end{align}\]</span></p>
-<p>$$</p>
-<p>$$</p>
-<p><span class="math display">\[\begin{align}
+\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}
 p(\lambda |Y,X,A,\Sigma )
 &amp;\propto p(A |\Sigma, \lambda)p(\lambda) \\
 &amp;\propto
 det(\lambda \underline{V} )^{-\frac{N}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}} \\
-
 &amp;\propto
 det(\underline{V} )^{-\frac{N}{2}} \lambda^{-\frac{N}{2}} exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}exp \left\{ -\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
-
 &amp;\propto
 \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
 &amp;\propto
 \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2\lambda} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\}
-
-
-\end{align}\]</span></p>
-<p>$$</p>
+\end{align}
+\]</span></p>
 </section>
 </section>
 <section id="references" class="level2 unnumbered">

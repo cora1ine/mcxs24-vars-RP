@@ -529,20 +529,25 @@ The model selects ten variables related to Australian inflation. Among the varia
 -   Regarding the specific inflation zone of 2-3%, it appears that both the expected and actual inflation rates oscillate into this range periodically. However, it seems that starting just before 2020, there's a pronounced peak where expected inflation sharply rises above the actual inflation rate, which then converges back into the 2-3% range shortly after (although actual inflation rate still need some time). So we can foresee that inflation will indeed fall back to the 2-3% range in the near future.
 
 ```{r Plot inf and infexp, fig.align='center',fig.pos='H'}
-
 data_df <- fortify.zoo(key_data)
 
-par(mfcol = c(1, 1), mar = c(4, 2, 2, 2))
-ggplot(data_df, aes(x = Index)) +
-  annotate("rect", xmin = min(data_df$Index), xmax = max(data_df$Index), 
-           ymin = 2, ymax = 3, fill = blue2, alpha = 0.5) +
-  geom_line(aes(y = inf_data, colour = "Inflation Rate")) +
-  geom_line(aes(y = infexp_data, colour = "Expected Inflation Rate")) +
-  scale_color_manual(name = "",
-                     values = c("Inflation Rate" = blue1, "Expected Inflation Rate" = blue4)) +
-  labs(title = "Inflation Rate vs Expected Inflation Rate", x = "Date", y = "Rate (%)") +
-  theme_minimal() +
-  theme(legend.position = "bottom")
+par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) + 0.1)
+
+plot(data_df$Index, data_df$inf_data, type = "l", col = blue1,
+     xlab = "Date", ylab = "Rate (%)", ylim = c(0, max(c(data_df$inf_data, data_df$infexp_data))))
+
+rect(xleft = min(data_df$Index), xright = max(data_df$Index),
+     ybottom = 2, ytop = 3, col = green5, border = NA)  
+
+lines(data_df$Index, data_df$inf_data, col = blue3)
+lines(data_df$Index, data_df$infexp_data, col = blue4)
+
+legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate"),
+       col = c(blue3, blue4), lty = 1, cex = 0.8)
+
+title(main = "Inflation Rate vs Expected Inflation Rate")
+
+
 ```
 
 Figure 5 Inflation Rate vs Expected Inflation Rate
@@ -728,6 +733,8 @@ Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s
 #| echo: false
 #| message: false
 #| warning: false
+
+set.seed(1)
 
 ## Create Y and X
 y             = ts(all_data[,1:ncol(all_data)])     # 10col, 135row
@@ -1064,7 +1071,7 @@ posterior.extend.draws = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
 ```
 
 
-By including the $\lambda$ in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, A of Extend model's variance is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model's 0.98 to 1.01. 
+By including the $\lambda$ in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, variance of A for Extend model is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model's 0.98 to 1.01. 
 
 
 ```{r Extension Model Plot, fig.align='center',fig.pos='H'}

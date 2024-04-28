@@ -570,10 +570,13 @@ p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 \end{align}
 \]</span></p>
 <p><strong>Step 3</strong>: As <span class="math inline">\(\overline{A}\)</span>, <span class="math inline">\(\overline{V}\)</span>, <span class="math inline">\(\overline{S}\)</span> and <span class="math inline">\(\overline{v}\)</span> are specified:</p>
-<ul>
-<li>Firstly, draw <span class="math inline">\(\Sigma\)</span> from <span class="math inline">\(\mathcal{IW}_{10}(\overline{S}, \overline{v})\)</span>, and take <span class="math inline">\(\Sigma\)</span> as known</li>
-<li>Secondly, insert it in <span class="math inline">\(\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma,\overline{V} )\)</span> to draw <span class="math inline">\(A\)</span></li>
-</ul>
+<p>At each iteration <span class="math inline">\(s\)</span>:</p>
+<ol type="1">
+<li><p>Draw <span class="math inline">\(\Sigma^{(s)}\)</span> from <span class="math inline">\(\mathcal{IW}_{10}(\overline{S}, \overline{v})\)</span>, and take <span class="math inline">\(\Sigma^{(s)}\)</span> as known</p></li>
+<li><p>Draw <span class="math inline">\(A^{(s)}\)</span> from <span class="math inline">\(\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma,\overline{V} )\)</span> by insert <span class="math inline">\(\Sigma^{(s)}\)</span></p></li>
+</ol>
+<p>Output is the sample draws from the joint posterior distribution <span class="math inline">\(\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}\)</span>.</p>
+<p>Function below is <code>posterior.draws</code>:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Posterior sample draw function for basic model(posterior.draws)</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>posterior.draws       <span class="ot">=</span> <span class="cf">function</span> (S, Y, X){</span>
@@ -606,12 +609,12 @@ p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/Basic Model Plot-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>Figure 6 CPI simulation of basic model</p>
+<p>Figure 6 Model Simulation of Basic Model</p>
 </section>
 <section id="model-extension" class="level3">
 <h3 class="anchored" data-anchor-id="model-extension">Model Extension</h3>
@@ -633,11 +636,14 @@ A |\Sigma, \lambda &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \la
 \]</span></p>
 <p>The prior distribution is shown in the same way as the Step 1 of basic model.</p>
 <p><strong>Step 2</strong>: Posterior distribution shows below with the implementation of the specification in Step 1 by multiply <span class="math inline">\(L(A,\Sigma | Y,X) \ p(A |\Sigma, \lambda) \ p(\Sigma) \ p(\lambda)\)</span></p>
-<p>Since probability density function of Gamma distribution is:</p>
+<p>The probability density function of Gamma distribution is:</p>
 <p><span class="math display">\[
-f(x;k,\theta)= \frac{x^{k-1}e^{-\frac{x}{\theta}}}{\theta^k \ \Gamma(k)} \quad  \quad   for  \ x&gt;0, and \  k,\theta &gt;0
+f(x;k,\theta) = \frac{x^{k-1}e^{-\frac{x}{\theta}}}{\theta^k \ \Gamma(k)} \quad  \quad   for  \ x&gt;0, and \  k,\theta &gt;0
 \]</span></p>
-<p>We can figure out the kernel is: <span class="math inline">\(x^{k-1}e^{-\frac{x}{\theta}}\)</span></p>
+<p>The kernel of Gamma distribution is:</p>
+<p><span class="math display">\[
+p(x|k,\theta) \propto x^{k-1}e^{-\frac{x}{\theta}}
+\]</span></p>
 <p>Therefore all kernel shows as follow:</p>
 <p><span class="math display">\[
 \begin{align}
@@ -658,14 +664,14 @@ p(A,\Sigma |Y,X, \lambda) &amp;\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Si
 \end{align}
 \]</span></p>
 <p>Now, we can get:</p>
-<p><span class="math display">\[
-\begin{align}
-\overline{V} &amp;= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
+<p>$$ <span class="math display">\[\begin{align}
 \overline{A} &amp;= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
-\overline{v} &amp;= T+\underline{v}\\
-\overline{S} &amp;= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}
-\end{align}
-\]</span></p>
+\overline{V} &amp;= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
+
+
+\overline{S} &amp;= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} \\
+\overline{v} &amp;= T+\underline{v}
+\end{align}\]</span> $$</p>
 <ul>
 <li>The kernel of the fully conditional posterior distribution of <span class="math inline">\(\lambda\)</span>:</li>
 </ul>
@@ -699,13 +705,13 @@ exp\left\{ \frac{- \left[ \frac{1}{\lambda} \mathrm{tr}  \left[ \Sigma^{-1} (A-\
 <p><span class="math display">\[
 f(x;a,b,p)=\frac{(a/b)^{p/2}}{2K_p(\sqrt{ab})}x^{(p-1)}e^{-(ax+b/x)/2}, \quad \quad    x&gt;0
 \]</span></p>
-<p>Kernel of GIG:</p>
+<p>The kernel of GIG:</p>
 <p><span class="math display">\[
-p(x;a,b,p)=x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}, \quad \quad    x&gt;0
+p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 \]</span></p>
 <p>Hence, the full-conditional posterior distribution of <span class="math inline">\(\lambda\)</span> follows a Generalised Inverse Gaussian distribution.</p>
 <p><span class="math display">\[
-\lambda|T,X,A,\Sigma \sim \mathcal{GIG}(\overline{a},\overline{b},\overline{p})
+\lambda|Y,X,A,\Sigma \sim \mathcal{GIG}(\overline{a},\overline{b},\overline{p})
 \]</span></p>
 <p>Therefore we can get:</p>
 <p><span class="math display">\[
@@ -717,6 +723,72 @@ p(x;a,b,p)=x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}, \quad \quad  
 \overline{p} &amp;= -\frac{N}{2} + \underline{k_{\lambda}}
 \end{align}
 \]</span></p>
+<p><strong>Step 3</strong>: As <span class="math inline">\(\overline{A}\)</span>, <span class="math inline">\(\overline{V}\)</span>, <span class="math inline">\(\overline{S}\)</span>, <span class="math inline">\(\overline{v}\)</span>, <span class="math inline">\(\overline{a}\)</span>, <span class="math inline">\(\overline{b}\)</span>, <span class="math inline">\(\overline{p}\)</span> are specified:</p>
+<p>Initialize <span class="math inline">\(\lambda\)</span> at <span class="math inline">\(\lambda^{(0)}\)</span>.</p>
+<p>At each iteration <span class="math inline">\(s\)</span>:</p>
+<ol type="1">
+<li><p>Draw random matrices for <span class="math inline">\(A^{(s)}\)</span> and <span class="math inline">\(\Sigma^{(s)}\)</span> from <span class="math inline">\(p(A,\Sigma|Y,X,\lambda^{(s-1)})\)</span>.</p></li>
+<li><p>Draw a random number for <span class="math inline">\(\lambda^{(s)}\)</span> from <span class="math inline">\(p(\lambda |Y,X,A^{(s)},\Sigma^{(s)})\)</span>.</p></li>
+</ol>
+<p>Repeat steps 1 and 2 <span class="math inline">\(S_{1} + S_{2}\)</span> times.</p>
+<p>Discard the first <span class="math inline">\(S_{1}\)</span> draws that allows the algorithm to converge to the stationary posterior distribution.</p>
+<p>Output is the sample draws from the joint posterior distribution <span class="math inline">\(\left\{ {A^{(s)}, \Sigma^{(s)}, \lambda^{(s)}} \right\}^{S_{1}+S_{2}}_{s=S_{1}+1}\)</span>.</p>
+<p>Function below is <code>posterior.draws.exten</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Posterior sample draw function for extended model(posterior.draws.exten)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>posterior.draws.exten <span class="ot">=</span> <span class="cf">function</span> (total_S, Y, X){</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>total_S){</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># NIW posterior parameters</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    V.bar.inv              <span class="ot">=</span> <span class="fu">t</span>(X)<span class="sc">%*%</span>X <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(lambda.posterior[s]<span class="sc">*</span> V.prior)) </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    V.bar                  <span class="ot">=</span> <span class="fu">solve</span>(V.bar.inv)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    A.bar                  <span class="ot">=</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(lambda.posterior[s]<span class="sc">*</span> V.prior))<span class="sc">%*%</span>A.prior)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    nu.bar                 <span class="ot">=</span> <span class="fu">nrow</span>(Y) <span class="sc">+</span> nu.prior</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    S.bar                  <span class="ot">=</span> S.prior <span class="sc">+</span> <span class="fu">t</span>(Y)<span class="sc">%*%</span>Y <span class="sc">+</span> <span class="fu">t</span>(A.prior)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(lambda.posterior[s]<span class="sc">*</span> V.prior))<span class="sc">%*%</span>A.prior <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    S.bar.inv              <span class="ot">=</span> <span class="fu">solve</span>(S.bar)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># posterior draws for A and Sigma</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    Sigma.posterior.IW     <span class="ot">=</span> <span class="fu">rWishart</span>(<span class="dv">1</span>, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span>S.bar.inv)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    Sigma.posterior.draw   <span class="ot">=</span> <span class="fu">apply</span>(Sigma.posterior.IW,<span class="dv">3</span>,solve)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    Sigma.posterior[,,s]   <span class="ot">=</span> Sigma.posterior.draw</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    A.posterior[,,s]       <span class="ot">=</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),<span class="dv">1</span>))),<span class="fu">c</span>(<span class="fu">dim</span>(A.bar),<span class="dv">1</span>))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    L                      <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar))</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    A.posterior[,,s]       <span class="ot">=</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.posterior[,,s]<span class="sc">%*%</span><span class="fu">chol</span>(Sigma.posterior[,,s])</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update parameters for kappa posterior</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    p       <span class="ot">=</span> lambda.priors<span class="sc">$</span>k <span class="sc">-</span> (N)<span class="sc">/</span><span class="dv">2</span>              <span class="co"># N=10</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    diff_A  <span class="ot">=</span> A.posterior[,,s] <span class="sc">-</span> A.prior</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    product <span class="ot">=</span> <span class="fu">t</span>(diff_A) <span class="sc">%*%</span> <span class="fu">solve</span>(V.prior) <span class="sc">%*%</span> diff_A</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    b       <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">diag</span>(<span class="fu">solve</span>(Sigma.posterior[,,s] <span class="sc">%*%</span> product)))</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    a       <span class="ot">=</span> <span class="dv">2</span> <span class="sc">/</span> lambda.priors<span class="sc">$</span>theta</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Draw next period value for lambda from GIG distribution</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (s<span class="sc">!=</span>total_S){</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      lambda.posterior[s<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> GIGrvg<span class="sc">::</span><span class="fu">rgig</span>(<span class="at">n=</span><span class="dv">1</span>, <span class="at">lambda =</span> p, <span class="at">chi =</span> b, <span class="at">psi =</span> a)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    output                 <span class="ot">=</span> <span class="fu">list</span>(<span class="at">A.posterior.exten =</span> A.posterior, </span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Sigma.posterior.exten =</span> Sigma.posterior, </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">lambda.posterior.exten =</span> lambda.posterior)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(output)</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>By including the <span class="math inline">\(\lambda\)</span> in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, A of Extend model’s variance is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model’s 0.98 to 1.01.</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/Extension Model Plot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Figure 7 Model Simulation of Extend Model</p>
+<div class="cell">
+<div class="cell-output-display">
+<p><img src="index_files/figure-html/Extension Model lambda Plot-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Figure 6 Model Simulation of Extend Model (lambda)</p>
 </section>
 </section>
 <section id="references" class="level2 unnumbered">

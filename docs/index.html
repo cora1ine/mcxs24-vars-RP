@@ -501,10 +501,11 @@ E &amp;=
 <h2 class="anchored" data-anchor-id="estimation-procedure-and-algorithm">Estimation Procedure and Algorithm</h2>
 <section id="basic-model" class="level3">
 <h3 class="anchored" data-anchor-id="basic-model">Basic Model</h3>
-<p>The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution <span class="citation" data-cites="wozniakBsvarsBayesianEstimation2022">(<a href="#ref-wozniakBsvarsBayesianEstimation2022" role="doc-biblioref">Woźniak 2022</a>)</span>. Minnesota prior with some stylised facts about the macroeconomic time series, since <span class="math inline">\(lcpi_t\)</span> and <span class="math inline">\(lm_t\)</span> are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.</p>
+<p>The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution<span class="citation" data-cites="wozniak2016">(<a href="#ref-wozniak2016" role="doc-biblioref">Woźniak 2016</a>)</span>. Minnesota prior with some stylised facts about the macroeconomic time series, since <span class="math inline">\(lcpi_t\)</span> and <span class="math inline">\(lm_t\)</span> are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.</p>
 <p>The estimation procedures to draw from the posterior follows the steps below:</p>
 <p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span> and <span class="math inline">\(\underline{v}\)</span>.</p>
-<p><span class="math display">\[\begin{align}
+<p><span class="math display">\[
+\begin{align}
 p(A,\Sigma) &amp;\propto L(A,\Sigma | Y,X) \ p(A|\Sigma) \ p(\Sigma)
 \\
 p(A,\Sigma|Y,X) &amp;= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
@@ -513,7 +514,8 @@ p(A,\Sigma|Y,X) &amp;= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
 A|\Sigma &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V})
 \\
 \Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S}, \underline{v})
-\end{align}\]</span></p>
+\end{align}
+\]</span></p>
 <ul>
 <li><span class="math inline">\(\underline{A}\)</span> is a <span class="math inline">\(K \times 10\)</span> matrix, reflect the random walk with no drift process on the first lag of <span class="math inline">\(lcpi_{t}\)</span> and <span class="math inline">\(lm_{t}\)</span>, and 0 elsewhere.</li>
 </ul>
@@ -655,6 +657,15 @@ p(A,\Sigma |Y,X, \lambda) &amp;\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Si
 &amp;\times \exp\left\{ -\frac{1}{2} \mathrm{tr}[\Sigma^{-1}[(A-\overline{A})'\overline{V}^{-1}(A-\overline{A})+\underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}]  ] \right\} \\
 \end{align}
 \]</span></p>
+<p>Now, we can get:</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{V} &amp;= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
+\overline{A} &amp;= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
+\overline{v} &amp;= T+\underline{v}\\
+\overline{S} &amp;= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}
+\end{align}
+\]</span></p>
 <ul>
 <li>The kernel of the fully conditional posterior distribution of <span class="math inline">\(\lambda\)</span>:</li>
 </ul>
@@ -676,7 +687,34 @@ det(\underline{V} )^{-\frac{N}{2}} \lambda^{-\frac{N}{2}} exp\left\{ -\frac{1}{2
 &amp;\propto
 \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
 &amp;\propto
-\lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2\lambda} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\}
+\lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{\mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]}{2\lambda}
+-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\}\\
+&amp;\propto
+\lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 }
+exp\left\{ \frac{- \left[ \frac{1}{\lambda} \mathrm{tr}  \left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]  + \frac{\lambda}{ \frac{1}{2} \underline{\theta_{\lambda}}}\right]}{2}
+\right\}\\
+\end{align}
+\]</span></p>
+<p>As we can figure out the kernel follows generalized inverse Gaussian distribution (GIG):</p>
+<p><span class="math display">\[
+f(x;a,b,p)=\frac{(a/b)^{p/2}}{2K_p(\sqrt{ab})}x^{(p-1)}e^{-(ax+b/x)/2}, \quad \quad    x&gt;0
+\]</span></p>
+<p>Kernel of GIG:</p>
+<p><span class="math display">\[
+p(x;a,b,p)=x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}, \quad \quad    x&gt;0
+\]</span></p>
+<p>Hence, the full-conditional posterior distribution of <span class="math inline">\(\lambda\)</span> follows a Generalised Inverse Gaussian distribution.</p>
+<p><span class="math display">\[
+\lambda|T,X,A,\Sigma \sim \mathcal{GIG}(\overline{a},\overline{b},\overline{p})
+\]</span></p>
+<p>Therefore we can get:</p>
+<p><span class="math display">\[
+\begin{align}
+\overline{a} &amp;= \frac{2}{\underline{\theta_{\lambda}} }
+\\
+\overline{b} &amp;= \mathrm{tr}  \left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]
+\\
+\overline{p} &amp;= -\frac{N}{2} + \underline{k_{\lambda}}
 \end{align}
 \]</span></p>
 </section>
@@ -702,8 +740,8 @@ Kalemli-Ozcan, Sebnem, Pierre-Olivier Gourinchas, Veronika Penciakova, and Nick 
 <div id="ref-stock2001" class="csl-entry" role="listitem">
 Stock, James H, and Mark W Watson. 2001. <span>“Vector Autoregressions.”</span> <em>Journal of Economic Perspectives</em> 15 (4): 101–15. <a href="https://doi.org/10.1257/jep.15.4.101">https://doi.org/10.1257/jep.15.4.101</a>.
 </div>
-<div id="ref-wozniakBsvarsBayesianEstimation2022" class="csl-entry" role="listitem">
-Woźniak, Tomasz. 2022. <em>Bsvars: Bayesian Estimation of Structural Vector Autoregressive Models</em>. R Package. <a href="https://cran.r-project.org/package=bsvars">https://cran.r-project.org/package=bsvars</a>.
+<div id="ref-wozniak2016" class="csl-entry" role="listitem">
+Woźniak, Tomasz. 2016. <span>“Bayesian Vector Autoregressions.”</span> <em>Australian Economic Review</em> 49 (3): 365–80. <a href="https://doi.org/10.1111/1467-8462.12179">https://doi.org/10.1111/1467-8462.12179</a>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

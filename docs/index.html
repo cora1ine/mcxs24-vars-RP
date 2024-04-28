@@ -664,14 +664,14 @@ p(A,\Sigma |Y,X, \lambda) &amp;\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Si
 \end{align}
 \]</span></p>
 <p>Now, we can get:</p>
-<p>$$ <span class="math display">\[\begin{align}
+<p><span class="math display">\[
+\begin{align}
 \overline{A} &amp;= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
 \overline{V} &amp;= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
-
-
 \overline{S} &amp;= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} \\
 \overline{v} &amp;= T+\underline{v}
-\end{align}\]</span> $$</p>
+\end{align}
+\]</span></p>
 <ul>
 <li>The kernel of the fully conditional posterior distribution of <span class="math inline">\(\lambda\)</span>:</li>
 </ul>
@@ -755,26 +755,24 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    A.posterior[,,s]       <span class="ot">=</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.posterior[,,s]<span class="sc">%*%</span><span class="fu">chol</span>(Sigma.posterior[,,s])</span>
 <span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update parameters for kappa posterior</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    p       <span class="ot">=</span> lambda.priors<span class="sc">$</span>k <span class="sc">-</span> (N)<span class="sc">/</span><span class="dv">2</span>              <span class="co"># N=10</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    diff_A  <span class="ot">=</span> A.posterior[,,s] <span class="sc">-</span> A.prior</span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    product <span class="ot">=</span> <span class="fu">t</span>(diff_A) <span class="sc">%*%</span> <span class="fu">solve</span>(V.prior) <span class="sc">%*%</span> diff_A</span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    b       <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">diag</span>(<span class="fu">solve</span>(Sigma.posterior[,,s] <span class="sc">%*%</span> product)))</span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    a       <span class="ot">=</span> <span class="dv">2</span> <span class="sc">/</span> lambda.priors<span class="sc">$</span>theta</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update parameters for lambda posterior</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    p                      <span class="ot">=</span> lambda.priors<span class="sc">$</span>k <span class="sc">-</span> (N)<span class="sc">/</span><span class="dv">2</span>              <span class="co"># N=10</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    diff_A                 <span class="ot">=</span> A.posterior[,,s] <span class="sc">-</span> A.prior</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    product                <span class="ot">=</span> <span class="fu">t</span>(diff_A) <span class="sc">%*%</span> <span class="fu">solve</span>(V.prior) <span class="sc">%*%</span> diff_A</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    b                      <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">diag</span>(<span class="fu">solve</span>(Sigma.posterior[,,s] <span class="sc">%*%</span> product)))</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    a                      <span class="ot">=</span> <span class="dv">2</span> <span class="sc">/</span> lambda.priors<span class="sc">$</span>theta</span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Draw next period value for lambda from GIG distribution</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (s<span class="sc">!=</span>total_S){</span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>      lambda.posterior[s<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> GIGrvg<span class="sc">::</span><span class="fu">rgig</span>(<span class="at">n=</span><span class="dv">1</span>, <span class="at">lambda =</span> p, <span class="at">chi =</span> b, <span class="at">psi =</span> a)</span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    output                 <span class="ot">=</span> <span class="fu">list</span>(<span class="at">A.posterior.exten =</span> A.posterior, </span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Sigma.posterior.exten =</span> Sigma.posterior, </span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">lambda.posterior.exten =</span> lambda.posterior)</span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(output)</span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Draw next period value for lambda from GIG distribution</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (s<span class="sc">!=</span>total_S){</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>      lambda.posterior[s<span class="sc">+</span><span class="dv">1</span>] <span class="ot">=</span> GIGrvg<span class="sc">::</span><span class="fu">rgig</span>(<span class="at">n=</span><span class="dv">1</span>, <span class="at">lambda =</span> p, <span class="at">chi =</span> b, <span class="at">psi =</span> a)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    output                 <span class="ot">=</span> <span class="fu">list</span>(<span class="at">A.posterior.exten =</span> A.posterior, </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Sigma.posterior.exten =</span> Sigma.posterior, </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">lambda.posterior.exten =</span> lambda.posterior)</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(output)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>By including the <span class="math inline">\(\lambda\)</span> in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, A of Extend model’s variance is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model’s 0.98 to 1.01.</p>
 <div class="cell" data-layout-align="center">

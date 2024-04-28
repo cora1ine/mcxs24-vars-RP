@@ -895,8 +895,6 @@ $$
 \begin{align}
 \overline{A} &= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
 \overline{V} &= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
-
-
 \overline{S} &= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} \\
 \overline{v} &= T+\underline{v}
 \end{align}
@@ -1033,14 +1031,12 @@ for (s in 1:total_S){
     A.posterior[,,s]       = A.bar + L%*%A.posterior[,,s]%*%chol(Sigma.posterior[,,s])
     
     
-    # Update parameters for kappa posterior
-    p       = lambda.priors$k - (N)/2              # N=10
-    diff_A  = A.posterior[,,s] - A.prior
-    product = t(diff_A) %*% solve(V.prior) %*% diff_A
-    b       = sum(diag(solve(Sigma.posterior[,,s] %*% product)))
-    a       = 2 / lambda.priors$theta
-    
-
+    # Update parameters for lambda posterior
+    p                      = lambda.priors$k - (N)/2              # N=10
+    diff_A                 = A.posterior[,,s] - A.prior
+    product                = t(diff_A) %*% solve(V.prior) %*% diff_A
+    b                      = sum(diag(solve(Sigma.posterior[,,s] %*% product)))
+    a                      = 2 / lambda.priors$theta
     
     # Draw next period value for lambda from GIG distribution
     if (s!=total_S){
@@ -1068,9 +1064,6 @@ posterior.extend.draws = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
 ```
 
 
-
-
-
 By including the $\lambda$ in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, A of Extend model's variance is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model's 0.98 to 1.01. 
 
 
@@ -1078,7 +1071,6 @@ By including the $\lambda$ in the variance specification of the prior mean A, it
 #| echo: false
 #| message: false
 #| warning: false
-
 
 par(mfcol = c(3, 2), mar = c(4, 2, 2, 2))
 # 2 row 1 col of matrix A 
@@ -1099,7 +1091,7 @@ Figure 7 Model Simulation of Extend Model
 #| echo: false
 #| message: false
 #| warning: false
-par(mfcol = c(1, 2), mar = c(4, 2, 14, 2))
+par(mfcol = c(1, 2), mar = c(14, 2, 4, 2))
 plot.ts(posterior.extend.draws[["lambda.posterior.exten"]][(S1+1):total_S], xlab = "Simulation times S", ylab = "lambda", col = blue1)   
 hist(posterior.extend.draws[["lambda.posterior.exten"]][(S1+1):total_S], xlab = "lambda", col = green1, main = '')
 ```

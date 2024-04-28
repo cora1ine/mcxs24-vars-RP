@@ -632,13 +632,14 @@ In the forecasting process, we will concentrate on determining the conditional m
 
 ### Basic Model
 
-The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution [@wozniakBsvarsBayesianEstimation2022]. Minnesota prior with some stylised facts about the macroeconomic time series, since $lcpi_t$ and $lm_t$ are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.
+The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution[@wozniak2016]. Minnesota prior with some stylised facts about the macroeconomic time series, since $lcpi_t$ and $lm_t$ are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.
 
 The estimation procedures to draw from the posterior follows the steps below:
 
 **Step 1**: Prior distribution is presented below. We will specify $\underline{A}$, $\underline{V}$, $\underline{S}$ and $\underline{v}$.
 
-$$\begin{align}
+$$
+\begin{align}
 p(A,\Sigma) &\propto L(A,\Sigma | Y,X) \ p(A|\Sigma) \ p(\Sigma) 
 \\
 p(A,\Sigma|Y,X) &= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X) 
@@ -647,7 +648,8 @@ p(A,\Sigma|Y,X) &= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
 A|\Sigma &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V}) 
 \\ 
 \Sigma &\sim \mathcal{IW}_{N}(\underline{S}, \underline{v})
-\end{align}$$
+\end{align}
+$$
 
 -   $\underline{A}$ is a $K \times 10$ matrix, reflect the random walk with no drift process on the first lag of $lcpi_{t}$ and $lm_{t}$, and 0 elsewhere.
 
@@ -837,8 +839,7 @@ Since probability density function of Gamma distribution is:
 
 $$
 f(x;k,\theta)= \frac{x^{k-1}e^{-\frac{x}{\theta}}}{\theta^k \ \Gamma(k)} \quad  \quad   for  \ x>0, and \  k,\theta >0
-$$ 
-
+$$
 
 We can figure out the kernel is: $x^{k-1}e^{-\frac{x}{\theta}}$
 
@@ -853,7 +854,6 @@ p(\lambda) &= \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{
 \end{align}
 $$
 
-
 -   The kernel of the fully conditional posterior distribution of $A$ and $\Sigma$:
 
 $$
@@ -861,6 +861,17 @@ $$
 p(A,\Sigma |Y,X, \lambda) &\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Sigma) \\
 &\propto \det(\Sigma)^{-\frac{T+N+K+\underline{v}+1}{2}} \\
 &\times \exp\left\{ -\frac{1}{2} \mathrm{tr}[\Sigma^{-1}[(A-\overline{A})'\overline{V}^{-1}(A-\overline{A})+\underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}]  ] \right\} \\
+\end{align}
+$$
+
+Now, we can get:
+
+$$
+\begin{align}
+\overline{V} &= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
+\overline{A} &= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
+\overline{v} &= T+\underline{v}\\
+\overline{S} &= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}
 \end{align}
 $$
 
@@ -875,7 +886,6 @@ p(\lambda |Y,X,A,\Sigma ) &\propto L(Y,X|A,\Sigma)p(A,\Sigma, \lambda)\\
 \end{align}
 $$
 
-
 $$
 \begin{align}
 p(\lambda |Y,X,A,\Sigma ) 
@@ -887,9 +897,43 @@ det(\underline{V} )^{-\frac{N}{2}} \lambda^{-\frac{N}{2}} exp\left\{ -\frac{1}{2
 &\propto 
  \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
 &\propto 
- \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2\lambda} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} 
+ \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{\mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]}{2\lambda} 
+-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\}\\
+&\propto 
+\lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } 
+exp\left\{ \frac{- \left[ \frac{1}{\lambda} \mathrm{tr}  \left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]  + \frac{\lambda}{ \frac{1}{2} \underline{\theta_{\lambda}}}\right]}{2} 
+\right\}\\
 \end{align}
 $$
 
+As we can figure out the kernel follows generalized inverse Gaussian distribution (GIG):
+
+$$
+f(x;a,b,p)=\frac{(a/b)^{p/2}}{2K_p(\sqrt{ab})}x^{(p-1)}e^{-(ax+b/x)/2}, \quad \quad    x>0
+$$
+
+Kernel of GIG:
+
+$$
+p(x;a,b,p)=x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}, \quad \quad    x>0
+$$
+
+Hence, the full-conditional posterior distribution of $\lambda$ follows a Generalised Inverse Gaussian distribution.
+
+$$
+\lambda|T,X,A,\Sigma \sim \mathcal{GIG}(\overline{a},\overline{b},\overline{p})
+$$
+
+Therefore we can get:
+
+$$
+\begin{align}
+\overline{a} &= \frac{2}{\underline{\theta_{\lambda}} }
+\\
+\overline{b} &= \mathrm{tr}  \left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right] 
+\\ 
+\overline{p} &= -\frac{N}{2} + \underline{k_{\lambda}}
+\end{align}
+$$
 
 ## References {.unnumbered}

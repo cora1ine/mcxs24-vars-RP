@@ -277,7 +277,6 @@ It should be noted that the unemployment rate exhibits a weak correlation with t
 #| message: false
 #| warning: false
 
-
 ## plot corr table
 cor_matrix          = round(cor(all_data), 4)
 
@@ -477,14 +476,14 @@ kable(Unit_Root_Test_table, align = "c") %>%
 
 Table 1 Unit root test for all data
 
-Given that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply first differencing to all of the data sets.
+Given that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply not differencing to any of the data sets.
 
 ```{r Diff Data, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
 
-all_data         = na.omit(diff(all_data))
+# all_data         = na.omit(diff(all_data))
 
 
 ```
@@ -661,7 +660,7 @@ A|\Sigma &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V})
 \end{align}
 $$
 
--   $\underline{A}$ is a $K \times 10$ matrix, reflect the random walk with no drift process on the first lag of $lcpi_{t}$ and $lm_{t}$, and 0 elsewhere.
+-   $\underline{A}$ is a $K \times 10$ matrix, reflect the random walk with no drift process on the first lag of diagonal, and 0 elsewhere.
 
 $$
 \underline{A} = \left[ \underbrace{\textbf{0}_{10\times 1}}_{intercept} \quad  
@@ -671,7 +670,7 @@ $$
 \vdots  & \ddots  & \vdots  & \ddots&  \vdots \\
 0 & \cdots  & 1 & \cdots&  0 \\
 \vdots  & \ddots  & \vdots  & \ddots&  \vdots \\
-0 & \cdots  &  0 & \cdots &  0\\
+0 & \cdots  &  0 & \cdots &  1\\
 \end{matrix}_{10\times10} \quad 
 \begin{matrix}
 0 & \cdots  &  0\\
@@ -760,11 +759,12 @@ Sigma.hat     = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
 kappa.1       = 1                                     # shrinkage for A1 to Ap
 kappa.2       = 100                                   # shrinkage for constant 
 A.prior       = matrix(0,nrow(A.hat),ncol(A.hat))
-A.prior[2,1]  = 1
-A.prior[7,6]  = 1                           
+# A.prior[2,1]  = 1
+# A.prior[7,6]  = 1  
+A.prior[2:11,] = diag(10)
 V.prior       = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior       = diag(diag(Sigma.hat))
-nu.prior      = N+1                                   #?
+nu.prior      = N+2                                   #?
 ```
 
 

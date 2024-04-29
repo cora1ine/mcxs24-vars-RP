@@ -268,7 +268,7 @@ colnames(all_data)   = c("cpi_data",    "infexp_data",
                          "aord_data",   "exr_data")
 ```
 
-Following Table shows the correlation between CPI and other variables.
+Following Figure shows the correlation between CPI and other variables.
 
 Despite the low direct correlation between inflation expectations and CPI, inflation expectations may more closely reflect concerns about core inflation, which excludes volatile items like food and energy, whereas the CPI includes all items. If the trends between core inflation and overall inflation differ, this discrepancy can reduce the correlation between inflation expectations and the CPI. However, inflation expectations provide additional insight into how future economic conditions are perceived by consumers, businesses, and investors. This forward-looking perspective is important as it might influence economic decisions that are not immediately apparent through current CPI data.
 
@@ -644,6 +644,8 @@ In the forecasting process, we will concentrate on determining the conditional m
 
 ### Basic Model
 
+#### Prior Distribution and Posterier Distribution Specified
+
 The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution[@wozniak2016]. Minnesota prior with some stylised facts about the macroeconomic time series, since $lcpi_t$ and $lm_t$ are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.
 
 The estimation procedures to draw from the posterior follows the steps below:
@@ -805,44 +807,125 @@ posterior.draws       = function (S, Y, X){
 }
 ```
 
+
+#### Function Applying
+
 ```{r Function Applying, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
+
 ## Function Applying
 posterior.sample.draws = posterior.draws(S=5000, Y=Y, X=X) # sample use S=5000
 
-# Presenting output
-
-# head(round(apply(posterior.sample.draws$A.posterior, 1:2, mean),5))           # posterior draw A
-# head(round(apply(posterior.sample.draws$Sigma.posterior, 1:2, mean),5))       # posterior draw sigma
 ```
 
-Below are the trace plots and histograms posterior to draws on $A$ and $\Sigma$. It is clear from the trace plots that CPI has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1.
+Below are the histograms posterior to draws on $A$ and $\Sigma$. It is clear that CPI has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1.
 
 ```{r Basic Model Plot, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
 
-par(mfcol = c(3, 2), mar = c(4, 2, 2, 2))
+par(mfcol = c(2, 2), mar = c(4, 2, 2, 2))
 # 2 row 1 col of matrix A 
 
 hist(posterior.sample.draws[["A.posterior"]][2,1,], xlab = "CPI", col = blue2, main = '')
 hist(posterior.sample.draws[["A.posterior"]][2,2,], xlab = "Inflation Expectation", col = blue2, main = '')
-hist(posterior.sample.draws[["A.posterior"]][2,6,], xlab = "M3", col = blue2, main = '')
-
 
 hist(posterior.sample.draws[["Sigma.posterior"]][1,1,], xlab = "CPI sigma", col = green2, main = '')
 hist(posterior.sample.draws[["Sigma.posterior"]][1,2,], xlab = "Inflation Expectation sigma", col = green2, main = '')
-hist(posterior.sample.draws[["Sigma.posterior"]][1,6,], xlab = "M3 sigma", col = green2, main = '')
+
 ```
 
-Figure 6 Model Simulation of Basic Model
+#### Function Proofing
+
+Consider Bi-variate Gaussian random walk process:
+
+$$
+\left[ \begin{matrix}
+X_{t+1} \\ Y_{t+1}
+\end{matrix} \right] 
+= 
+\left[ \begin{matrix}
+X_{t} \\ Y_{t}
+\end{matrix} \right]
++
+\left[ \begin{matrix}
+\epsilon^{(1)}_{t+1} \\ \epsilon^{(2)}_{t+1}
+\end{matrix} \right] \\
+\epsilon^{(1)}_{t+1} \sim \mathcal{N}(0,1) \\
+\epsilon^{(2)}_{t+1} \sim \mathcal{N}(0,1)
+$$
+
+```{r Basic Model Function Proof, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+e1 = cumsum(rnorm(1000, 0, sd=1))
+e2 = cumsum(rnorm(1000, 0, sd=1))
+e  = cbind(e1,e2)
+
+## Define data X, Y 
+Y = ts(e[2:nrow(e),], frequency=1)
+X = matrix(1,nrow(Y),1)
+X = cbind(X,e[2:nrow(e)-1,])
+
+
+## Test on basic model
+N           = ncol(Y)                          # N=2
+p           = frequency(Y)
+A.hat       = solve(t(X)%*%X)%*%t(X)%*%Y
+Sigma.hat   = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+
+# Prior distribution (with Minnesota prior)
+kappa.1             = 1                                    # shrinkage for A1 to Ap
+kappa.2             = 100                                  # shrinkage for constant 
+A.prior             = matrix(0,nrow(A.hat),ncol(A.hat))
+A.prior[2:(N + 1),] = diag(N)
+V.prior             = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+S.prior             = diag(diag(Sigma.hat))
+nu.prior            = N+2
+
+# Applying function 
+posterior.sample.draws.p = posterior.draws(S=1, Y=Y, X=X)
+
+```
+
+
+
+```{r Basic Model Proof, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+basic.model.proof <- 
+  tibble( " " = c("Constant term", "1 lag"),
+          "Simulation Parameter" 
+          = c(round(mean(posterior.sample.draws.p[["A.posterior"]][1,1,]),6),
+              round(mean(posterior.sample.draws.p[["A.posterior"]][2,1,]),6))
+
+  )
+
+
+kable(basic.model.proof, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+
+```
+
+Table 2 Basic Model Proofing Simulation
 
 ### Model Extension
 
 The model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda $\lambda$ is introduced to adjust kappa $\kappa$.
+
+#### Prior Distribution and Posterier Distribution Specified
 
 **Step 1**: Prior distribution is presented below. We will specify $\underline{A}$, $\underline{V}$, $\underline{S}$, $\underline{v}$ by Minnesota shrinkage parameter lambda $\lambda$.
 
@@ -1058,6 +1141,8 @@ for (s in 1:total_S){
 }
 ```
 
+#### Function Applying
+
 ```{r Extension Function Applying, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1084,12 +1169,10 @@ par(mfcol = c(3, 2), mar = c(4, 2, 2, 2))
 
 hist(posterior.extend.draws[["A.posterior.exten"]][2,1,][(S1+1):total_S], xlab = "CPI", col = blue2, main = '')
 hist(posterior.extend.draws[["A.posterior.exten"]][2,2,][(S1+1):total_S], xlab = "Inflation Expectation", col = blue2, main = '')
-hist(posterior.extend.draws[["A.posterior.exten"]][2,6,][(S1+1):total_S], xlab = "M3", col = blue2, main = '')
-
 
 hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,1,][(S1+1):total_S], xlab = "CPI sigma", col = green2, main = '')
 hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,2,][(S1+1):total_S], xlab = "Inflation Expectation sigma", col = green2, main = '')
-hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,6,][(S1+1):total_S], xlab = "M3 sigma", col = green2, main = '')
+
 ```
 
 Figure 7 Model Simulation of Extend Model
@@ -1098,11 +1181,65 @@ Figure 7 Model Simulation of Extend Model
 #| echo: false
 #| message: false
 #| warning: false
+
 par(mfcol = c(1, 2), mar = c(14, 2, 4, 2))
 plot.ts(posterior.extend.draws[["lambda.posterior.exten"]][(S1+1):total_S], xlab = "Simulation times S", ylab = "lambda", col = blue1)   
 hist(posterior.extend.draws[["lambda.posterior.exten"]][(S1+1):total_S], xlab = "lambda", col = green1, main = '')
 ```
 
 Figure 6 Model Simulation of Extend Model (lambda)
+
+
+#### Function Proofing
+
+```{r Extend Model Function Proof, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# setup 
+kappa.1     = 1                                # shrinkage for A1 to Ap
+kappa.2     = 100                               # shrinkage for constant 
+S1          = 100                              # determine the burn-in draws
+S2          = 900                             # number of draws from the final simulation
+total_S     = S1+S2
+A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
+Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
+k.posterior       = matrix(NA, S1+S2, 1)
+k.posterior[1]    = 10                         # set k0 
+
+# Prior Gamma distribution: k, theta
+lambda.priors = list(
+  k = 1,
+  theta = .1
+)
+
+# Applying function 
+posterior.extend.draws.p = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
+```
+
+```{r Extend Model Proof, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+extend.model.proof <-
+  tibble( " " = c("Constant term", "1 lag"),
+          "Simulation Parameter" 
+          = c(round(mean(posterior.extend.draws.p[["A.posterior.exten"]][1,1,]),6),
+              round(mean(posterior.extend.draws.p[["A.posterior.exten"]][2,1,]),6))
+
+  )
+
+kable(extend.model.proof, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+
+```
+
+Table 3 Extend Model Proofing Simulation
 
 ## References {.unnumbered}

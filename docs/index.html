@@ -263,7 +263,7 @@ div.csl-indent {
 <p>Despite the low direct correlation between inflation expectations and CPI, inflation expectations may more closely reflect concerns about core inflation, which excludes volatile items like food and energy, whereas the CPI includes all items. If the trends between core inflation and overall inflation differ, this discrepancy can reduce the correlation between inflation expectations and the CPI. However, inflation expectations provide additional insight into how future economic conditions are perceived by consumers, businesses, and investors. This forward-looking perspective is important as it might influence economic decisions that are not immediately apparent through current CPI data.</p>
 <p>Exchange rate fluctuations are typically sensitive to immediate market sentiment and short-term capital flows, whereas the CPI, as a measure of past price level changes, often exhibits a lag in responding to market changes. Even if the correlation between the CPI and the AUD/USD exchange rate is low, including this variable can help researchers understand economic changes from a broader perspective. For example, changes in the exchange rate can indirectly affect domestic price levels through the cost of imports, especially in open economies.</p>
 <p>It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US <span class="citation" data-cites="kalemli-ozcan2020">(<a href="#ref-kalemli-ozcan2020" role="doc-biblioref">Kalemli-Ozcan et al. 2020</a>)</span>. This impact can be seen as an indirect effect of rising unemployment rates on inflation. Therefore, despite the weak correlation between unemployment rate and CPI, it is still important to include it in the model for a comprehensive analysis.</p>
-<div class="cell">
+<div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -298,7 +298,7 @@ div.csl-indent {
 <ul>
 <li><strong>Integration transformation</strong></li>
 </ul>
-<p>According to ACF plot for all data (Figure 3), we can see all data with autocorrelation. It suggests that the series is not white noise and might not be stationary. In this case, applying a differencing operation, such as a first difference (single-order integration), can help remove the autocorrelation and achieve stationary.</p>
+<p>According to ACF plot for all data (Figure 3), we can see all data with autocorrelation. It suggests that the series is not white noise and might not be stationary.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -392,8 +392,8 @@ div.csl-indent {
 </div>
 </div>
 <p>Table 1 Unit root test for all data</p>
-<p>Given that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply first differencing to all of the data sets.</p>
-<p>After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). Even after first order difference processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 120).</p>
+<p>Consider that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply not differencing to any of the data sets.</p>
+<p>After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). The dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 120).</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -517,7 +517,7 @@ A|\Sigma &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V})
 \end{align}
 \]</span></p>
 <ul>
-<li><span class="math inline">\(\underline{A}\)</span> is a <span class="math inline">\(K \times 10\)</span> matrix, reflect the random walk with no drift process on the first lag of <span class="math inline">\(lcpi_{t}\)</span> and <span class="math inline">\(lm_{t}\)</span>, and 0 elsewhere.</li>
+<li><span class="math inline">\(\underline{A}\)</span> is a <span class="math inline">\(K \times 10\)</span> matrix, reflect the random walk with no drift process on the first lag of diagonal, and 0 elsewhere.</li>
 </ul>
 <p><span class="math display">\[
 \underline{A} = \left[ \underbrace{\textbf{0}_{10\times 1}}_{intercept} \quad  
@@ -527,7 +527,7 @@ A|\Sigma &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V})
 \vdots  &amp; \ddots  &amp; \vdots  &amp; \ddots&amp;  \vdots \\
 0 &amp; \cdots  &amp; 1 &amp; \cdots&amp;  0 \\
 \vdots  &amp; \ddots  &amp; \vdots  &amp; \ddots&amp;  \vdots \\
-0 &amp; \cdots  &amp;  0 &amp; \cdots &amp;  0\\
+0 &amp; \cdots  &amp;  0 &amp; \cdots &amp;  1\\
 \end{matrix}_{10\times10} \quad
 \begin{matrix}
 0 &amp; \cdots  &amp;  0\\
@@ -545,7 +545,7 @@ _{10\times10(p-1))}}_{N\times(K-1)}
 \]</span></p>
 <ul>
 <li><p><span class="math inline">\(\underline{S}\)</span> is <span class="math inline">\(10\times10\)</span> symmetric matrix where the diagonal represents the variances of individual variables (diagonal of <span class="math inline">\(\Sigma\)</span>) and the off-diagonals are 0.</p></li>
-<li><p><span class="math inline">\(\underline{v}\)</span> is degree of freedom, and it is a single values because variance is assumed to be the same for all elements of <span class="math inline">\(\Sigma\)</span>.</p></li>
+<li><p><span class="math inline">\(\underline{v}\)</span> is <span class="math inline">\(N+2\)</span>, and it is a single values because variance is assumed to be the same for all elements of <span class="math inline">\(\Sigma\)</span>.</p></li>
 </ul>
 <p><strong>Step 2</strong>: Posterior distribution shows below with the implementation of the specification in Step 1</p>
 <p><span class="math display">\[

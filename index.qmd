@@ -24,11 +24,15 @@ Will Australia's inflation rate fall back to the 2-3% inflation target range in 
 
 Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country [@bernoth2021]. The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026. Influenced by the COVID-19 pandemic, Blot et al. deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates [@EuropeanParliament.2022]. Therefore, this study will assess the reasonableness of the RBA's inflation rate forecast for the next two years. During the COVID-19 period, Australia's inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.
 
+```{r Start}
+rm(list=ls())
+```
+
+
 ```{r Library}
 #| echo: false
 #| message: false
 #| warning: false
-
 
 library(readabs)
 library(readrba)
@@ -272,7 +276,7 @@ Exchange rate fluctuations are typically sensitive to immediate market sentiment
 
 It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US [@kalemli-ozcan2020]. This impact can be seen as an indirect effect of rising unemployment rates on inflation. Therefore, despite the weak correlation between unemployment rate and CPI, it is still important to include it in the model for a comprehensive analysis.
 
-```{r Corr Plot, fig.pos="H"}
+```{r Corr Plot, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -356,7 +360,7 @@ colnames(all_data)   = c("lcpi_data",      "infexp_data",
 
 -   **Integration transformation**
 
-According to ACF plot for all data (Figure 3), we can see all data with autocorrelation. It suggests that the series is not white noise and might not be stationary. In this case, applying a differencing operation, such as a first difference (single-order integration), can help remove the autocorrelation and achieve stationary.
+According to ACF plot for all data (Figure 3), we can see all data with autocorrelation. It suggests that the series is not white noise and might not be stationary.
 
 ```{r ACF plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -476,7 +480,7 @@ kable(Unit_Root_Test_table, align = "c") %>%
 
 Table 1 Unit root test for all data
 
-Given that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply not differencing to any of the data sets.
+Consider that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply not differencing to any of the data sets.
 
 ```{r Diff Data, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -485,10 +489,9 @@ Given that differencing might eliminate some of the long-term information (like 
 
 # all_data         = na.omit(diff(all_data))
 
-
 ```
 
-After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). Even after first order difference processing, the dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 120).
+After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). The dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 120).
 
 ```{r Data Plot 2, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -534,7 +537,7 @@ The model selects ten variables related to Australian inflation. Among the varia
 
 data_df = fortify.zoo(key_data)
 
-par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) + 0.5)
+par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
 
 plot(data_df$Index, data_df$inf_data, type = "l", col = blue1,
      xlab = "Date", ylab = "Rate (%)", ylim = c(0, max(c(data_df$inf_data, data_df$infexp_data))))
@@ -689,7 +692,7 @@ $$
 
 -   $\underline{S}$ is $10\times10$ symmetric matrix where the diagonal represents the variances of individual variables (diagonal of $\Sigma$) and the off-diagonals are 0.
 
--   $\underline{v}$ is degree of freedom, and it is a single values because variance is assumed to be the same for all elements of $\Sigma$.
+-   $\underline{v}$ is $N+2$, and it is a single values because variance is assumed to be the same for all elements of $\Sigma$.
 
 **Step 2**: Posterior distribution shows below with the implementation of the specification in Step 1
 
@@ -807,7 +810,7 @@ posterior.draws       = function (S, Y, X){
 #| message: false
 #| warning: false
 ## Function Applying
-posterior.sample.draws = posterior.draws(S=50000, Y=Y, X=X) # sample use S=50000
+posterior.sample.draws = posterior.draws(S=5000, Y=Y, X=X) # sample use S=5000
 
 # Presenting output
 
@@ -990,8 +993,8 @@ Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s
 #| message: false
 #| warning: false
 # setup 
-S1                = 5000                             # determine the burn-in draws
-S2                = 45000                            # number of draws from the final simulation
+S1                = 500                           # determine the burn-in draws
+S2                = 4500                          # number of draws from the final simulation
 total_S           = S1+S2
 A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
 Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))

@@ -259,7 +259,7 @@ div.csl-indent {
 </ol>
 <p>It affects the price of imports and exports, contributing to inflation.</p></li>
 </ul>
-<p>Following Table shows the correlation between CPI and other variables.</p>
+<p>Following Figure shows the correlation between CPI and other variables.</p>
 <p>Despite the low direct correlation between inflation expectations and CPI, inflation expectations may more closely reflect concerns about core inflation, which excludes volatile items like food and energy, whereas the CPI includes all items. If the trends between core inflation and overall inflation differ, this discrepancy can reduce the correlation between inflation expectations and the CPI. However, inflation expectations provide additional insight into how future economic conditions are perceived by consumers, businesses, and investors. This forward-looking perspective is important as it might influence economic decisions that are not immediately apparent through current CPI data.</p>
 <p>Exchange rate fluctuations are typically sensitive to immediate market sentiment and short-term capital flows, whereas the CPI, as a measure of past price level changes, often exhibits a lag in responding to market changes. Even if the correlation between the CPI and the AUD/USD exchange rate is low, including this variable can help researchers understand economic changes from a broader perspective. For example, changes in the exchange rate can indirectly affect domestic price levels through the cost of imports, especially in open economies.</p>
 <p>It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US <span class="citation" data-cites="kalemli-ozcan2020">(<a href="#ref-kalemli-ozcan2020" role="doc-biblioref">Kalemli-Ozcan et al. 2020</a>)</span>. This impact can be seen as an indirect effect of rising unemployment rates on inflation. Therefore, despite the weak correlation between unemployment rate and CPI, it is still important to include it in the model for a comprehensive analysis.</p>
@@ -501,6 +501,8 @@ E &amp;=
 <h2 class="anchored" data-anchor-id="estimation-procedure-and-algorithm">Estimation Procedure and Algorithm</h2>
 <section id="basic-model" class="level3">
 <h3 class="anchored" data-anchor-id="basic-model">Basic Model</h3>
+<section id="prior-distribution-and-posterier-distribution-specified" class="level4">
+<h4 class="anchored" data-anchor-id="prior-distribution-and-posterier-distribution-specified">Prior Distribution and Posterier Distribution Specified</h4>
 <p>The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution<span class="citation" data-cites="wozniak2016">(<a href="#ref-wozniak2016" role="doc-biblioref">Woźniak 2016</a>)</span>. Minnesota prior with some stylised facts about the macroeconomic time series, since <span class="math inline">\(lcpi_t\)</span> and <span class="math inline">\(lm_t\)</span> are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.</p>
 <p>The estimation procedures to draw from the posterior follows the steps below:</p>
 <p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span> and <span class="math inline">\(\underline{v}\)</span>.</p>
@@ -604,7 +606,10 @@ p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 <span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(output)</span>
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Below are the trace plots and histograms posterior to draws on <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>. It is clear from the trace plots that CPI has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1.</p>
+</section>
+<section id="function-applying" class="level4">
+<h4 class="anchored" data-anchor-id="function-applying">Function Applying</h4>
+<p>Below are the histograms posterior to draws on <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>. It is clear that CPI has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -614,11 +619,59 @@ p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 </div>
 </div>
 </div>
-<p>Figure 6 Model Simulation of Basic Model</p>
+</section>
+<section id="function-proofing" class="level4">
+<h4 class="anchored" data-anchor-id="function-proofing">Function Proofing</h4>
+<p>Consider Bi-variate Gaussian random walk process:</p>
+<p><span class="math display">\[
+\left[ \begin{matrix}
+X_{t+1} \\ Y_{t+1}
+\end{matrix} \right]
+=
+\left[ \begin{matrix}
+X_{t} \\ Y_{t}
+\end{matrix} \right]
++
+\left[ \begin{matrix}
+\epsilon^{(1)}_{t+1} \\ \epsilon^{(2)}_{t+1}
+\end{matrix} \right] \\
+\epsilon^{(1)}_{t+1} \sim \mathcal{N}(0,1) \\
+\epsilon^{(2)}_{t+1} \sim \mathcal{N}(0,1)
+\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Constant term</td>
+<td style="text-align: center;">-0.070200</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1 lag</td>
+<td style="text-align: center;">0.995445</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<p>Table 2 Basic Model Proofing Simulation</p>
+</section>
 </section>
 <section id="model-extension" class="level3">
 <h3 class="anchored" data-anchor-id="model-extension">Model Extension</h3>
 <p>The model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span> is introduced to adjust kappa <span class="math inline">\(\kappa\)</span>.</p>
+<section id="prior-distribution-and-posterier-distribution-specified-1" class="level4">
+<h4 class="anchored" data-anchor-id="prior-distribution-and-posterier-distribution-specified-1">Prior Distribution and Posterier Distribution Specified</h4>
 <p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span>, <span class="math inline">\(\underline{v}\)</span> by Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span>.</p>
 <p><span class="math display">\[
 \begin{align}
@@ -774,6 +827,9 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 <span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(output)</span>
 <span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+<section id="function-applying-1" class="level4">
+<h4 class="anchored" data-anchor-id="function-applying-1">Function Applying</h4>
 <p>By including the <span class="math inline">\(\lambda\)</span> in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, variance of A for Extend model is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model’s 0.98 to 1.01.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -795,6 +851,37 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 </div>
 </div>
 <p>Figure 6 Model Simulation of Extend Model (lambda)</p>
+</section>
+<section id="function-proofing-1" class="level4">
+<h4 class="anchored" data-anchor-id="function-proofing-1">Function Proofing</h4>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Constant term</td>
+<td style="text-align: center;">-0.10790</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1 lag</td>
+<td style="text-align: center;">0.99433</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<p>Table 3 Extend Model Proofing Simulation</p>
+</section>
 </section>
 </section>
 <section id="references" class="level2 unnumbered">

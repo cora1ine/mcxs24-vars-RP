@@ -608,7 +608,7 @@ $$
 
 $$
 A = \begin{bmatrix}
-\mu_{lcpi} & \mu_{gold} & \ldots & \mu_{lexr} \\
+\mu_{lcpi} & \mu_{infexp} & \ldots & \mu_{lexr} \\
 A_{1,lcpi}^{(1)} & A_{1,infexp}^{(1)} & \ldots & A_{1,exr}^{(1)} \\
 A_{2,lpci}^{(1)} & A_{2,infexp}^{(1)} & \ldots & A_{2,exr}^{(1)} \\
 \vdots  & \vdots  & \ddots & \vdots  \\
@@ -889,7 +889,7 @@ S.prior             = diag(diag(Sigma.hat))
 nu.prior            = N+2
 
 # Applying function 
-posterior.sample.draws.p = posterior.draws(S=1, Y=Y, X=X)
+posterior.sample.draws.p = posterior.draws(S=5000, Y=Y, X=X)
 
 ```
 
@@ -901,13 +901,17 @@ posterior.sample.draws.p = posterior.draws(S=1, Y=Y, X=X)
 #| warning: false
 
 basic.model.proof <- 
-  tibble( " " = c("Constant term", "1 lag"),
-          "Simulation Parameter" 
-          = c(round(mean(posterior.sample.draws.p[["A.posterior"]][1,1,]),6),
-              round(mean(posterior.sample.draws.p[["A.posterior"]][2,1,]),6))
+  tibble( " " = c("Constant term", "First Lag",""),
+          "Simulation Parameter e1" 
+          = c(round(mean(posterior.sample.draws.p[["A.posterior"]][1,1,]),4),
+              round(mean(posterior.sample.draws.p[["A.posterior"]][2,1,]),4),
+              round(mean(posterior.sample.draws.p[["A.posterior"]][3,1,]),4)),
+           "Simulation Parameter e2" 
+          = c(round(mean(posterior.sample.draws.p[["A.posterior"]][1,2,]),4),
+              round(mean(posterior.sample.draws.p[["A.posterior"]][2,2,]),4),
+              round(mean(posterior.sample.draws.p[["A.posterior"]][3,2,]),4))
 
   )
-
 
 kable(basic.model.proof, align = "c") %>% 
   kable_styling(font_size = 8, 
@@ -918,6 +922,7 @@ kable(basic.model.proof, align = "c") %>%
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 
 ```
+
 
 Table 2 Basic Model Proofing Simulation
 
@@ -1151,8 +1156,6 @@ for (s in 1:total_S){
 ## Applying function 
 posterior.extend.draws = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
 
-# Presenting output
-# head(round(apply(posterior.extend.draw$A.posterior.exten[,,(S1+1):total_S], 1:2, mean),6))
 ```
 
 
@@ -1200,8 +1203,8 @@ Figure 6 Model Simulation of Extend Model (lambda)
 # setup 
 kappa.1     = 1                                # shrinkage for A1 to Ap
 kappa.2     = 100                               # shrinkage for constant 
-S1          = 100                              # determine the burn-in draws
-S2          = 900                             # number of draws from the final simulation
+S1          = 500                              # determine the burn-in draws
+S2          = 4500                             # number of draws from the final simulation
 total_S     = S1+S2
 A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
 Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
@@ -1223,10 +1226,15 @@ posterior.extend.draws.p = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
 #| message: false
 #| warning: false
 extend.model.proof <-
-  tibble( " " = c("Constant term", "1 lag"),
-          "Simulation Parameter" 
-          = c(round(mean(posterior.extend.draws.p[["A.posterior.exten"]][1,1,]),6),
-              round(mean(posterior.extend.draws.p[["A.posterior.exten"]][2,1,]),6))
+  tibble( " " = c("Constant term", "First Lag",""),
+          "Simulation Parameter e1" 
+          = c(round(mean(posterior.extend.draws.p[["A.posterior.exten"]][1,1,]),4),
+              round(mean(posterior.extend.draws.p[["A.posterior.exten"]][2,1,]),4),
+              round(mean(posterior.extend.draws.p[["A.posterior.exten"]][3,1,]),4)),
+           "Simulation Parameter e2" 
+          = c(round(mean(posterior.extend.draws.p[["A.posterior.exten"]][1,2,]),4),
+              round(mean(posterior.extend.draws.p[["A.posterior.exten"]][2,2,]),4),
+              round(mean(posterior.extend.draws.p[["A.posterior.exten"]][3,2,]),4))
 
   )
 

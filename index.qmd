@@ -735,7 +735,7 @@ Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s
 #| message: false
 #| warning: false
 
-set.seed(10)
+set.seed(11)
 
 ## Create Y and X
 y             = ts(all_data[,1:ncol(all_data)])     # 10col, 135row
@@ -1006,10 +1006,6 @@ lambda.priors = list(
   theta = .1
 )
 
-# Prior GIG distribution: a,b,p
-a.lambda.prior         = 2
-b.lambda.prior         = 1
-p.lambda.prior         = 0.1
 ```
 
 
@@ -1083,14 +1079,14 @@ By including the $\lambda$ in the variance specification of the prior mean A, it
 par(mfcol = c(3, 2), mar = c(4, 2, 2, 2))
 # 2 row 1 col of matrix A 
 
-hist(posterior.extend.draws[["A.posterior.exten"]][2,1,], xlab = "CPI", col = blue2, main = '')
-hist(posterior.extend.draws[["A.posterior.exten"]][2,2,], xlab = "Inflation Expectation", col = blue2, main = '')
-hist(posterior.extend.draws[["A.posterior.exten"]][2,6,], xlab = "M3", col = blue2, main = '')
+hist(posterior.extend.draws[["A.posterior.exten"]][2,1,][(S1+1):total_S], xlab = "CPI", col = blue2, main = '')
+hist(posterior.extend.draws[["A.posterior.exten"]][2,2,][(S1+1):total_S], xlab = "Inflation Expectation", col = blue2, main = '')
+hist(posterior.extend.draws[["A.posterior.exten"]][2,6,][(S1+1):total_S], xlab = "M3", col = blue2, main = '')
 
 
-hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,1,], xlab = "CPI sigma", col = green2, main = '')
-hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,2,], xlab = "Inflation Expectation sigma", col = green2, main = '')
-hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,6,], xlab = "M3 sigma", col = green2, main = '')
+hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,1,][(S1+1):total_S], xlab = "CPI sigma", col = green2, main = '')
+hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,2,][(S1+1):total_S], xlab = "Inflation Expectation sigma", col = green2, main = '')
+hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,6,][(S1+1):total_S], xlab = "M3 sigma", col = green2, main = '')
 ```
 
 Figure 7 Model Simulation of Extend Model

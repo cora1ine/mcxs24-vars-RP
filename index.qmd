@@ -909,7 +909,7 @@ posterior.sample.draws.p = posterior.draws(S=5000, Y=Y, X=X)
 #| warning: false
 
 basic.model.proof.A <- 
-  tibble( " " = c("Constant term", "First Lag",""),
+  tibble( "A" = c("Constant term", "First Lag",""),
           "Simulation Parameter e1" 
           = c(round(mean(posterior.sample.draws.p[["A.posterior"]][1,1,]),4),
               round(mean(posterior.sample.draws.p[["A.posterior"]][2,1,]),4),
@@ -931,13 +931,15 @@ kable(basic.model.proof.A, align = "c") %>%
 
 ```
 
+Table 2 Basic Model Proofing Simulation for A
+
 ```{r Basic Model Proof Sigma, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
 
 basic.model.proof.Sigma <-
-  tibble( 
+  tibble( "Sigma" = c("",""),
           "Simulation Parameter e1" 
           = c(round(mean(posterior.sample.draws.p[["Sigma.posterior"]][1,1,]),4),
               round(mean(posterior.sample.draws.p[["Sigma.posterior"]][2,1,]),4)),
@@ -957,7 +959,7 @@ kable(basic.model.proof.Sigma, align = "c") %>%
 
 ```
 
-Table 5 Extend Model Proofing Simulation for Sigma Table 2 Basic Model Proofing Simulation
+Table 3 Basic Model Proofing Simulation for Sigma
 
 ### Model Extension
 
@@ -1113,8 +1115,8 @@ Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s
 #| message: false
 #| warning: false
 # setup 
-S1                = 500                           # determine the burn-in draws
-S2                = 4500                          # number of draws from the final simulation
+S1                = 500                            # determine the burn-in draws
+S2                = 9500                          # number of draws from the final simulation
 total_S           = S1+S2
 A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
 Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
@@ -1231,9 +1233,9 @@ Figure 8 Model Simulation of Extend Model (lambda)
 
 # setup 
 kappa.1     = 1                                # shrinkage for A1 to Ap
-kappa.2     = 100                               # shrinkage for constant 
-S1          = 500                              # determine the burn-in draws
-S2          = 4500                             # number of draws from the final simulation
+kappa.2     = 100                              # shrinkage for constant 
+S1          = 500                               # determine the burn-in draws
+S2          = 9500                             # number of draws from the final simulation
 total_S     = S1+S2
 A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
 Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
@@ -1255,7 +1257,7 @@ posterior.extend.draws.p = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
 #| message: false
 #| warning: false
 extend.model.proof.A <-
-  tibble( " " = c("Constant term", "First Lag",""),
+  tibble( "A" = c("Constant term", "First Lag",""),
           "Simulation Parameter e1" 
           = c(round(mean(posterior.extend.draws.p[["A.posterior.exten"]][1,1,]),4),
               round(mean(posterior.extend.draws.p[["A.posterior.exten"]][2,1,]),4),
@@ -1285,7 +1287,7 @@ Table 4 Extend Model Proofing Simulation for A
 #| warning: false
 
 extend.model.proof.Sigma <-
-  tibble( 
+  tibble( "Sigma" = c("",""),
           "Simulation Parameter e1" 
           = c(round(mean(posterior.extend.draws.p[["Sigma.posterior.exten"]][1,1,]),4),
               round(mean(posterior.extend.draws.p[["Sigma.posterior.exten"]][2,1,]),4)),

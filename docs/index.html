@@ -624,19 +624,33 @@ p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 <h4 class="anchored" data-anchor-id="function-proofing">Function Proofing</h4>
 <p>Consider Bi-variate Gaussian random walk process:</p>
 <p><span class="math display">\[
-\left[ \begin{matrix}
-X_{t+1} \\ Y_{t+1}
-\end{matrix} \right]
-=
-\left[ \begin{matrix}
-X_{t} \\ Y_{t}
-\end{matrix} \right]
-+
-\left[ \begin{matrix}
-\epsilon^{(1)}_{t+1} \\ \epsilon^{(2)}_{t+1}
-\end{matrix} \right] \\
-\epsilon^{(1)}_{t+1} \sim \mathcal{N}(0,1) \\
-\epsilon^{(2)}_{t+1} \sim \mathcal{N}(0,1)
+e_t =
+\begin{bmatrix}
+e_{t,1} \\
+e_{t,2}
+\end{bmatrix} =
+\begin{bmatrix}
+e_{t-1,1} \\
+e_{t-1,2}
+\end{bmatrix} +
+\begin{bmatrix}
+\epsilon_{t,1} \\
+\epsilon_{t,2}
+\end{bmatrix} \\
+\epsilon_{t,1} \sim \mathcal{N}(0,1) \\
+\epsilon_{t,2} \sim \mathcal{N}(0,1)
+\]</span></p>
+<p><span class="math display">\[
+Y = \begin{bmatrix}
+e_2 \\
+e_3 \\
+\vdots \\
+e_n
+\end{bmatrix},
+\quad
+X = \begin{bmatrix}
+1 &amp; e_1 &amp; e_2 &amp; \ldots &amp; e_{n-1}
+\end{bmatrix}
 \]</span></p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -672,12 +686,38 @@ X_{t} \\ Y_{t}
 
 </div>
 </div>
-<p>Table 2 Basic Model Proofing Simulation</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e1</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1.0046</td>
+<td style="text-align: center;">0.0077</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.0077</td>
+<td style="text-align: center;">0.9849</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<p>Table 5 Extend Model Proofing Simulation for Sigma Table 2 Basic Model Proofing Simulation</p>
 </section>
 </section>
 <section id="model-extension" class="level3">
 <h3 class="anchored" data-anchor-id="model-extension">Model Extension</h3>
-<p>The model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span> is introduced to adjust kappa <span class="math inline">\(\kappa\)</span>.</p>
+<p>The model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span> is introduced to adjust <span class="math inline">\(V\)</span>.</p>
 <section id="prior-distribution-and-posterier-distribution-specified-1" class="level4">
 <h4 class="anchored" data-anchor-id="prior-distribution-and-posterier-distribution-specified-1">Prior Distribution and Posterier Distribution Specified</h4>
 <p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span>, <span class="math inline">\(\underline{v}\)</span> by Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span>.</p>
@@ -791,7 +831,7 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 <li><p>Draw random matrices for <span class="math inline">\(A^{(s)}\)</span> and <span class="math inline">\(\Sigma^{(s)}\)</span> from <span class="math inline">\(p(A,\Sigma|Y,X,\lambda^{(s-1)})\)</span>.</p></li>
 <li><p>Draw a random number for <span class="math inline">\(\lambda^{(s)}\)</span> from <span class="math inline">\(p(\lambda |Y,X,A^{(s)},\Sigma^{(s)})\)</span>.</p></li>
 </ol>
-<p>Repeat steps 1 and 2 <span class="math inline">\(S_{1} + S_{2}\)</span> times.</p>
+<p>Repeat 1 and 2 <span class="math inline">\(S_{1} + S_{2}\)</span> times.</p>
 <p>Discard the first <span class="math inline">\(S_{1}\)</span> draws that allows the algorithm to converge to the stationary posterior distribution.</p>
 <p>Output is the sample draws from the joint posterior distribution <span class="math inline">\(\left\{ {A^{(s)}, \Sigma^{(s)}, \lambda^{(s)}} \right\}^{S_{1}+S_{2}}_{s=S_{1}+1}\)</span>.</p>
 <p>Function below is <code>posterior.draws.exten</code>:</p>
@@ -858,7 +898,7 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 </div>
 </div>
 </div>
-<p>Figure 6 Model Simulation of Extend Model (lambda)</p>
+<p>Figure 8 Model Simulation of Extend Model (lambda)</p>
 </section>
 <section id="function-proofing-1" class="level4">
 <h4 class="anchored" data-anchor-id="function-proofing-1">Function Proofing</h4>
@@ -896,7 +936,34 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 
 </div>
 </div>
-<p>Table 3 Extend Model Proofing Simulation</p>
+<p>Table 4 Extend Model Proofing Simulation for A</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e1</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e2</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1.0058</td>
+<td style="text-align: center;">0.0081</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.0081</td>
+<td style="text-align: center;">0.9843</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<p>Table 5 Extend Model Proofing Simulation for Sigma</p>
 </section>
 </section>
 </section>

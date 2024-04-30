@@ -356,8 +356,8 @@ div.csl-indent {
 </tr>
 <tr class="even">
 <td style="text-align: center;">lm</td>
-<td style="text-align: center;">0.9054</td>
-<td style="text-align: center;">0.2152</td>
+<td style="text-align: center;">0.9051</td>
+<td style="text-align: center;">0.2150</td>
 <td style="text-align: center;">lm~I(n)</td>
 </tr>
 <tr class="odd">
@@ -637,6 +637,7 @@ e_{t-1,2}
 \epsilon_{t,1} \\
 \epsilon_{t,2}
 \end{bmatrix} \\
+\\
 \epsilon_{t,1} \sim \mathcal{N}(0,1) \\
 \epsilon_{t,2} \sim \mathcal{N}(0,1)
 \]</span></p>
@@ -652,6 +653,7 @@ X = \begin{bmatrix}
 1 &amp; e_1 &amp; e_2 &amp; \ldots &amp; e_{n-1}
 \end{bmatrix}
 \]</span></p>
+<p>The posterior mean of the <span class="math inline">\(A\)</span> is:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -659,25 +661,25 @@ X = \begin{bmatrix}
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">A</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e1</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e2</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter Y1</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter Y2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">Constant term</td>
-<td style="text-align: center;">-0.1097</td>
-<td style="text-align: center;">-0.0349</td>
+<td style="text-align: center;">0.1225</td>
+<td style="text-align: center;">-0.2442</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">First Lag</td>
-<td style="text-align: center;">0.9944</td>
-<td style="text-align: center;">-0.0087</td>
+<td style="text-align: center;">Y1 lag</td>
+<td style="text-align: center;">0.9866</td>
+<td style="text-align: center;">-0.0007</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"></td>
-<td style="text-align: center;">-0.0009</td>
-<td style="text-align: center;">0.9921</td>
+<td style="text-align: center;">Y2 lag</td>
+<td style="text-align: center;">-0.0020</td>
+<td style="text-align: center;">0.9925</td>
 </tr>
 </tbody>
 </table>
@@ -687,6 +689,7 @@ X = \begin{bmatrix}
 </div>
 </div>
 <p>Table 2 Basic Model Proofing Simulation for A</p>
+<p>The posterior mean of the <span class="math inline">\(\Sigma\)</span> is:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -694,20 +697,20 @@ X = \begin{bmatrix}
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Sigma</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e1</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e2</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter Y1</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter Y2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"></td>
-<td style="text-align: center;">1.0046</td>
-<td style="text-align: center;">0.0077</td>
+<td style="text-align: center;">Y1 lag</td>
+<td style="text-align: center;">1.0013</td>
+<td style="text-align: center;">-0.0183</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"></td>
-<td style="text-align: center;">0.0077</td>
-<td style="text-align: center;">0.9849</td>
+<td style="text-align: center;">Y2 lag</td>
+<td style="text-align: center;">-0.0183</td>
+<td style="text-align: center;">1.0507</td>
 </tr>
 </tbody>
 </table>
@@ -906,6 +909,7 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 </section>
 <section id="function-proofing-1" class="level4">
 <h4 class="anchored" data-anchor-id="function-proofing-1">Function Proofing</h4>
+<p>The posterior mean of the <span class="math inline">\(A\)</span> is:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -913,25 +917,25 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">A</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e1</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e2</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter Y1</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter Y2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">Constant term</td>
-<td style="text-align: center;">-0.1104</td>
-<td style="text-align: center;">-0.0340</td>
+<td style="text-align: center;">0.1239</td>
+<td style="text-align: center;">-0.2441</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;">First Lag</td>
-<td style="text-align: center;">0.9945</td>
-<td style="text-align: center;">-0.0088</td>
+<td style="text-align: center;">Y1 lag</td>
+<td style="text-align: center;">0.9866</td>
+<td style="text-align: center;">-0.0006</td>
 </tr>
 <tr class="odd">
-<td style="text-align: center;"></td>
-<td style="text-align: center;">-0.0009</td>
-<td style="text-align: center;">0.9920</td>
+<td style="text-align: center;">Y2 lag</td>
+<td style="text-align: center;">-0.0019</td>
+<td style="text-align: center;">0.9925</td>
 </tr>
 </tbody>
 </table>
@@ -941,6 +945,7 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 </div>
 </div>
 <p>Table 4 Extend Model Proofing Simulation for A</p>
+<p>The posterior mean of the <span class="math inline">\(\Sigma\)</span> is:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -948,20 +953,20 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 <thead>
 <tr class="header">
 <th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Sigma</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e1</th>
-<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter e2</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter Y1</th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;">Simulation Parameter Y2</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: center;"></td>
-<td style="text-align: center;">1.0061</td>
-<td style="text-align: center;">0.0083</td>
+<td style="text-align: center;">Y1 lag</td>
+<td style="text-align: center;">1.0007</td>
+<td style="text-align: center;">-0.0182</td>
 </tr>
 <tr class="even">
-<td style="text-align: center;"></td>
-<td style="text-align: center;">0.0083</td>
-<td style="text-align: center;">0.9842</td>
+<td style="text-align: center;">Y2 lag</td>
+<td style="text-align: center;">-0.0182</td>
+<td style="text-align: center;">1.0514</td>
 </tr>
 </tbody>
 </table>

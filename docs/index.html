@@ -416,7 +416,7 @@ div.csl-indent {
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
-<p><img src="index_files/figure-html/Plot inf and infexp-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="index_files/figure-html/Plot inf infexp-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -607,53 +607,46 @@ p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 <span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="function-applying" class="level4">
-<h4 class="anchored" data-anchor-id="function-applying">Function Applying</h4>
-<p>Below are the histograms posterior to draws on <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>. It is clear that CPI has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/Basic Model Plot-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
 <section id="function-proofing" class="level4">
 <h4 class="anchored" data-anchor-id="function-proofing">Function Proofing</h4>
 <p>Consider Bi-variate Gaussian random walk process:</p>
 <p><span class="math display">\[
-e_t =
+y_t =
 \begin{bmatrix}
-e_{t,1} \\
-e_{t,2}
+y_{t,1} \\
+y_{t,2}
 \end{bmatrix} =
 \begin{bmatrix}
-e_{t-1,1} \\
-e_{t-1,2}
+y_{t-1,1} \\
+y_{t-1,2}
 \end{bmatrix} +
 \begin{bmatrix}
 \epsilon_{t,1} \\
 \epsilon_{t,2}
-\end{bmatrix} \\
-\\
-\epsilon_{t,1} \sim \mathcal{N}(0,1) \\
+\end{bmatrix}
+, where   \  \
+\epsilon_{t,1} \sim \mathcal{N}(0,1)  \ and \
 \epsilon_{t,2} \sim \mathcal{N}(0,1)
 \]</span></p>
 <p><span class="math display">\[
 Y = \begin{bmatrix}
-e_2 \\
-e_3 \\
+y_2' \\
+y_3' \\
 \vdots \\
-e_n
+y_n'
 \end{bmatrix},
 \quad
 X = \begin{bmatrix}
-1 &amp; e_1 &amp; e_2 &amp; \ldots &amp; e_{n-1}
+1 \quad y_1' \\
+1 \quad y_2' \\
+\vdots \quad \vdots \\
+1 \quad y_{n-1}'
 \end{bmatrix}
 \]</span></p>
-<p>The posterior mean of the <span class="math inline">\(A\)</span> is:</p>
+<p>After estimating a model that includes a constant term and one lag using artificial data, we observe that the posterior mean of the autoregressive and covariance matrices closely approximates an identity matrix, and the posterior mean of the constant term is nearly a vector of zeros.</p>
+<ul>
+<li>The posterior mean of the <span class="math inline">\(A\)</span> is:</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -668,18 +661,18 @@ X = \begin{bmatrix}
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">Constant term</td>
-<td style="text-align: center;">0.1225</td>
-<td style="text-align: center;">-0.2442</td>
+<td style="text-align: center;">0.0308</td>
+<td style="text-align: center;">0.0718</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Y1 lag</td>
-<td style="text-align: center;">0.9866</td>
-<td style="text-align: center;">-0.0007</td>
+<td style="text-align: center;">0.9970</td>
+<td style="text-align: center;">-0.0016</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Y2 lag</td>
-<td style="text-align: center;">-0.0020</td>
-<td style="text-align: center;">0.9925</td>
+<td style="text-align: center;">-0.0019</td>
+<td style="text-align: center;">0.9857</td>
 </tr>
 </tbody>
 </table>
@@ -688,8 +681,10 @@ X = \begin{bmatrix}
 
 </div>
 </div>
-<p>Table 2 Basic Model Proofing Simulation for A</p>
-<p>The posterior mean of the <span class="math inline">\(\Sigma\)</span> is:</p>
+<p>Table 2 Basic Model Proofing Simulation for <span class="math inline">\(A\)</span></p>
+<ul>
+<li>The posterior mean of the <span class="math inline">\(\Sigma\)</span> is:</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -704,13 +699,13 @@ X = \begin{bmatrix}
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">Y1 lag</td>
-<td style="text-align: center;">1.0013</td>
-<td style="text-align: center;">-0.0183</td>
+<td style="text-align: center;">0.9904</td>
+<td style="text-align: center;">-0.0208</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Y2 lag</td>
-<td style="text-align: center;">-0.0183</td>
-<td style="text-align: center;">1.0507</td>
+<td style="text-align: center;">-0.0208</td>
+<td style="text-align: center;">0.9818</td>
 </tr>
 </tbody>
 </table>
@@ -719,7 +714,7 @@ X = \begin{bmatrix}
 
 </div>
 </div>
-<p>Table 3 Basic Model Proofing Simulation for Sigma</p>
+<p>Table 3 Basic Model Proofing Simulation for <span class="math inline">\(\Sigma\)</span></p>
 </section>
 </section>
 <section id="model-extension" class="level3">
@@ -876,40 +871,19 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 <span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  }</span>
 <span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    output                 <span class="ot">=</span> <span class="fu">list</span>(<span class="at">A.posterior.exten =</span> A.posterior, </span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Sigma.posterior.exten =</span> Sigma.posterior, </span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">lambda.posterior.exten =</span> lambda.posterior)</span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(output)</span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    output                 <span class="ot">=</span> <span class="fu">list</span>(<span class="at">A.posterior.exten =</span> A.posterior[,,(S1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>S2], </span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Sigma.posterior.exten =</span> Sigma.posterior[,,(S1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>S2], </span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">lambda.posterior.exten =</span> lambda.posterior[(S1<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>S2,])</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(output)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section>
-<section id="function-applying-1" class="level4">
-<h4 class="anchored" data-anchor-id="function-applying-1">Function Applying</h4>
-<p>By including the <span class="math inline">\(\lambda\)</span> in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, variance of A for Extend model is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model’s 0.98 to 1.01.</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/Extension Model Plot-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Figure 7 Model Simulation of Extend Model</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/Extension Model lambda Plot-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<p>Figure 8 Model Simulation of Extend Model (lambda)</p>
 </section>
 <section id="function-proofing-1" class="level4">
 <h4 class="anchored" data-anchor-id="function-proofing-1">Function Proofing</h4>
-<p>The posterior mean of the <span class="math inline">\(A\)</span> is:</p>
+<ul>
+<li>The posterior mean of the <span class="math inline">\(A\)</span> is:</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -924,18 +898,18 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">Constant term</td>
-<td style="text-align: center;">0.1239</td>
-<td style="text-align: center;">-0.2441</td>
+<td style="text-align: center;">0.0304</td>
+<td style="text-align: center;">0.0705</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Y1 lag</td>
-<td style="text-align: center;">0.9866</td>
-<td style="text-align: center;">-0.0006</td>
+<td style="text-align: center;">0.9969</td>
+<td style="text-align: center;">-0.0016</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">Y2 lag</td>
 <td style="text-align: center;">-0.0019</td>
-<td style="text-align: center;">0.9925</td>
+<td style="text-align: center;">0.9858</td>
 </tr>
 </tbody>
 </table>
@@ -944,8 +918,10 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 
 </div>
 </div>
-<p>Table 4 Extend Model Proofing Simulation for A</p>
-<p>The posterior mean of the <span class="math inline">\(\Sigma\)</span> is:</p>
+<p>Table 4 Extend Model Proofing Simulation for <span class="math inline">\(A\)</span></p>
+<ul>
+<li>The posterior mean of the <span class="math inline">\(\Sigma\)</span> is:</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="table-responsive">
@@ -960,13 +936,13 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">Y1 lag</td>
-<td style="text-align: center;">1.0007</td>
-<td style="text-align: center;">-0.0182</td>
+<td style="text-align: center;">0.9903</td>
+<td style="text-align: center;">-0.0209</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">Y2 lag</td>
-<td style="text-align: center;">-0.0182</td>
-<td style="text-align: center;">1.0514</td>
+<td style="text-align: center;">-0.0209</td>
+<td style="text-align: center;">0.9828</td>
 </tr>
 </tbody>
 </table>
@@ -975,7 +951,7 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 
 </div>
 </div>
-<p>Table 5 Extend Model Proofing Simulation for Sigma</p>
+<p>Table 5 Extend Model Proofing Simulation for <span class="math inline">\(\Sigma\)</span></p>
 </section>
 </section>
 </section>

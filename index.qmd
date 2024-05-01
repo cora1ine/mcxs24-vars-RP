@@ -529,7 +529,7 @@ The model selects ten variables related to Australian inflation. Among the varia
 
 -   Regarding the specific inflation zone of 2-3%, it appears that both the expected and actual inflation rates oscillate into this range periodically. However, it seems that starting just before 2020, there's a pronounced peak where expected inflation sharply rises above the actual inflation rate, which then converges back into the 2-3% range shortly after (although actual inflation rate still need some time). So we can foresee that inflation will indeed fall back to the 2-3% range in the near future.
 
-```{r Plot inf and infexp, fig.align='center',fig.pos='H'}
+```{r Plot inf infexp, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -803,7 +803,7 @@ posterior.draws       = function (S, Y, X){
 }
 ```
 
-#### Function Applying
+
 
 ```{r Function Applying, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -811,61 +811,47 @@ posterior.draws       = function (S, Y, X){
 #| warning: false
 
 ## Function Applying
-posterior.sample.draws = posterior.draws(S=10000, Y=Y, X=X) # sample use S=10000
+# posterior.sample.draws = posterior.draws(S=10000, Y=Y, X=X) # sample use S=10000
 
 ```
 
-Below are the histograms posterior to draws on $A$ and $\Sigma$. It is clear that CPI has a very strong perfect positive correlation with its own preceding period, which is consistent with the previous distribution design and the anticipation of integration at 1.
-
-```{r Basic Model Plot, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
-
-par(mfcol = c(2, 2), mar = c(4, 2, 2, 2))
-# 2 row 1 col of matrix A 
-
-hist(posterior.sample.draws[["A.posterior"]][2,1,], xlab = "CPI", col = blue2, main = '')
-hist(posterior.sample.draws[["A.posterior"]][2,2,], xlab = "Inflation Expectation", col = blue2, main = '')
-
-hist(posterior.sample.draws[["Sigma.posterior"]][1,1,], xlab = "CPI sigma", col = green2, main = '')
-hist(posterior.sample.draws[["Sigma.posterior"]][1,2,], xlab = "Inflation Expectation sigma", col = green2, main = '')
-
-```
 
 #### Function Proofing
 
 Consider Bi-variate Gaussian random walk process:
 
 $$
-e_t = 
+y_t = 
 \begin{bmatrix}
-e_{t,1} \\
-e_{t,2}
+y_{t,1} \\
+y_{t,2}
 \end{bmatrix} = 
 \begin{bmatrix}
-e_{t-1,1} \\
-e_{t-1,2}
+y_{t-1,1} \\
+y_{t-1,2}
 \end{bmatrix} + 
 \begin{bmatrix}
 \epsilon_{t,1} \\
 \epsilon_{t,2}
-\end{bmatrix} \\ 
- \\ 
-\epsilon_{t,1} \sim \mathcal{N}(0,1) \\
+\end{bmatrix} 
+, where   \  \ 
+\epsilon_{t,1} \sim \mathcal{N}(0,1)  \ and \ 
 \epsilon_{t,2} \sim \mathcal{N}(0,1)
 $$
 
 $$ 
 Y = \begin{bmatrix}
-e_2 \\
-e_3 \\
+y_2' \\
+y_3' \\
 \vdots \\
-e_n
+y_n'
 \end{bmatrix},
 \quad
 X = \begin{bmatrix}
-1 & e_1 & e_2 & \ldots & e_{n-1}
+1 \quad y_1' \\
+1 \quad y_2' \\
+\vdots \quad \vdots \\
+1 \quad y_{n-1}'
 \end{bmatrix}
 $$
 
@@ -907,7 +893,10 @@ posterior.sample.draws.p = posterior.draws(S=10000, Y=Y, X=X)
 ```
 
 
-The posterior mean of the $A$ is:
+After estimating a model that includes a constant term and one lag using artificial data, we observe that the posterior mean of the autoregressive and covariance matrices closely approximates an identity matrix, and the posterior mean of the constant term is nearly a vector of zeros.
+
+ - The posterior mean of the $A$ is:
+ 
 
 ```{r Basic Model Proof A, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -937,9 +926,9 @@ kable(basic.model.proof.A, align = "c") %>%
 
 ```
 
-Table 2 Basic Model Proofing Simulation for A
+Table 2 Basic Model Proofing Simulation for $A$
 
-The posterior mean of the $\Sigma$ is:
+ - The posterior mean of the $\Sigma$ is:
 
 ```{r Basic Model Proof Sigma, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -967,7 +956,7 @@ kable(basic.model.proof.Sigma, align = "c") %>%
 
 ```
 
-Table 3 Basic Model Proofing Simulation for Sigma
+Table 3 Basic Model Proofing Simulation for $\Sigma$
 
 ### Model Extension
 
@@ -1124,7 +1113,7 @@ Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s
 #| warning: false
 # setup 
 S1                = 500                            # determine the burn-in draws
-S2                = 9500                          # number of draws from the final simulation
+S2                = 9500                           # number of draws from the final simulation
 total_S           = S1+S2
 A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
 Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
@@ -1181,14 +1170,15 @@ for (s in 1:total_S){
     }
   }
   
-    output                 = list(A.posterior.exten = A.posterior, 
-                                  Sigma.posterior.exten = Sigma.posterior, 
-                                  lambda.posterior.exten = lambda.posterior)
+    output                 = list(A.posterior.exten = A.posterior[,,(S1+1):S2], 
+                                  Sigma.posterior.exten = Sigma.posterior[,,(S1+1):S2], 
+                                  lambda.posterior.exten = lambda.posterior[(S1+1):S2,])
+
     return(output)
 }
 ```
 
-#### Function Applying
+
 
 ```{r Extension Function Applying, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1196,41 +1186,10 @@ for (s in 1:total_S){
 #| warning: false
 
 ## Applying function 
-posterior.extend.draws = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
+# posterior.extend.draws = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
 
 ```
 
-By including the $\lambda$ in the variance specification of the prior mean A, it adds more variability than the basic model. As opposed to having a constant shrinkage level, variance of A for Extend model is non-constant. This modification produces noticeable effects on the CPI, whose coefficient now spans a wider range from 0.9 to 1.05 as opposed to the basic model's 0.98 to 1.01.
-
-```{r Extension Model Plot, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
-
-par(mfcol = c(2, 2), mar = c(4, 2, 2, 2))
-# 2 row 1 col of matrix A 
-
-hist(posterior.extend.draws[["A.posterior.exten"]][2,1,][(S1+1):total_S], xlab = "CPI", col = blue2, main = '')
-hist(posterior.extend.draws[["A.posterior.exten"]][2,2,][(S1+1):total_S], xlab = "Inflation Expectation", col = blue2, main = '')
-
-hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,1,][(S1+1):total_S], xlab = "CPI sigma", col = green2, main = '')
-hist(posterior.extend.draws[["Sigma.posterior.exten"]][1,2,][(S1+1):total_S], xlab = "Inflation Expectation sigma", col = green2, main = '')
-
-```
-
-Figure 7 Model Simulation of Extend Model
-
-```{r Extension Model lambda Plot, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
-
-par(mfcol = c(1, 2), mar = c(14, 2, 4, 2))
-plot.ts(posterior.extend.draws[["lambda.posterior.exten"]][(S1+1):total_S], xlab = "Simulation times S", ylab = "lambda", col = blue1)   
-hist(posterior.extend.draws[["lambda.posterior.exten"]][(S1+1):total_S], xlab = "lambda", col = green1, main = '')
-```
-
-Figure 8 Model Simulation of Extend Model (lambda)
 
 #### Function Proofing
 
@@ -1261,7 +1220,7 @@ posterior.extend.draws.p = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
 ```
 
 
-The posterior mean of the $A$ is:
+ - The posterior mean of the $A$ is:
 
 ```{r Extend Model Proof A, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1277,7 +1236,6 @@ extend.model.proof.A <-
           = c(round(mean(posterior.extend.draws.p[["A.posterior.exten"]][1,2,]),4),
               round(mean(posterior.extend.draws.p[["A.posterior.exten"]][2,2,]),4),
               round(mean(posterior.extend.draws.p[["A.posterior.exten"]][3,2,]),4))
-
   )
 
 kable(extend.model.proof.A, align = "c") %>% 
@@ -1290,10 +1248,10 @@ kable(extend.model.proof.A, align = "c") %>%
 
 ```
 
-Table 4 Extend Model Proofing Simulation for A
+Table 4 Extend Model Proofing Simulation for $A$
 
 
-The posterior mean of the $\Sigma$ is:
+ - The posterior mean of the $\Sigma$ is:
 
 ```{r Extend Model Proof Sigma, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1308,7 +1266,6 @@ extend.model.proof.Sigma <-
            "Simulation Parameter Y2" 
           = c(round(mean(posterior.extend.draws.p[["Sigma.posterior.exten"]][1,2,]),4),
               round(mean(posterior.extend.draws.p[["Sigma.posterior.exten"]][2,2,]),4))
-
   )
 
 kable(extend.model.proof.Sigma, align = "c") %>% 
@@ -1321,6 +1278,6 @@ kable(extend.model.proof.Sigma, align = "c") %>%
 
 ```
 
-Table 5 Extend Model Proofing Simulation for Sigma
+Table 5 Extend Model Proofing Simulation for $\Sigma$
 
 ## References {.unnumbered}

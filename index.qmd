@@ -1220,6 +1220,8 @@ posterior.extend.draws.p = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
 ```
 
 
+After fitting a model that includes a constant term and one lag with artificial data, just like the basic model, the extend model also shows that the posterior mean of both the autoregressive and covariance matrices closely identity matrix, and the posterior mean of the constant term is almost a vector of zeros.
+
  - The posterior mean of the $A$ is:
 
 ```{r Extend Model Proof A, fig.align='center',fig.pos='H'}

@@ -1,5 +1,5 @@
 ---
-title: "Forecasting Australian Inflation Rate Using Bayesian VAR model"
+title: "Inflation Insight: Forecasting Australian Inflation Rate Using Bayesian VAR model"
 author: "Gezhi Chen"
 
 execute:
@@ -1199,15 +1199,15 @@ for (s in 1:total_S){
 #| warning: false
 
 # setup 
-kappa.1     = 1                                # shrinkage for A1 to Ap
-kappa.2     = 100                              # shrinkage for constant 
-S1          = 500                               # determine the burn-in draws
-S2          = 9500                             # number of draws from the final simulation
-total_S     = S1+S2
+kappa.1           = 1                                # shrinkage for A1 to Ap
+kappa.2           = 100                              # shrinkage for constant 
+S1                = 500                              # determine the burn-in draws
+S2                = 9500                             # number of draws from the final simulation
+total_S           = S1+S2
 A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
 Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
 k.posterior       = matrix(NA, S1+S2, 1)
-k.posterior[1]    = 10                         # set k0 
+k.posterior[1]    = 10                               # set k0 
 
 # Prior Gamma distribution: k, theta
 lambda.priors = list(

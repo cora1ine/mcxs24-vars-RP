@@ -45,6 +45,7 @@ library(kableExtra)   # for print table
 library(zoo)
 library(ggplot2)      # plot in same graph
 library(GIGrvg)       # GIG distribution
+library(mvtnorm)
 ```
 
 ```{r Colour}
@@ -539,7 +540,7 @@ data_df = fortify.zoo(key_data)
 par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
 
 plot(data_df$Index, data_df$inf_data, type = "l", col = blue1,
-     xlab = "Date", ylab = "Rate (%)", ylim = c(0, max(c(data_df$inf_data, data_df$infexp_data))))
+     xlab = "Date", ylab = "Rate (%)", ylim = c(0, 11))
 
 rect(xleft = min(data_df$Index), xright = max(data_df$Index),
      ybottom = 2, ytop = 3, col = green5, border = NA)  
@@ -547,9 +548,12 @@ rect(xleft = min(data_df$Index), xright = max(data_df$Index),
 lines(data_df$Index, data_df$inf_data, col = blue3)
 lines(data_df$Index, data_df$infexp_data, col = blue4)
 
+
 legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate"),
-       col = c(blue3, blue4), lty = 1, cex = 0.8)
+       col = c(blue3, blue4), lty = 1, cex = 0.6)
 title(main = "Inflation Rate vs Expected Inflation Rate")
+
+
 
 
 ```
@@ -731,42 +735,13 @@ At each iteration $s$:
 
 Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
 
-```{r Stat Setup for Basic Model, fig.align='center',fig.pos='H'}
+```{r Stat Setup, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
 
 set.seed(11)
 
-## Create Y and X
-y             = ts(all_data[,1:ncol(all_data)])     # 10col, 135row
-Y             = ts(y[5:nrow(y),], frequency=4)      # 10col, 131row
-X             = matrix(1,nrow(Y),1)
-for (i in 1:frequency(Y)){
-  X           = cbind(X,y[5:nrow(y)-i,])            # 10*4+1=41col, 131row
-}
- 
-## Pre-setup 
-N             = ncol(Y)                             # N=10
-p             = frequency(Y)                        # p=4
-A.hat         = solve(t(X)%*%X)%*%t(X)%*%Y
-Sigma.hat     = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
-
-# round(A.hat,3)
-# round(Sigma.hat,3)
-# round(cov2cor(Sigma.hat),3)
-
-
-# Prior distribution (with Minnesota prior)
-kappa.1       = 1                                     # shrinkage for A1 to Ap
-kappa.2       = 100                                   # shrinkage for constant 
-A.prior       = matrix(0,nrow(A.hat),ncol(A.hat))
-# A.prior[2,1]  = 1
-# A.prior[7,6]  = 1  
-A.prior[2:11,] = diag(10)
-V.prior       = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
-S.prior       = diag(diag(Sigma.hat))
-nu.prior      = N+2                                   #?
 ```
 
 Function below is `posterior.draws`:
@@ -801,18 +776,6 @@ posterior.draws       = function (S, Y, X){
     output            = list(A.posterior=A.posterior, Sigma.posterior=Sigma.posterior)
     return(output)
 }
-```
-
-
-
-```{r Function Applying, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
-
-## Function Applying
-# posterior.sample.draws = posterior.draws(S=10000, Y=Y, X=X) # sample use S=10000
-
 ```
 
 
@@ -1107,28 +1070,7 @@ Discard the first $S_{1}$ draws that allows the algorithm to converge to the sta
 
 Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}, \lambda^{(s)}} \right\}^{S_{1}+S_{2}}_{s=S_{1}+1}$.
 
-```{r Stat Setup for Extend model, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
-# setup 
-S1                = 500                            # determine the burn-in draws
-S2                = 9500                           # number of draws from the final simulation
-total_S           = S1+S2
-A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
-Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
-lambda.posterior  = matrix(NA, S1+S2, 1)
 
-# initial value of lambda
-lambda.posterior[1] = 10                               # set lambda0 
-
-# Prior Gamma distribution: k, theta
-lambda.priors = list(
-  k = 1,
-  theta = .1
-)
-
-```
 
 Function below is `posterior.draws.exten`:
 
@@ -1180,16 +1122,6 @@ for (s in 1:total_S){
 
 
 
-```{r Extension Function Applying, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
-
-## Applying function 
-# posterior.extend.draws = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
-
-```
-
 
 #### Function Proofing
 
@@ -1208,6 +1140,10 @@ A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
 Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
 k.posterior       = matrix(NA, S1+S2, 1)
 k.posterior[1]    = 10                               # set k0 
+lambda.posterior  = matrix(NA, S1+S2, 1)
+
+# initial value of lambda
+lambda.posterior[1] = 10                               # set lambda0 
 
 # Prior Gamma distribution: k, theta
 lambda.priors = list(
@@ -1282,4 +1218,259 @@ kable(extend.model.proof.Sigma, align = "c") %>%
 
 Table 5 Extend Model Proofing Simulation for $\Sigma$
 
+## Empirical Analysis -  Model Applying and Forecasing
+
+### Basic Model
+
+```{r Stat Setup for Basic Model, fig.align='center',fig.pos='H'}
+
+## Create Y and X
+y             = ts(all_data[,1:ncol(all_data)])     # 10col, 135row
+Y             = ts(y[5:nrow(y),], frequency=4)      # 10col, 131row
+X             = matrix(1,nrow(Y),1)
+for (i in 1:frequency(Y)){
+  X           = cbind(X,y[5:nrow(y)-i,])            # 10*4+1=41col, 131row
+}
+ 
+## Pre-setup 
+N             = ncol(Y)                             # N=10
+p             = frequency(Y)                        # p=4
+A.hat         = solve(t(X)%*%X)%*%t(X)%*%Y
+Sigma.hat     = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+
+# Prior distribution (with Minnesota prior)
+kappa.1       = 1                                     # shrinkage for A1 to Ap
+kappa.2       = 100                                   # shrinkage for constant 
+A.prior       = matrix(0,nrow(A.hat),ncol(A.hat))
+# A.prior[2,1]  = 1
+# A.prior[7,6]  = 1  
+A.prior[2:11,] = diag(10)
+V.prior       = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+S.prior       = diag(diag(Sigma.hat))
+nu.prior      = N+2                                   
+```
+
+```{r Function Applying, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+## Function Applying
+posterior.sample.draws = posterior.draws(S=10000, Y=Y, X=X) # sample use S=10000
+A.posterior.simu       = posterior.sample.draws$A.posterior
+Sigma.posterior.simu   = posterior.sample.draws$Sigma.posterior
+
+```
+
+
+
+
+```{r Basic Model Forecasting, fig.align='center',fig.pos='H'}
+
+## Two-year ahead forecasting h=8
+# set up
+h                      = 8
+S                      = 10000
+Y.h                    = array(NA,c(h,N,S))
+
+# sampling predictive density
+for (s in 1:S){
+  A.posterior.draw     = A.posterior.simu[,,s]
+  Sigma.posterior.draw = Sigma.posterior.simu[,,s]
+    x.Ti               = Y[(nrow(Y)-p+1):nrow(Y),]
+    x.Ti               = x.Ti[p:1,]
+  for (i in 1:h){
+    x.T                = c(1,as.vector(t(x.Ti)))
+    Y.f                = rmvnorm(1, mean = x.T%*%A.posterior.draw, sigma=Sigma.posterior.draw)
+      x.Ti             = rbind(Y.f,x.Ti[1:(p-1),])
+    Y.h[i,,s]          = Y.f[1:N]
+  }
+}
+
+
+```
+
+
+```{r Basic Model forecast data transform, fig.align='center',fig.pos='H'}
+# transform cpi into inflation rate, collect with it with infexp and cash rate
+
+## transform cpi into inflation rate
+point.lcpi.h            = ts(round(apply(Y.h[,1,],1,mean),6))
+dates <- as.Date(c("2024-03-31", "2024-06-30", "2024-09-30", "2024-12-31",
+                   "2025-03-31", "2025-06-30", "2025-09-30", "2025-12-31"))
+point.lcpi.h<- xts(point.lcpi.h, order.by = dates)
+
+lcpi.data.h             = c(lcpi_data["/2023-12-31"], point.lcpi.h)
+cpi.data.h              = exp(lcpi.data.h)
+cpi.lag4.h = lag(cpi.data.h, 4)
+inf.data.h = ((cpi.data.h / cpi.lag4.h)-1)*100
+inf.data.h = na.omit(inf.data.h)
+
+
+## inflation expectation
+
+point.infexp.h            = ts(round(apply(Y.h[,2,],1,mean),6))
+point.infexp.h            = xts(point.infexp.h, order.by = dates)
+infexp.data.h             = c(infexp_data["/2023-12-31"], point.infexp.h )
+
+## cash rate
+
+point.crt.h            = ts(round(apply(Y.h[,4,],1,mean),6))
+point.crt.h            = xts(point.crt.h, order.by = dates)
+crt.data.h             = c(crt_data["/2023-12-31"], point.crt.h )
+
+key_data.h           = na.omit(merge(inf.data.h, infexp.data.h, crt.data.h))
+colnames(key_data.h) = c("inf_data.h", "infexp_data.h", "crt_data.h")
+
+```
+
+```{r Basic Model Key Data Plot, fig.align='center',fig.pos='H'}
+
+num.h      = nrow(key_data.h)
+num        = num.h-h
+data_df    = fortify.zoo(key_data.h)
+
+par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
+
+plot(data_df$Index, data_df$inf_data.h, type = "l", col = blue1,
+     xlab = "Date", ylab = "Rate (%)", ylim = c(0, 11))
+
+rect(xleft = min(data_df$Index), xright = max(data_df$Index),
+     ybottom = 2, ytop = 3, col = green5, border = NA)  
+
+lines(data_df$Index[1:num], data_df$inf_data.h[1:num], col = blue1)
+lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = blue4)
+
+lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = green2)
+lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
+
+abline(v = data_df$Index[136], col = green1, lty = 1) 
+
+legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2023-12-31"),
+       col = c(blue1, blue4, green2, green3, green1), lty = 1, cex = 0.6)
+title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Model")
+
+```
+
+
+### Extension Model
+
+```{r Stat Setup for Extend model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+# setup 
+S1                = 500                            # determine the burn-in draws
+S2                = 9500                           # number of draws from the final simulation
+
+# Prior Gamma distribution: k, theta
+lambda.priors = list(
+  k = 1,
+  theta = .1
+)
+
+total_S           = S1+S2
+A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
+Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
+lambda.posterior  = matrix(NA, S1+S2, 1)
+
+# initial value of lambda
+lambda.posterior[1] = 10                               # set lambda0 
+
+```
+
+```{r Extension Function Applying, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+## Function Applying
+posterior.extend.draws     = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
+A.posterior.ext.simu       = posterior.extend.draws[["A.posterior.exten"]]
+Sigma.posterior.ext.simu   = posterior.extend.draws[["Sigma.posterior.exten"]]
+
+```
+
+```{r Extension Function Foracasting}
+## two-year ahead forecasting h=8
+# set up
+h                 = 8
+S                 = 9000
+Y.h.ext           = array(NA,c(h,N,S))
+
+# sampling predictive density
+for (s in 1:S){
+  A.posterior.draw     = A.posterior.ext.simu[,,s]
+  Sigma.posterior.draw = Sigma.posterior.ext.simu[,,s]
+    x.Ti               = Y[(nrow(Y)-p+1):nrow(Y),]
+    x.Ti               = x.Ti[p:1,]
+  for (i in 1:h){
+    x.T                = c(1,as.vector(t(x.Ti)))
+    Y.f                = rmvnorm(1, mean = x.T%*%A.posterior.draw, sigma=Sigma.posterior.draw)
+      x.Ti             = rbind(Y.f,x.Ti[1:(p-1),])
+    Y.h.ext[i,,s]          = Y.f[1:N]
+  }
+}
+```
+
+```{r Extend Model forecast data transform, fig.align='center',fig.pos='H'}
+# transform cpi into inflation rate, collect with it with infexp and cash rate
+
+## transform cpi into inflation rate
+point.lcpi.h.ext            = ts(round(apply(Y.h.ext[,1,],1,mean),6))
+point.lcpi.h.ext            = xts(point.lcpi.h, order.by = dates)
+
+lcpi.data.h.ext             = c(lcpi_data["/2023-12-31"], point.lcpi.h.ext)
+cpi.data.h.ext              = exp(lcpi.data.h.ext)
+cpi.lag4.h.ext              = lag(cpi.data.h.ext , 4)
+inf.data.h.ext              = ((cpi.data.h.ext/cpi.lag4.h.ext)-1)*100
+inf.data.h.ext              = na.omit(inf.data.h.ext)
+
+
+## inflation expectation
+
+point.infexp.h.ext          = ts(round(apply(Y.h.ext[,2,],1,mean),6))
+point.infexp.h.ext          = xts(point.infexp.h.ext , order.by = dates)
+infexp.data.h.ext           = c(infexp_data["/2023-12-31"], point.infexp.h.ext  )
+
+
+## cash rate
+
+point.crt.h.ext             = ts(round(apply(Y.h.ext[,4,],1,mean),6))
+point.crt.h.ext             = xts(point.crt.h.ext, order.by = dates)
+crt.data.h.ext              = c(crt_data["/2023-12-31"], point.crt.h.ext)
+
+key_data.h.ext              = na.omit(merge(inf.data.h.ext, infexp.data.h.ext, crt.data.h.ext))
+colnames(key_data.h.ext)    = c("inf_data.h", "infexp_data.h", "crt_data.h")
+
+```
+
+
+```{r Extend Model Key Data Plot, fig.align='center',fig.pos='H'}
+
+num.h      = nrow(key_data.h.ext)
+num        = num.h-h
+data_df    = fortify.zoo(key_data.h.ext)
+
+par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
+
+plot(data_df$Index, data_df$inf_data.h, type = "l", col = blue1,
+     xlab = "Date", ylab = "Rate (%)", ylim = c(0, 11))
+
+rect(xleft = min(data_df$Index), xright = max(data_df$Index),
+     ybottom = 2, ytop = 3, col = green5, border = NA)  
+
+lines(data_df$Index[1:num], data_df$inf_data.h[1:num], col = blue1)
+lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = blue4)
+
+lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = green2)
+lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
+
+abline(v = data_df$Index[136], col = green1, lty = 1) 
+
+legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2023-12-31"),
+       col = c(blue1, blue4, green2, green3, green1), lty = 1, cex = 0.6)
+title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Model")
+
+```
 ## References {.unnumbered}

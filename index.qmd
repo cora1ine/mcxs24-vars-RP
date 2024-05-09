@@ -1303,7 +1303,7 @@ Figure 6 presents a 3D visualization of the density intervals for the log CPI an
 #| message: false
 #| warning: false
 
-par(mfcol = c(1, 2))
+par(mfcol = c(1, 2), mar=c(2,2,2,2))
 
 # Log CPI forecasting 
 limits.lcpi      = range(Y.h[,1,])
@@ -1527,7 +1527,7 @@ Figure 8 presents a 3D visualization of the density intervals for the log CPI an
 #| message: false
 #| warning: false
 
-par(mfcol = c(1, 2))
+par(mfcol = c(1, 2), mar=c(2,2,2,2))
 
 # Log CPI forecasting 
 limits.lcpi.ext      = range(Y.h.ext[,1,])

@@ -738,7 +738,7 @@ p(A,\Sigma, \lambda |Y,X) &amp;\propto L(A,\Sigma | Y,X) \ p(A,\Sigma, \lambda) 
 <p><span class="math display">\[
 \begin{align}
 A |\Sigma, \lambda &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V}) \\
-\Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S},\underline{v}) \\
+\Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S},\underline{\nu}) \\
 \lambda &amp;\sim \mathcal{Gamma}(\underline{k_{\lambda}}, \underline{\theta_{\lambda}} ) \\
 \end{align}
 \]</span></p>
@@ -757,7 +757,7 @@ p(x|k,\theta) \propto x^{k-1}e^{-\frac{x}{\theta}}
 \begin{align}
 L(A,\Sigma | Y,X) &amp;= det(\Sigma)^{-\frac{T}{2}}\times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(A-\widehat{A})'X'X (A-\widehat{A})\right]\right\} \times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(Y-X\widehat{A})'(Y-X\widehat{A})\right]\right\} \\
 p(A |\Sigma, \lambda) &amp;= det(\Sigma)^{-\frac{K}{2}}det(\lambda \underline{V} )^{-\frac{N}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\} \\
-p(\Sigma) &amp;= det(\Sigma)^{\frac{\underline{v}+N+1}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} \underline{S}\right]\right\}  \\
+p(\Sigma) &amp;= det(\Sigma)^{\frac{\underline{\nu}+N+1}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} \underline{S}\right]\right\}  \\
 p(\lambda) &amp;= \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}}
 \end{align}
 \]</span></p>
@@ -767,7 +767,7 @@ p(\lambda) &amp;= \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underl
 <p><span class="math display">\[
 \begin{align}
 p(A,\Sigma |Y,X, \lambda) &amp;\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Sigma) \\
-&amp;\propto \det(\Sigma)^{-\frac{T+N+K+\underline{v}+1}{2}} \\
+&amp;\propto \det(\Sigma)^{-\frac{T+N+K+\underline{\nu}+1}{2}} \\
 &amp;\times \exp\left\{ -\frac{1}{2} \mathrm{tr}[\Sigma^{-1}[(A-\overline{A})'\overline{V}^{-1}(A-\overline{A})+\underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}]  ] \right\} \\
 \end{align}
 \]</span></p>
@@ -777,7 +777,7 @@ p(A,\Sigma |Y,X, \lambda) &amp;\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Si
 \overline{A} &amp;= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
 \overline{V} &amp;= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
 \overline{S} &amp;= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} \\
-\overline{v} &amp;= T+\underline{\nu}
+\overline{\nu} &amp;= T+\underline{\nu}
 \end{align}
 \]</span></p>
 <ul>

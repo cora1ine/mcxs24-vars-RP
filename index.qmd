@@ -944,7 +944,7 @@ where, each $p(A |\Sigma, k)$, $p(\Sigma)$, $p(k)$ is specified below:
 $$
 \begin{align}
 A |\Sigma, \lambda &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V}) \\
-\Sigma &\sim \mathcal{IW}_{N}(\underline{S},\underline{v}) \\
+\Sigma &\sim \mathcal{IW}_{N}(\underline{S},\underline{\nu}) \\
 \lambda &\sim \mathcal{Gamma}(\underline{k_{\lambda}}, \underline{\theta_{\lambda}} ) \\ 
 \end{align}
 $$
@@ -971,7 +971,7 @@ $$
 \begin{align}
 L(A,\Sigma | Y,X) &= det(\Sigma)^{-\frac{T}{2}}\times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(A-\widehat{A})'X'X (A-\widehat{A})\right]\right\} \times exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(Y-X\widehat{A})'(Y-X\widehat{A})\right]\right\} \\
 p(A |\Sigma, \lambda) &= det(\Sigma)^{-\frac{K}{2}}det(\lambda \underline{V} )^{-\frac{N}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\} \\ 
-p(\Sigma) &= det(\Sigma)^{\frac{\underline{v}+N+1}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} \underline{S}\right]\right\}  \\
+p(\Sigma) &= det(\Sigma)^{\frac{\underline{\nu}+N+1}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} \underline{S}\right]\right\}  \\
 p(\lambda) &= \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}}
 \end{align}
 $$
@@ -981,7 +981,7 @@ $$
 $$
 \begin{align}
 p(A,\Sigma |Y,X, \lambda) &\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Sigma) \\
-&\propto \det(\Sigma)^{-\frac{T+N+K+\underline{v}+1}{2}} \\
+&\propto \det(\Sigma)^{-\frac{T+N+K+\underline{\nu}+1}{2}} \\
 &\times \exp\left\{ -\frac{1}{2} \mathrm{tr}[\Sigma^{-1}[(A-\overline{A})'\overline{V}^{-1}(A-\overline{A})+\underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}]  ] \right\} \\
 \end{align}
 $$
@@ -993,7 +993,7 @@ $$
 \overline{A} &= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
 \overline{V} &= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
 \overline{S} &= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} \\
-\overline{v} &= T+\underline{\nu}
+\overline{\nu} &= T+\underline{\nu}
 \end{align}
 $$
 
@@ -1303,7 +1303,7 @@ Figure 6 presents a 3D visualization of the density intervals for the log CPI an
 #| message: false
 #| warning: false
 
-par(mfcol = c(1, 2), mar=c(2,2,2,2))
+par(mfcol = c(1, 2), mar=c(2,2,2,2)-0.1)
 
 # Log CPI forecasting 
 limits.lcpi      = range(Y.h[,1,])
@@ -1527,7 +1527,7 @@ Figure 8 presents a 3D visualization of the density intervals for the log CPI an
 #| message: false
 #| warning: false
 
-par(mfcol = c(1, 2), mar=c(2,2,2,2))
+par(mfcol = c(1, 2), mar=c(2,2,2,2)-0.1)
 
 # Log CPI forecasting 
 limits.lcpi.ext      = range(Y.h.ext[,1,])

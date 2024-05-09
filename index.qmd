@@ -552,6 +552,8 @@ rect(xleft = min(data_df$Index), xright = max(data_df$Index),
 lines(data_df$Index, data_df$inf_data, col = blue3)
 lines(data_df$Index, data_df$infexp_data, col = green2)
 
+abline(h = 0, col = green1, lty = 1) 
+
 
 legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate"),
        col = c(blue3, green2), lty = 1, cex = 0.6)
@@ -1441,6 +1443,7 @@ lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(da
 lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
 
 abline(v = data_df$Index[136], col = green1, lty = 2) 
+abline(h = 0, col = green1, lty = 1) 
 
 legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2023-12-31"),
        col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
@@ -1651,7 +1654,7 @@ data_df    = fortify.zoo(key_data.h.ext)
 par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
 
 plot(data_df$Index, data_df$inf_data.h, type = "l", col = blue1,
-     xlab = "Date", ylab = "Rate (%)", ylim = c(0, 11))
+     xlab = "Date", ylab = "Rate (%)", ylim = c(-1, 11))
 
 rect(xleft = min(data_df$Index), xright = max(data_df$Index),
      ybottom = 2, ytop = 3, col = green5, border = NA)  
@@ -1663,8 +1666,9 @@ lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(da
 lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
 
 abline(v = data_df$Index[136], col = green1, lty = 2) 
+abline(h = 0, col = green1, lty = 1) 
 
-legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2023-12-31"),
+legend("topleft", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2023-12-31"),
        col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
 title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Model")
 

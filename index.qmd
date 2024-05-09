@@ -1294,10 +1294,12 @@ for (s in 1:S){
 ```
 
 
-```{r Log CPI forecasting on basic model, fig.align='center',fig.pos='H'}
+```{r 3d forecasting graph on basic model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
+
+par(mfcol = c(1, 2))
 
 # Log CPI forecasting 
 limits.lcpi      = range(Y.h[,1,])
@@ -1336,14 +1338,7 @@ for (i in 1:h){
 f4.l1 = trans3d(x=point.lcpi.f, y=yy, z=0, pmat=f4)
 lines(f4.l1, lwd=1.5, col=green1)
 
-```
 
-
-
-```{r Expected inflation rate forecasting on basic model, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
 
 # Expected inflation rate forecasting 
 limits.infexp      = range(Y.h[,2,])
@@ -1379,7 +1374,12 @@ for (i in 1:h){
 }
 f4.l1 = trans3d(x=point.infexp.f, y=yy, z=0, pmat=f4)
 lines(f4.l1, lwd=1.5, col=green1)
+
 ```
+
+
+
+
 
 
 
@@ -1517,10 +1517,12 @@ for (s in 1:S){
 
 
 
-```{r Log CPI forecasting on extension model, fig.align='center',fig.pos='H'}
+```{r 3d forecasting graph on extension model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
+
+par(mfcol = c(1, 2))
 
 # Log CPI forecasting 
 limits.lcpi.ext      = range(Y.h.ext[,1,])
@@ -1556,16 +1558,6 @@ for (i in 1:h){
 }
 f4.l1 = trans3d(x=point.lcpi.f.ext, y=yy, z=0, pmat=f4)
 lines(f4.l1, lwd=1.5, col=green1)
-
-
-```
-
-
-
-```{r Expected inflation rate forecasting on extension model, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
 
 # Expected inflation rate forecasting 
 limits.infexp.ext      = range(Y.h[,2,])

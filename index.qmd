@@ -1294,6 +1294,10 @@ for (s in 1:S){
 ```
 
 
+
+
+Figure 6 presents a 3D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty. 
+
 ```{r 3d forecasting graph on basic model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1377,11 +1381,7 @@ lines(f4.l1, lwd=1.5, col=green1)
 
 ```
 
-
-
-
-
-
+Figure 6 3D forecasting graph on basic model
 
 ```{r Basic Model forecast data transform, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1419,6 +1419,10 @@ colnames(key_data.h) = c("inf_data.h", "infexp_data.h", "crt_data.h")
 
 ```
 
+
+After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 7), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
+
+
 ```{r Basic Model Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1451,6 +1455,7 @@ title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Mode
 
 ```
 
+Figure 7 Basic Model Key Data Plot
 
 ### Extension Model
 
@@ -1515,7 +1520,7 @@ for (s in 1:S){
 }
 ```
 
-
+Figure 8 presents a 3D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.
 
 ```{r 3d forecasting graph on extension model, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1595,6 +1600,7 @@ f4.l1 = trans3d(x=point.infexp.f.ext, y=yy, z=0, pmat=f4)
 lines(f4.l1, lwd=1.5, col=green1)
 ```
 
+Figure 8 3d forecasting graph on extension model
 
 ```{r Extend Model forecast data transform, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1634,6 +1640,8 @@ colnames(key_data.h.ext)    = c("inf_data.h", "infexp_data.h", "crt_data.h")
 ```
 
 
+For the analysis of key data, we can see that the extension model presents a more aggressive outlook compared to the basic model (Figure 9). The expected inflation rate continues to decline over the next eight quarters, reaching negative values by the end of 2024 (deflation). People's inflation expectations are also volatile, fluctuating within the 0%-2% range.
+
 ```{r Extend Model Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1665,4 +1673,7 @@ legend("topleft", legend = c("Inflation Rate", "Expected Inflation Rate", "Infla
 title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Model")
 
 ```
+
+Figure 9 Extend Model Key Data Plot
+
 ## References {.unnumbered}

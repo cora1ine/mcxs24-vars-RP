@@ -520,7 +520,7 @@ p(A,\Sigma|Y,X) &amp;= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
 \\
 A|\Sigma &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V})
 \\
-\Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S}, \underline{v})
+\Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
 \end{align}
 \]</span></p>
 <ul>
@@ -561,7 +561,7 @@ p(A,\Sigma | Y,X) &amp;= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
 \\
 p(A|Y,X,\Sigma) &amp;\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma,\overline{V} )
 \\
-p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
+p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{\nu})
 \end{align}
 \]</span></p>
 <p>Therefore we can get:</p>
@@ -573,7 +573,7 @@ p(\Sigma|Y,X) &amp;\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
 \\
 \overline{S} &amp;= \underline{S}+Y'Y+\underline{A'} \ \underline{V}^{-1}\underline{A}-\overline{A'}\overline{V}^{-1}\overline{A}
 \\
-\overline{v} &amp;= T + \underline{v}
+\overline{v} &amp;= T + \underline{\nu}
 \end{align}
 \]</span></p>
 <p><strong>Step 3</strong>: As <span class="math inline">\(\overline{A}\)</span>, <span class="math inline">\(\overline{V}\)</span>, <span class="math inline">\(\overline{S}\)</span> and <span class="math inline">\(\overline{v}\)</span> are specified:</p>
@@ -727,7 +727,7 @@ X = \begin{bmatrix}
 <p>The model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span> is introduced to adjust <span class="math inline">\(V\)</span>.</p>
 <section id="prior-distribution-and-posterier-distribution-specified-1" class="level4">
 <h4 class="anchored" data-anchor-id="prior-distribution-and-posterier-distribution-specified-1">Prior Distribution and Posterier Distribution Specified</h4>
-<p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span>, <span class="math inline">\(\underline{v}\)</span> by Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span>.</p>
+<p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span>, <span class="math inline">\(\underline{\nu}\)</span> by Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span>.</p>
 <p><span class="math display">\[
 \begin{align}
 p(A,\Sigma, \lambda |Y,X) &amp;\propto L(A,\Sigma | Y,X) \ p(A,\Sigma, \lambda) \\
@@ -777,7 +777,7 @@ p(A,\Sigma |Y,X, \lambda) &amp;\propto L(Y,X|A,\Sigma)p(A |\Sigma, \lambda)p(\Si
 \overline{A} &amp;= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
 \overline{V} &amp;= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
 \overline{S} &amp;= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} \\
-\overline{v} &amp;= T+\underline{v}
+\overline{v} &amp;= T+\underline{\nu}
 \end{align}
 \]</span></p>
 <ul>

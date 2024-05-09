@@ -1264,8 +1264,6 @@ Sigma.posterior.simu   = posterior.sample.draws$Sigma.posterior
 ```
 
 
-
-
 ```{r Basic Model Forecasting, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1291,9 +1289,7 @@ for (s in 1:S){
   }
 }
 
-
 ```
-
 
 
 ```{r Log CPI forecasting on basic model, fig.align='center',fig.pos='H'}
@@ -1337,7 +1333,6 @@ for (i in 1:h){
 }
 f4.l1 = trans3d(x=point.lcpi.f, y=yy, z=0, pmat=f4)
 lines(f4.l1, lwd=1.5, col=green1)
-
 
 ```
 
@@ -1393,7 +1388,7 @@ lines(f4.l1, lwd=1.5, col=green1)
 # transform cpi into inflation rate, collect with it with infexp and cash rate
 
 ## transform cpi into inflation rate
-point.lcpi.h            = ts(round(apply(Y.h[,1,],1,mean),6))
+point.lcpi.h            = ts(apply(Y.h[,1,],1,mean))
 dates <- as.Date(c("2024-03-31", "2024-06-30", "2024-09-30", "2024-12-31",
                    "2025-03-31", "2025-06-30", "2025-09-30", "2025-12-31"))
 point.lcpi.h<- xts(point.lcpi.h, order.by = dates)
@@ -1614,8 +1609,9 @@ lines(f4.l1, lwd=1.5, col=green1)
 # transform cpi into inflation rate, collect with it with infexp and cash rate
 
 ## transform cpi into inflation rate
-point.lcpi.h.ext            = ts(round(apply(Y.h.ext[,1,],1,mean),6))
-point.lcpi.h.ext            = xts(point.lcpi.h, order.by = dates)
+point.lcpi.h.ext            = ts(apply(Y.h.ext[,1,],1,mean))
+point.lcpi.h.ext            = xts(point.lcpi.h.ext, order.by = dates)
+
 
 lcpi.data.h.ext             = c(lcpi_data["/2023-12-31"], point.lcpi.h.ext)
 cpi.data.h.ext              = exp(lcpi.data.h.ext)

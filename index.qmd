@@ -45,7 +45,10 @@ library(kableExtra)   # for print table
 library(zoo)
 library(ggplot2)      # plot in same graph
 library(GIGrvg)       # GIG distribution
-library(mvtnorm)
+library(mvtnorm)      # Bvars forecast
+library(plot3D)
+library(HDInterval)   # hdi plot
+
 ```
 
 ```{r Colour}
@@ -66,6 +69,7 @@ green2  = "#379683"
 green3  = "#5CDB95"
 green4  = "#8EE4AF"
 green5  = "#EDF5E1"
+green6  = "darkgreen"
 ```
 
 ## Data and Data Properties
@@ -546,15 +550,12 @@ rect(xleft = min(data_df$Index), xright = max(data_df$Index),
      ybottom = 2, ytop = 3, col = green5, border = NA)  
 
 lines(data_df$Index, data_df$inf_data, col = blue3)
-lines(data_df$Index, data_df$infexp_data, col = blue4)
+lines(data_df$Index, data_df$infexp_data, col = green2)
 
 
 legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate"),
-       col = c(blue3, blue4), lty = 1, cex = 0.6)
+       col = c(blue3, green2), lty = 1, cex = 0.6)
 title(main = "Inflation Rate vs Expected Inflation Rate")
-
-
-
 
 ```
 
@@ -1266,6 +1267,9 @@ Sigma.posterior.simu   = posterior.sample.draws$Sigma.posterior
 
 
 ```{r Basic Model Forecasting, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
 
 ## Two-year ahead forecasting h=8
 # set up
@@ -1291,7 +1295,101 @@ for (s in 1:S){
 ```
 
 
+
+```{r Log CPI forecasting on basic model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Log CPI forecasting 
+limits.lcpi      = range(Y.h[,1,])
+point.lcpi.f     = apply(Y.h[,1,],1,mean)
+
+interval.lcpi.f  = apply(Y.h[,1,],1,hdi,credMass=0.90)
+theta            = 180
+phi              = 15.5
+
+x                = seq(from=limits.lcpi[1], to=limits.lcpi[2], length.out=100)
+z                = matrix(NA,h,99)
+for (i in 1:h){
+  z[i,]          = hist(Y.h[i,1,], breaks=x, plot=FALSE)$density
+}
+x                = hist(Y.h[i,1,], breaks=x, plot=FALSE)$mids
+yy               = 1:h
+z                = t(z)
+
+f4               = persp3D(x=x, y=yy, z=z, phi=phi, theta=theta, 
+                           xlab="\ncpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi",
+                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
+                           col=NA,plot=FALSE)
+perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=phi, theta=theta, 
+          xlab="\nlog.cpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi", 
+          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
+
+polygon3D(x=c(interval.lcpi.f[1,],interval.lcpi.f[2,h:1]), 
+          y=c(1:h,h:1), 
+          z=rep(0,2*h), 
+          col = blue2, NAcol = blue5, border = NA, add = TRUE, plot = TRUE)
+
+for (i in 1:h){
+  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
+  lines(f4.l, lwd=1, col=blue3)
+}
+f4.l1 = trans3d(x=point.lcpi.f, y=yy, z=0, pmat=f4)
+lines(f4.l1, lwd=1.5, col=green1)
+
+
+```
+
+
+
+```{r Expected inflation rate forecasting on basic model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Expected inflation rate forecasting 
+limits.infexp      = range(Y.h[,2,])
+point.infexp.f     = apply(Y.h[,2,],1,mean)
+
+interval.infexp.f  = apply(Y.h[,2,],1,hdi,credMass=0.90)
+
+x                = seq(from=limits.infexp[1], to=limits.infexp[2], length.out=100)
+z                = matrix(NA,h,99)
+for (i in 1:h){
+  z[i,]          = hist(Y.h[i,2,], breaks=x, plot=FALSE)$density
+}
+x                = hist(Y.h[i,2,], breaks=x, plot=FALSE)$mids
+yy               = 1:h
+z                = t(z)
+
+f4               = persp3D(x=x, y=yy, z=z, phi=phi, theta=theta, 
+                           xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp",
+                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
+                           col=NA,plot=FALSE)
+perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=phi, theta=theta, 
+          xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp", 
+          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
+
+polygon3D(x=c(interval.infexp.f[1,],interval.infexp.f[2,h:1]), 
+          y=c(1:h,h:1), 
+          z=rep(0,2*h), 
+          col = green5, NAcol = green2, border = NA, add = TRUE, plot = TRUE)
+
+for (i in 1:h){
+  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
+  lines(f4.l, lwd=1, col=green6)
+}
+f4.l1 = trans3d(x=point.infexp.f, y=yy, z=0, pmat=f4)
+lines(f4.l1, lwd=1.5, col=green1)
+```
+
+
+
 ```{r Basic Model forecast data transform, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
 # transform cpi into inflation rate, collect with it with infexp and cash rate
 
 ## transform cpi into inflation rate
@@ -1325,6 +1423,9 @@ colnames(key_data.h) = c("inf_data.h", "infexp_data.h", "crt_data.h")
 ```
 
 ```{r Basic Model Key Data Plot, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
 
 num.h      = nrow(key_data.h)
 num        = num.h-h
@@ -1339,15 +1440,15 @@ rect(xleft = min(data_df$Index), xright = max(data_df$Index),
      ybottom = 2, ytop = 3, col = green5, border = NA)  
 
 lines(data_df$Index[1:num], data_df$inf_data.h[1:num], col = blue1)
-lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = blue4)
+lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = green2)
 
-lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = green2)
+lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = blue4)
 lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
 
-abline(v = data_df$Index[136], col = green1, lty = 1) 
+abline(v = data_df$Index[136], col = green1, lty = 2) 
 
 legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2023-12-31"),
-       col = c(blue1, blue4, green2, green3, green1), lty = 1, cex = 0.6)
+       col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
 title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Model")
 
 ```
@@ -1391,7 +1492,10 @@ Sigma.posterior.ext.simu   = posterior.extend.draws[["Sigma.posterior.exten"]]
 
 ```
 
-```{r Extension Function Foracasting}
+```{r Extension Function Foracasting, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
 ## two-year ahead forecasting h=8
 # set up
 h                 = 8
@@ -1400,20 +1504,113 @@ Y.h.ext           = array(NA,c(h,N,S))
 
 # sampling predictive density
 for (s in 1:S){
-  A.posterior.draw     = A.posterior.ext.simu[,,s]
-  Sigma.posterior.draw = Sigma.posterior.ext.simu[,,s]
-    x.Ti               = Y[(nrow(Y)-p+1):nrow(Y),]
-    x.Ti               = x.Ti[p:1,]
+  A.posterior.draw         = A.posterior.ext.simu[,,s]
+  Sigma.posterior.draw     = Sigma.posterior.ext.simu[,,s]
+    x.Ti                   = Y[(nrow(Y)-p+1):nrow(Y),]
+    x.Ti                   = x.Ti[p:1,]
   for (i in 1:h){
-    x.T                = c(1,as.vector(t(x.Ti)))
-    Y.f                = rmvnorm(1, mean = x.T%*%A.posterior.draw, sigma=Sigma.posterior.draw)
-      x.Ti             = rbind(Y.f,x.Ti[1:(p-1),])
+    x.T                    = c(1,as.vector(t(x.Ti)))
+    Y.f                    = rmvnorm(1, mean = x.T%*%A.posterior.draw, sigma=Sigma.posterior.draw)
+      x.Ti                 = rbind(Y.f,x.Ti[1:(p-1),])
     Y.h.ext[i,,s]          = Y.f[1:N]
   }
 }
 ```
 
+
+
+```{r Log CPI forecasting on extension model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Log CPI forecasting 
+limits.lcpi.ext      = range(Y.h.ext[,1,])
+point.lcpi.f.ext     = apply(Y.h.ext[,1,],1,mean)
+
+interval.lcpi.f.ext  = apply(Y.h.ext[,1,],1,hdi,credMass=0.90)
+
+x                = seq(from=limits.lcpi.ext[1], to=limits.lcpi.ext[2], length.out=100)
+z                = matrix(NA,h,99)
+for (i in 1:h){
+  z[i,]          = hist(Y.h.ext[i,1,], breaks=x, plot=FALSE)$density
+}
+x                = hist(Y.h.ext[i,1,], breaks=x, plot=FALSE)$mids
+yy               = 1:h
+z                = t(z)
+
+f4               = persp3D(x=x, y=yy, z=z, phi=phi, theta=theta, 
+                           xlab="\ncpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi",
+                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
+                           col=NA,plot=FALSE)
+perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=phi, theta=theta, 
+          xlab="\nlog.cpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi", 
+          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
+
+polygon3D(x=c(interval.lcpi.f.ext[1,],interval.lcpi.f.ext[2,h:1]), 
+          y=c(1:h,h:1), 
+          z=rep(0,2*h), 
+          col = blue2, NAcol = blue5, border = NA, add = TRUE, plot = TRUE)
+
+for (i in 1:h){
+  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
+  lines(f4.l, lwd=1, col=blue3)
+}
+f4.l1 = trans3d(x=point.lcpi.f.ext, y=yy, z=0, pmat=f4)
+lines(f4.l1, lwd=1.5, col=green1)
+
+
+```
+
+
+
+```{r Expected inflation rate forecasting on extension model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Expected inflation rate forecasting 
+limits.infexp.ext      = range(Y.h[,2,])
+point.infexp.f.ext     = apply(Y.h[,2,],1,mean)
+
+interval.infexp.f.ext  = apply(Y.h[,2,],1,hdi,credMass=0.90)
+
+x                = seq(from=limits.infexp.ext[1], to=limits.infexp.ext[2], length.out=100)
+z                = matrix(NA,h,99)
+for (i in 1:h){
+  z[i,]          = hist(Y.h[i,2,], breaks=x, plot=FALSE)$density
+}
+x                = hist(Y.h[i,2,], breaks=x, plot=FALSE)$mids
+yy               = 1:h
+z                = t(z)
+
+f4               = persp3D(x=x, y=yy, z=z, phi=phi, theta=theta, 
+                           xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp",
+                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
+                           col=NA,plot=FALSE)
+perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=phi, theta=theta, 
+          xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp", 
+          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
+
+polygon3D(x=c(interval.infexp.f.ext[1,],interval.infexp.f.ext[2,h:1]), 
+          y=c(1:h,h:1), 
+          z=rep(0,2*h), 
+          col = green5, NAcol = green2, border = NA, add = TRUE, plot = TRUE)
+
+for (i in 1:h){
+  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
+  lines(f4.l, lwd=1, col=green6)
+}
+f4.l1 = trans3d(x=point.infexp.f.ext, y=yy, z=0, pmat=f4)
+lines(f4.l1, lwd=1.5, col=green1)
+```
+
+
 ```{r Extend Model forecast data transform, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
 # transform cpi into inflation rate, collect with it with infexp and cash rate
 
 ## transform cpi into inflation rate
@@ -1447,6 +1644,9 @@ colnames(key_data.h.ext)    = c("inf_data.h", "infexp_data.h", "crt_data.h")
 
 
 ```{r Extend Model Key Data Plot, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
 
 num.h      = nrow(key_data.h.ext)
 num        = num.h-h
@@ -1461,15 +1661,15 @@ rect(xleft = min(data_df$Index), xright = max(data_df$Index),
      ybottom = 2, ytop = 3, col = green5, border = NA)  
 
 lines(data_df$Index[1:num], data_df$inf_data.h[1:num], col = blue1)
-lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = blue4)
+lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = green2)
 
-lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = green2)
+lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = blue4)
 lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
 
-abline(v = data_df$Index[136], col = green1, lty = 1) 
+abline(v = data_df$Index[136], col = green1, lty = 2) 
 
 legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2023-12-31"),
-       col = c(blue1, blue4, green2, green3, green1), lty = 1, cex = 0.6)
+       col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
 title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Model")
 
 ```

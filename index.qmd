@@ -664,7 +664,7 @@ p(A,\Sigma|Y,X) &= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
 \\
 A|\Sigma &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V}) 
 \\ 
-\Sigma &\sim \mathcal{IW}_{N}(\underline{S}, \underline{v})
+\Sigma &\sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
 \end{align}
 $$
 
@@ -707,7 +707,7 @@ p(A,\Sigma | Y,X) &= p(A|Y,X,\Sigma) \ p(\Sigma|Y,X)
 \\
  p(A|Y,X,\Sigma) &\sim \mathcal{MN}_{K\times N}(\overline{A}, \Sigma,\overline{V} ) 
 \\
- p(\Sigma|Y,X) &\sim \mathcal{IW}_{N}(\overline{S}, \overline{v})
+ p(\Sigma|Y,X) &\sim \mathcal{IW}_{N}(\overline{S}, \overline{\nu})
  \end{align}
 $$
 
@@ -721,7 +721,7 @@ $$
 \\ 
 \overline{S} &= \underline{S}+Y'Y+\underline{A'} \ \underline{V}^{-1}\underline{A}-\overline{A'}\overline{V}^{-1}\overline{A} 
 \\ 
-\overline{v} &= T + \underline{v}
+\overline{v} &= T + \underline{\nu}
 \end{align}
 $$
 
@@ -927,7 +927,7 @@ The model extension base on a hierarchical model. The gamma distribution on the 
 
 #### Prior Distribution and Posterier Distribution Specified
 
-**Step 1**: Prior distribution is presented below. We will specify $\underline{A}$, $\underline{V}$, $\underline{S}$, $\underline{v}$ by Minnesota shrinkage parameter lambda $\lambda$.
+**Step 1**: Prior distribution is presented below. We will specify $\underline{A}$, $\underline{V}$, $\underline{S}$, $\underline{\nu}$ by Minnesota shrinkage parameter lambda $\lambda$.
 
 $$
 \begin{align}
@@ -990,7 +990,7 @@ $$
 \overline{A} &= \overline{V}(X'Y+(\lambda\underline{V})^{-1}\underline{A}) \\
 \overline{V} &= (X'X + (\lambda\underline{V})^{-1})^{-1}\\
 \overline{S} &= \underline{S}+Y'Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} \\
-\overline{v} &= T+\underline{v}
+\overline{v} &= T+\underline{\nu}
 \end{align}
 $$
 

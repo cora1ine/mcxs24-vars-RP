@@ -724,7 +724,7 @@ $$
 \\ 
 \overline{S} &= \underline{S}+Y'Y+\underline{A'} \ \underline{V}^{-1}\underline{A}-\overline{A'}\overline{V}^{-1}\overline{A} 
 \\ 
-\overline{v} &= T + \underline{\nu}
+\overline{\nu} &= T + \underline{\nu}
 \end{align}
 $$
 

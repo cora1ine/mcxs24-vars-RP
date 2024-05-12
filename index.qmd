@@ -1565,17 +1565,17 @@ f4.l1 = trans3d(x=point.lcpi.f.ext, y=yy, z=0, pmat=f4)
 lines(f4.l1, lwd=1.5, col=green1)
 
 # Expected inflation rate forecasting 
-limits.infexp.ext      = range(Y.h[,2,])
-point.infexp.f.ext     = apply(Y.h[,2,],1,mean)
+limits.infexp.ext      = range(Y.h.ext[,2,])
+point.infexp.f.ext     = apply(Y.h.ext[,2,],1,mean)
 
-interval.infexp.f.ext  = apply(Y.h[,2,],1,hdi,credMass=0.90)
+interval.infexp.f.ext  = apply(Y.h.ext[,2,],1,hdi,credMass=0.90)
 
 x                = seq(from=limits.infexp.ext[1], to=limits.infexp.ext[2], length.out=100)
 z                = matrix(NA,h,99)
 for (i in 1:h){
-  z[i,]          = hist(Y.h[i,2,], breaks=x, plot=FALSE)$density
+  z[i,]          = hist(Y.h.ext[i,2,], breaks=x, plot=FALSE)$density
 }
-x                = hist(Y.h[i,2,], breaks=x, plot=FALSE)$mids
+x                = hist(Y.h.ext[i,2,], breaks=x, plot=FALSE)$mids
 yy               = 1:h
 z                = t(z)
 

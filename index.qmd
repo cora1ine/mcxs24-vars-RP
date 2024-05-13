@@ -70,6 +70,12 @@ green3  = "#5CDB95"
 green4  = "#8EE4AF"
 green5  = "#EDF5E1"
 green6  = "darkgreen"
+
+
+blue4.rgb   = col2rgb(blue4)
+blue4.shade1= rgb(blue4.rgb[1],blue4.rgb[2],blue4.rgb[3], alpha=120, maxColorValue=255)
+green3.rgb   = col2rgb(green3)
+green3.shade1= rgb(green3.rgb[1],green3.rgb[2],green3.rgb[3], alpha=120, maxColorValue=255)
 ```
 
 ## Data and Data Properties
@@ -464,7 +470,7 @@ Unit_Root_Test_table <-
                     dadf.aord@test$p.value,   dadf.exr@test$p.value),4),
           
           "conclusion" 
-          = c("lcpi~I(n)",     "infexp~I(1)", 
+          = c("lcpi~I(n)",     "infexp~I(0)", 
               "lgdp~I(1)",     "crt~I(1)",    
               "unemp~I(1)",    "lm~I(n)", 
               "lexport~I(1)",  "limport~I(1)", 
@@ -1245,8 +1251,7 @@ Sigma.hat     = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
 kappa.1       = 1                                     # shrinkage for A1 to Ap
 kappa.2       = 100                                   # shrinkage for constant 
 A.prior       = matrix(0,nrow(A.hat),ncol(A.hat))
-# A.prior[2,1]  = 1
-# A.prior[7,6]  = 1  
+
 A.prior[2:11,] = diag(10)
 V.prior       = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
 S.prior       = diag(diag(Sigma.hat))
@@ -1296,7 +1301,7 @@ for (s in 1:S){
 
 
 
-Figure 6 presents a 3D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty. 
+Figure 6 and 7 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty. 
 
 ```{r 3d forecasting graph on basic model, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1308,7 +1313,6 @@ par(mfcol = c(1, 2), mar=c(2,2,2,2)-0.1)
 # Log CPI forecasting 
 limits.lcpi      = range(Y.h[,1,])
 point.lcpi.f     = apply(Y.h[,1,],1,mean)
-
 interval.lcpi.f  = apply(Y.h[,1,],1,hdi,credMass=0.90)
 theta            = 180
 phi              = 15.5
@@ -1341,8 +1345,6 @@ for (i in 1:h){
 }
 f4.l1 = trans3d(x=point.lcpi.f, y=yy, z=0, pmat=f4)
 lines(f4.l1, lwd=1.5, col=green1)
-
-
 
 # Expected inflation rate forecasting 
 limits.infexp      = range(Y.h[,2,])
@@ -1383,6 +1385,44 @@ lines(f4.l1, lwd=1.5, col=green1)
 
 Figure 6 3D forecasting graph on basic model
 
+
+```{r 2d forecasting graph on basic model, fig.align='center',fig.pos='H'}
+
+point.lcpi.f    = apply(Y.h[,1,],1,mean)
+interval.lcpi.f = apply(Y.h[,1,],1,hdi,credMass=0.90)
+lcpi.range      = range(y[,1],interval.lcpi.f)
+
+point.infexp.f       = apply(Y.h[,2,],1,mean)
+interval.infexp.f    = apply(Y.h[,2,],1,hdi,credMass=0.90)
+infexp.range         = range(y[,2],interval.infexp.f)
+
+par(mfcol = c(2,1), mar=c(2,2,2,2)-0.1)
+plot(1:(length(y[,1])+h),c(y[,1],point.lcpi.f), type="l", ylim=c(3.9, 5.1), axes=FALSE, xlab="lcpi", ylab="", lwd=2, col=blue1)
+axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
+#axis(2,c(lcpi.range[1],mean(lcpi.range),lcpi.range[2]),c("","lcpi",""), col=green1)
+axis(2, at = pretty(lcpi.range), labels = pretty(lcpi.range), col = green1)
+abline(v=136, col=green1)
+polygon(c(length(y[,1]):(length(y[,1])+h),(length(y[,1]):(length(y[,1])+h))[9:1]),
+        c(y[136,1],interval.lcpi.f[1,],interval.lcpi.f[2,8:1],y[136,1]),
+        col=blue4.shade1, border=blue4.shade1)
+
+plot(1:(length(y[,2])+h),c(y[,2],point.infexp.f), type="l", ylim=c(0,5), axes=FALSE, xlab="infexp", ylab="", lwd=2, col=green6)
+axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
+#axis(2,c(infexp.range[1],mean(infexp.range),infexp.range[2]),c("","infexp",""), col=green1)
+axis(2, at = pretty(infexp.range), labels = pretty(infexp.range), col = green1)
+
+abline(v=136, col=green1)
+polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]),
+        c(y[136,2],interval.infexp.f[1,],interval.infexp.f[2,8:1],y[136,2]),
+        col=green3.shade1, border=green3.shade1)
+
+
+```
+
+
+Figure 7 2D forecasting graph on basic model
+
+
 ```{r Basic Model forecast data transform, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1391,16 +1431,16 @@ Figure 6 3D forecasting graph on basic model
 
 ## transform cpi into inflation rate
 point.lcpi.h            = ts(apply(Y.h[,1,],1,mean))
-dates <- as.Date(c("2024-03-31", "2024-06-30", "2024-09-30", "2024-12-31",
+dates = as.Date(c("2024-03-31", "2024-06-30", "2024-09-30", "2024-12-31",
                    "2025-03-31", "2025-06-30", "2025-09-30", "2025-12-31"))
-point.lcpi.h<- xts(point.lcpi.h, order.by = dates)
+point.lcpi.h = xts(point.lcpi.h, order.by = dates)
 
 lcpi.data.h             = c(lcpi_data["/2023-12-31"], point.lcpi.h)
 cpi.data.h              = exp(lcpi.data.h)
+
 cpi.lag4.h = lag(cpi.data.h, 4)
 inf.data.h = ((cpi.data.h / cpi.lag4.h)-1)*100
 inf.data.h = na.omit(inf.data.h)
-
 
 ## inflation expectation
 
@@ -1420,7 +1460,11 @@ colnames(key_data.h) = c("inf_data.h", "infexp_data.h", "crt_data.h")
 ```
 
 
-After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 7), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
+After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 8), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
+
+
+
+
 
 
 ```{r Basic Model Key Data Plot, fig.align='center',fig.pos='H'}
@@ -1455,7 +1499,7 @@ title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Mode
 
 ```
 
-Figure 7 Basic Model Key Data Plot
+Figure 8 Basic Model Key Data Plot
 
 ### Extension Model
 
@@ -1520,7 +1564,7 @@ for (s in 1:S){
 }
 ```
 
-Figure 8 presents a 3D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.
+Figure 9 and 10 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.
 
 ```{r 3d forecasting graph on extension model, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1600,7 +1644,45 @@ f4.l1 = trans3d(x=point.infexp.f.ext, y=yy, z=0, pmat=f4)
 lines(f4.l1, lwd=1.5, col=green1)
 ```
 
-Figure 8 3d forecasting graph on extension model
+Figure 9 3d forecasting graph on extension model
+
+
+```{r 2d forecasting graph on extension model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+point.lcpi.f.ext    = apply(Y.h.ext[,1,],1,mean)
+interval.lcpi.f.ext = apply(Y.h.ext[,1,],1,hdi,credMass=0.90)
+lcpi.range.ext      = range(y[,1],interval.lcpi.f.ext)
+
+point.infexp.f.ext       = apply(Y.h.ext[,2,],1,mean)
+interval.infexp.f.ext    = apply(Y.h.ext[,2,],1,hdi,credMass=0.90)
+infexp.range.ext        = range(y[,2],interval.infexp.f.ext)
+
+par(mfcol = c(2,1), mar=c(2,2,2,2)-0.1)
+
+plot(1:(length(y[,1])+h),c(y[,1],point.lcpi.f.ext), type="l", ylim=c(3.9, 5.1), axes=FALSE, xlab="lcpi", ylab="", lwd=2, col=blue1)
+axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
+axis(2, at = pretty(lcpi.range.ext), labels = pretty(lcpi.range.ext), col = green1)
+abline(v=136, col=green1)
+polygon(c(length(y[,1]):(length(y[,1])+h),(length(y[,1]):(length(y[,1])+h))[9:1]),
+        c(y[136,1],interval.lcpi.f.ext[1,],interval.lcpi.f.ext[2,8:1],y[136,1]),
+        col=blue4.shade1, border=blue4.shade1)
+
+plot(1:(length(y[,2])+h),c(y[,2],point.infexp.f.ext), type="l", ylim=c(0,5), axes=FALSE, xlab="infexp", ylab="", lwd=2, col=green6)
+axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
+axis(2, at = pretty(infexp.range.ext), labels = pretty(infexp.range.ext), col = green1)
+
+abline(v=136, col=green1)
+polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]),
+        c(y[136,2],interval.infexp.f.ext[1,],interval.infexp.f.ext[2,8:1],y[136,2]),
+        col=green3.shade1, border=green3.shade1)
+
+
+```
+
+
+Figure 10 2d forecasting graph on extension model
 
 ```{r Extend Model forecast data transform, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1640,7 +1722,7 @@ colnames(key_data.h.ext)    = c("inf_data.h", "infexp_data.h", "crt_data.h")
 ```
 
 
-For the analysis of key data, we can see that the extension model presents a more aggressive outlook compared to the basic model (Figure 9). The expected inflation rate continues to decline over the next eight quarters, reaching negative values by the end of 2024 (deflation). People's inflation expectations are also volatile, fluctuating within the 0%-2% range.
+For the analysis of key data, we can see that the extension model presents a more aggressive outlook compared to the basic model (Figure 11). The expected inflation rate continues to decline over the next eight quarters, reaching negative values by the end of 2024 (deflation). People's inflation expectations are also volatile, fluctuating within the 0%-2% range.
 
 ```{r Extend Model Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1674,6 +1756,6 @@ title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Mod
 
 ```
 
-Figure 9 Extend Model Key Data Plot
+Figure 11 Extend Model Key Data Plot
 
 ## References {.unnumbered}

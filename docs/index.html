@@ -355,7 +355,7 @@ div.csl-indent {
 </tr>
 <tr class="odd">
 <td style="text-align: center;">unemp</td>
-<td style="text-align: center;">0.3029</td>
+<td style="text-align: center;">0.3015</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">unemp~I(1)</td>
 </tr>
@@ -1032,6 +1032,45 @@ p(x|a,b,p) \propto x^{p-1}exp \left\{\frac{-(ax+\frac{b}{x})}{2} \right\}
 </div>
 </div>
 <p>Figure 11 Extend Model Key Data Plot</p>
+<p>Until here, we realized that the extended model is more radical, and we decided to rethink the prior settings in the extended model and compare: In the extended model, consider the coefficient <span class="math inline">\(\lambda\)</span>(follow gamma distribution.)</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/gamma dist-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 12 Gamma Distribution</p>
+<p>For the Gamma distribution with parameters <span class="math inline">\((k,θ)=(1,0.1)\)</span> (red line), the density is highly concentrated near zero, making it very steep. This distribution is ideal for modeling high-frequency, short-duration events such as waiting times or time between failures. Compared to distributions with larger shape or scale parameters, this one lacks support for larger values, indicating most events occur within a very short time frame.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.910777 4.901471 4.901188 4.887559 4.880420 4.871201 4.865591 4.857153
+[1] 4.953269 4.949214 4.943600 4.940471 4.936458 4.939391 4.928763 4.926227</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.909719 4.902006 4.899740 4.887870 4.880340 4.870251 4.864755 4.858413
+[1] 4.953952 4.947822 4.941855 4.940498 4.936761 4.937956 4.929011 4.925175</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.910238 4.902000 4.898780 4.888290 4.880104 4.869607 4.865063 4.857954
+[1] 4.953322 4.947954 4.942005 4.940148 4.937900 4.937061 4.929533 4.925768</code></pre>
+</div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/prior test-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 4.909875 4.902091 4.900093 4.889070 4.879975 4.869388 4.867516 4.857447
+[1] 4.950462 4.948606 4.940129 4.939272 4.937780 4.937416 4.928707 4.925192</code></pre>
+</div>
+</div>
+<p>Figure 12 predictive density of lcpi with different k and theta</p>
+<p>The predictive density distribution remains stable despite changes in the prior distribution of the Gamma distribution in lambda, indicating that the predictive values have stabilized in the Gibbs sampler. This suggests that with sufficient data, the influence of the prior distribution is overshadowed by the data, resulting in a stable posterior distribution and predictive outcome. Consequently, the predictive results are primarily driven by the data rather than the prior assumptions.</p>
 </section>
 </section>
 <section id="references" class="level2 unnumbered">

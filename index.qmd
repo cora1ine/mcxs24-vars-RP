@@ -48,7 +48,7 @@ library(GIGrvg)       # GIG distribution
 library(mvtnorm)      # Bvars forecast
 library(plot3D)
 library(HDInterval)   # hdi plot
-
+library(MASS)
 ```
 
 ```{r Colour}
@@ -1300,7 +1300,6 @@ for (s in 1:S){
 
 
 
-
 Figure 6 and 7 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty. 
 
 ```{r 3d forecasting graph on basic model, fig.align='center',fig.pos='H'}
@@ -1314,8 +1313,6 @@ par(mfcol = c(1, 2), mar=c(2,2,2,2)-0.1)
 limits.lcpi      = range(Y.h[,1,])
 point.lcpi.f     = apply(Y.h[,1,],1,mean)
 interval.lcpi.f  = apply(Y.h[,1,],1,hdi,credMass=0.90)
-theta            = 180
-phi              = 15.5
 
 x                = seq(from=limits.lcpi[1], to=limits.lcpi[2], length.out=100)
 z                = matrix(NA,h,99)
@@ -1326,11 +1323,11 @@ x                = hist(Y.h[i,1,], breaks=x, plot=FALSE)$mids
 yy               = 1:h
 z                = t(z)
 
-f4               = persp3D(x=x, y=yy, z=z, phi=phi, theta=theta, 
+f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
                            xlab="\ncpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi",
                            shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
                            col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=phi, theta=theta, 
+perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
           xlab="\nlog.cpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi", 
           ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
 
@@ -1361,11 +1358,11 @@ x                = hist(Y.h[i,2,], breaks=x, plot=FALSE)$mids
 yy               = 1:h
 z                = t(z)
 
-f4               = persp3D(x=x, y=yy, z=z, phi=phi, theta=theta, 
+f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
                            xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp",
                            shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
                            col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=phi, theta=theta, 
+perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
           xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp", 
           ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
 
@@ -1588,11 +1585,11 @@ x                = hist(Y.h.ext[i,1,], breaks=x, plot=FALSE)$mids
 yy               = 1:h
 z                = t(z)
 
-f4               = persp3D(x=x, y=yy, z=z, phi=phi, theta=theta, 
+f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
                            xlab="\ncpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi",
                            shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
                            col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=phi, theta=theta, 
+perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
           xlab="\nlog.cpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi", 
           ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
 
@@ -1623,11 +1620,11 @@ x                = hist(Y.h.ext[i,2,], breaks=x, plot=FALSE)$mids
 yy               = 1:h
 z                = t(z)
 
-f4               = persp3D(x=x, y=yy, z=z, phi=phi, theta=theta, 
+f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
                            xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp",
                            shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
                            col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=phi, theta=theta, 
+perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
           xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp", 
           ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
 
@@ -1757,5 +1754,141 @@ title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Mod
 ```
 
 Figure 11 Extend Model Key Data Plot
+
+
+Until here, we realized that the extended model is more radical, and we decided to rethink the prior settings in the extended model and compare: In the extended model, consider the coefficient $\lambda$(follow gamma distribution.)
+
+
+```{r gamma dist, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+
+lambda.priors = list(
+  k = c(1, 100, 1, 100),
+  theta = c(0.1, 0.1, 0.5, 0.5)
+)
+
+x <- seq(0, 30, length.out = 1000)
+
+lambda <- data.frame()
+for (i in 1:4) {
+  k <- lambda.priors$k[i]
+  theta <- lambda.priors$theta[i]
+  y <- dgamma(x, shape = k, scale = theta)
+  lambda <- rbind(lambda, data.frame(x = x, y = y, k = k, theta = theta))
+}
+
+ggplot(lambda, aes(x = x, y = y, color = interaction(k, theta))) +
+  geom_line() +
+  labs(title = "Gamma Distribution",
+       x = "x",
+       y = "Density",
+       color = "k, theta") +
+  theme_minimal()
+color = scales::hue_pal()(4)
+
+```
+
+Figure 12 Gamma Distribution
+
+For the Gamma distribution with parameters $(k,θ)=(1,0.1)$ (red line), the density is highly concentrated near zero, making it very steep. This distribution is ideal for modeling high-frequency, short-duration events such as waiting times or time between failures. Compared to distributions with larger shape or scale parameters, this one lacks support for larger values, indicating most events occur within a very short time frame.
+
+
+```{r prior test, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# setup 
+S1                = 500                            # determine the burn-in draws
+S2                = 9500                           # number of draws from the final simulation
+h                 = 8 
+S                 = 9000 
+
+# Prior Gamma distribution: k, theta
+
+# set up color
+colors <- c(color[1], color[2], color[3], color[4])
+
+par(mfcol = c(2, 2), mar = c(2, 2, 2, 2))
+
+for (i in 1:4) {
+  k <- lambda.priors$k[i]
+  theta <- lambda.priors$theta[i]
+  color <- colors[i]
+  
+  A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
+  Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
+  lambda.posterior  = matrix(NA, S1+S2, 1)
+  
+  # initial value of lambda
+  lambda.posterior[1] = 10                               # set lambda0 
+
+  #set.seed(param_index)
+
+
+  posterior.extend.draws <- posterior.draws.exten(total_S = S1 + S2, Y = Y, X = X)
+  A.posterior.ext.simu <- posterior.extend.draws[["A.posterior.exten"]]
+  Sigma.posterior.ext.simu <- posterior.extend.draws[["Sigma.posterior.exten"]]
+
+  Y.h.ext <- array(NA, c(h, N, S))
+
+  for (s in 1:S) {
+    A.posterior.draw <- A.posterior.ext.simu[,,s]
+    Sigma.posterior.draw <- Sigma.posterior.ext.simu[,,s]
+    x.Ti <- Y[(nrow(Y) - p + 1):nrow(Y),]
+    x.Ti <- x.Ti[p:1,]
+    for (i in 1:h) {
+      x.T <- c(1, as.vector(t(x.Ti)))
+      Y.f <- rmvnorm(1, mean = x.T %*% A.posterior.draw, sigma = Sigma.posterior.draw)
+      x.Ti <- rbind(Y.f, x.Ti[1:(p - 1),])
+      Y.h.ext[i,,s] <- Y.f[1:N]
+    }
+  }
+
+  limits.lcpi.ext <- range(Y.h.ext[,1,])
+  point.lcpi.f.ext <- apply(Y.h.ext[,1,], 1, mean)
+
+  interval.lcpi.f.ext <- apply(Y.h.ext[,1,], 1, hdi, credMass = 0.90)
+
+  x <- seq(from = limits.lcpi.ext[1], to = limits.lcpi.ext[2], length.out = 100)
+  z <- matrix(NA, h, 99)
+  for (i in 1:h) {
+    z[i,] <- hist(Y.h.ext[i,1,], breaks = x, plot = FALSE)$density
+  }
+  x <- hist(Y.h.ext[i,1,], breaks = x, plot = FALSE)$mids
+  yy <- 1:h
+  z <- t(z)
+
+  f4 <- persp3D(x = x, y = yy, z = z, phi=15.5, theta=180, 
+                xlab = "\ncpi[t+h|t]", ylab = "h", zlab = "\npredictive densities of cpi",
+                shade = NA, border = NA, ticktype = "detailed", nticks = 3, cex.lab = 1,
+                col = NA, plot = FALSE)
+  perspbox(x = x, y = yy, z = z, bty = "f", col.axis = "black", phi=15.5, theta=180, 
+           xlab = "\nlog.cpi[t+h|t]", ylab = "h", zlab = "\npredictive densities of cpi", 
+           ticktype = "detailed", nticks = 3, cex.lab = 1, col = NULL, plot = TRUE)
+
+  polygon3D(x = c(interval.lcpi.f.ext[1,], interval.lcpi.f.ext[2,h:1]), 
+            y = c(1:h, h:1), 
+            z = rep(0, 2*h), 
+            col = adjustcolor(color, alpha.f = 0.3), border = NA, add = TRUE, plot = TRUE)
+  print(interval.lcpi.f.ext[1,])
+  print(interval.lcpi.f.ext[2,h:1])
+  for (i in 1:h) {
+    f4.l <- trans3d(x = x, y = yy[i], z = z[,i], pmat = f4)
+    lines(f4.l, lwd = 1, col = color)
+  }
+  f4.l1 <- trans3d(x = point.lcpi.f.ext, y = yy, z = 0, pmat = f4)
+  lines(f4.l1, lwd = 1.5, col = adjustcolor(color, alpha.f = 0.7))
+}
+
+```
+
+Figure 12 predictive density of lcpi with different k and theta
+
+The predictive density distribution remains stable despite changes in the prior distribution of the Gamma distribution in lambda, indicating that the predictive values have stabilized in the Gibbs sampler. This suggests that with sufficient data, the influence of the prior distribution is overshadowed by the data, resulting in a stable posterior distribution and predictive outcome. Consequently, the predictive results are primarily driven by the data rather than the prior assumptions.
+
 
 ## References {.unnumbered}

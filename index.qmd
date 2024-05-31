@@ -656,9 +656,9 @@ In the forecasting process, we will concentrate on determining the conditional m
 
 ### Basic Model
 
-#### Prior Distribution and Posterier Distribution Specified
+#### Prior Distribution and Posterior Distribution Specified
 
-The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution[@wozniak2016]. Minnesota prior with some stylised facts about the macroeconomic time series, since $lcpi_t$ and $lm_t$ are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.
+The basic model based on the natural-conjugate prior distribution, which is specified as a matrix normal inverse Wishart distribution [@wozniak2016]. Minnesota prior with some stylised facts about the macroeconomic time series, since $lcpi_t$ and $lm_t$ are unit root non-stationary and other all variables are stationary, is applied to form the specifications of the prior distribution.
 
 The estimation procedures to draw from the posterior follows the steps below:
 
@@ -736,11 +736,11 @@ $$
 
 **Step 3**: As $\overline{A}$, $\overline{V}$, $\overline{S}$ and $\overline{v}$ are specified:
 
-At each iteration $s$:
+To obtain a sample of $S$ draws from the posterior distribution:
 
-1.  Draw $\Sigma^{(s)}$ from $\mathcal{IW}_{10}(\overline{S}, \overline{v})$, and take $\Sigma^{(s)}$ as known
+1.  Sample $S$ draws from the marginal posterior distribution for $\Sigma^{(s)}$ given by $\mathcal{IW}_{10}(\overline{S}, \overline{v})$, and collect the draws in $\{\Sigma^{(s)}\}_{s=1}^{S}$
 
-2.  Draw $A^{(s)}$ from $\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma,\overline{V} )$ by insert $\Sigma^{(s)}$
+2.  For each draw $\Sigma^{(s)}$ for $s=1,\dots,S$ sample the corresponding draw of $A^{(s)}$ from $\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma^{(s)},\overline{V} )$ 
 
 Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
 
@@ -1020,14 +1020,14 @@ p(\lambda |Y,X,A,\Sigma )
 &\propto 
 det(\lambda \underline{V} )^{-\frac{N}{2}}exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}} \\ 
 &\propto 
-det(\underline{V} )^{-\frac{N}{2}} \lambda^{-\frac{N}{2}} exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}exp \left\{ -\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
+det(\underline{V} )^{-\frac{N}{2}} \lambda^{-\frac{KN}{2}} exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}  \times \lambda ^{\underline{k_{\lambda}}-1}exp \left\{ -\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
 &\propto 
- \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
+ \lambda^{-\frac{KN}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]-\frac{\lambda}{\underline{\theta_{\lambda}}} \right\} \\
 &\propto 
- \lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{\mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]}{2\lambda} 
+ \lambda^{-\frac{KN}{2} + \underline{k_{\lambda}}-1 } exp\left\{ -\frac{\mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]}{2\lambda} 
 -\frac{\lambda}{\underline{\theta_{\lambda}}} \right\}\\
 &\propto 
-\lambda^{-\frac{N}{2} + \underline{k_{\lambda}}-1 } 
+\lambda^{-\frac{KN}{2} + \underline{k_{\lambda}}-1 } 
 exp\left\{ \frac{- \left[ \frac{1}{\lambda} \mathrm{tr}  \left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]  + \frac{\lambda}{ \frac{1}{2} \underline{\theta_{\lambda}}}\right]}{2} 
 \right\}\\
 \end{align}
@@ -1059,7 +1059,7 @@ $$
 \\
 \overline{b} &= \mathrm{tr}  \left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right] 
 \\ 
-\overline{p} &= -\frac{N}{2} + \underline{k_{\lambda}}
+\overline{p} &= -\frac{KN}{2} + \underline{k_{\lambda}}
 \end{align}
 $$
 
@@ -1090,6 +1090,19 @@ Function below is `posterior.draws.exten`:
 
 ## Posterior sample draw function for extended model(posterior.draws.exten)
 posterior.draws.exten = function (total_S, Y, X){
+  
+  N = ncol(Y)
+  K = ncol(X)
+  
+  # define here:
+  # lambda.posterior
+  # Sigma.posterior
+  # A.posterior
+  # lambda.priors
+  # all the object that are used in this function must be defined inside 
+  # of it or provided as arguments of the function.
+  # it is not a good programming practice to rely on global variables.
+  
 for (s in 1:total_S){
     # NIW posterior parameters
     V.bar.inv              = t(X)%*%X + diag(1/diag(lambda.posterior[s]* V.prior)) 
@@ -1109,7 +1122,7 @@ for (s in 1:total_S){
     
     
     # Update parameters for lambda posterior
-    p                      = lambda.priors$k - (N)/2              # N=10
+    p                      = lambda.priors$k - (K * N)/2              # N=10
     diff_A                 = A.posterior[,,s] - A.prior
     product                = t(diff_A) %*% solve(V.prior) %*% diff_A
     b                      = sum(diag(solve(Sigma.posterior[,,s] %*% product)))

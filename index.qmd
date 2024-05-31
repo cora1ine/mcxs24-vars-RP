@@ -256,7 +256,6 @@ correct_dates     = seq(as.Date("1969-10-01"), by="quarter", length.out=length(e
 correct_dates     = floor_date(correct_dates, "month") - days(1)
 index(exr_data)   = correct_dates
 
-
 ```
 
 ```{r Data Combine, fig.pos="H"}
@@ -525,13 +524,11 @@ Figure 4 Line plot of adjusted data
 cpi_lag4 = lag(cpi_data, 4)
 inf_data = ((cpi_data / cpi_lag4)-1)*100
 inf_data = na.omit(inf_data)
-
 ```
 
 ```{r Combine Key Data, fig.align='center',fig.pos='H'}
 key_data           = na.omit(merge(inf_data, infexp_data, crt_data))
 colnames(key_data) = c("inf_data", "infexp_data", "crt_data")
-                        
 ```
 
 The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation is inflation and inflation target. Meanwhile, because we use CPI as key variable, we first need to calculate quarterly inflation through CPI. Below we focus on analyzing these two variables:
@@ -763,7 +760,29 @@ Function below is `posterior.draws`:
 ## Posterior sample draw function for basic model(posterior.draws)
 posterior.draws       = function (S, Y, X){
   
-    # normal-inverse Wishard posterior parameters
+    ## Pre-setup 
+    N                 = ncol(Y) 
+    t                 = N + 1
+    p                 = frequency(Y)                        
+    A.hat             = solve(t(X)%*%X)%*%t(X)%*%Y
+    Sigma.hat         = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+    
+    # Prior distribution (with Minnesota prior)
+    kappa.1           = 1                                     # shrinkage for A1 to Ap
+    kappa.2           = 100                                   # shrinkage for constant 
+    A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
+    A.prior[2:t,]     = diag(N)
+    V.prior           = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+    S.prior           = diag(diag(Sigma.hat))
+    nu.prior          = N+2  
+    
+    # Define posterior
+    A.posterior       = array(NA, dim = c((1+N*p),N,S))
+    Sigma.posterior   = array(NA, dim = c(N,N,S))
+    
+    # --------------------------------------------------------------------------
+    
+    # Normal-inverse Wishard posterior parameters
     V.bar.inv         = t(X)%*%X + diag(1/diag(V.prior))
     V.bar             = solve(V.bar.inv)
     A.bar             = V.bar%*%(t(X)%*%Y + diag(1/diag(V.prior))%*%A.prior)
@@ -771,7 +790,7 @@ posterior.draws       = function (S, Y, X){
     S.bar             = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
     S.bar.inv         = solve(S.bar)
     
-    # posterior draws 
+    # Posterior draws 
     Sigma.posterior   = rWishart(S, df=nu.bar, Sigma=S.bar.inv)
     Sigma.posterior   = apply(Sigma.posterior,3,solve)
     Sigma.posterior   = array(Sigma.posterior,c(N,N,S))
@@ -843,24 +862,9 @@ Y = ts(e[2:nrow(e),], frequency=1)
 X = matrix(1,nrow(Y),1)
 X = cbind(X,e[2:nrow(e)-1,])
 
-
-## Test on basic model
-N           = ncol(Y)                          # N=2
-p           = frequency(Y)
-A.hat       = solve(t(X)%*%X)%*%t(X)%*%Y
-Sigma.hat   = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
-
-# Prior distribution (with Minnesota prior)
-kappa.1             = 1                                    # shrinkage for A1 to Ap
-kappa.2             = 100                                  # shrinkage for constant 
-A.prior             = matrix(0,nrow(A.hat),ncol(A.hat))
-A.prior[2:(N + 1),] = diag(N)
-V.prior             = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
-S.prior             = diag(diag(Sigma.hat))
-nu.prior            = N+2
-
+S = 10000
 # Applying function 
-posterior.sample.draws.p = posterior.draws(S=10000, Y=Y, X=X)
+posterior.sample.draws.p = posterior.draws(S=S, Y=Y, X=X)
 
 ```
 
@@ -1083,7 +1087,7 @@ Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s
 
 Function below is `posterior.draws.exten`:
 
-```{r Model Exten, fig.align='center',fig.pos='H'}
+```{r Exten Model, fig.align='center',fig.pos='H'}
 #| echo: true
 #| message: false
 #| warning: false
@@ -1091,55 +1095,74 @@ Function below is `posterior.draws.exten`:
 ## Posterior sample draw function for extended model(posterior.draws.exten)
 posterior.draws.exten = function (total_S, Y, X){
   
-  N = ncol(Y)
-  K = ncol(X)
+  ## Pre-setup 
+  N             = ncol(Y) 
+  t             = N + 1
+  p             = frequency(Y)                        
+  A.hat         = solve(t(X)%*%X)%*%t(X)%*%Y
+  Sigma.hat     = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+  K             = ncol(X)
   
-  # define here:
-  # lambda.posterior
-  # Sigma.posterior
-  # A.posterior
-  # lambda.priors
-  # all the object that are used in this function must be defined inside 
-  # of it or provided as arguments of the function.
-  # it is not a good programming practice to rely on global variables.
   
-for (s in 1:total_S){
-    # NIW posterior parameters
-    V.bar.inv              = t(X)%*%X + diag(1/diag(lambda.posterior[s]* V.prior)) 
-    V.bar                  = solve(V.bar.inv)
-    A.bar                  = V.bar%*%(t(X)%*%Y + diag(1/diag(lambda.posterior[s]* V.prior))%*%A.prior)
-    nu.bar                 = nrow(Y) + nu.prior
-    S.bar                  = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(lambda.posterior[s]* V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
-    S.bar.inv              = solve(S.bar)
+  # Prior distribution (with Minnesota prior)
+  kappa.1           = 1                                     # shrinkage for A1 to Ap
+  kappa.2           = 100                                   # shrinkage for constant 
+  A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
+  A.prior[2:t,]     = diag(N)
+  V.prior           = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+  S.prior           = diag(diag(Sigma.hat))
+  nu.prior          = N+2  
   
-    # posterior draws for A and Sigma
-    Sigma.posterior.IW     = rWishart(1, df=nu.bar, Sigma=S.bar.inv)
-    Sigma.posterior.draw   = apply(Sigma.posterior.IW,3,solve)
-    Sigma.posterior[,,s]   = Sigma.posterior.draw
-    A.posterior[,,s]       = array(rnorm(prod(c(dim(A.bar),1))),c(dim(A.bar),1))
-    L                      = t(chol(V.bar))
-    A.posterior[,,s]       = A.bar + L%*%A.posterior[,,s]%*%chol(Sigma.posterior[,,s])
-    
-    
-    # Update parameters for lambda posterior
-    p                      = lambda.priors$k - (K * N)/2              # N=10
-    diff_A                 = A.posterior[,,s] - A.prior
-    product                = t(diff_A) %*% solve(V.prior) %*% diff_A
-    b                      = sum(diag(solve(Sigma.posterior[,,s] %*% product)))
-    a                      = 2 / lambda.priors$theta
-    
-    # Draw next period value for lambda from GIG distribution
-    if (s!=total_S){
-      lambda.posterior[s+1] = GIGrvg::rgig(n=1, lambda = p, chi = b, psi = a)
-    }
-  }
+  # Define posterior
+  A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
+  Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
+  lambda.posterior  = matrix(NA, S1+S2, 1)
   
-    output                 = list(A.posterior.exten = A.posterior[,,(S1+1):S2], 
-                                  Sigma.posterior.exten = Sigma.posterior[,,(S1+1):S2], 
-                                  lambda.posterior.exten = lambda.posterior[(S1+1):S2,])
+  # initial value of lambda
+  lambda.posterior[1] = 10                               # set lambda0 
 
-    return(output)
-}
+  # Prior Gamma distribution: k, theta
+  lambda.priors = list(k = 1, theta = .1)
+  
+  # --------------------------------------------------------------------------
+  
+  for (s in 1:total_S){
+      # NIW posterior parameters
+      V.bar.inv              = t(X)%*%X + diag(1/diag(lambda.posterior[s]* V.prior)) 
+      V.bar                  = solve(V.bar.inv)
+      A.bar                  = V.bar%*%(t(X)%*%Y + diag(1/diag(lambda.posterior[s]* V.prior))%*%A.prior)
+      nu.bar                 = nrow(Y) + nu.prior
+      S.bar                  = S.prior + t(Y)%*%Y + t(A.prior)%*%diag(1/diag(lambda.posterior[s]* V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+      S.bar.inv              = solve(S.bar)
+    
+      # posterior draws for A and Sigma
+      Sigma.posterior.IW     = rWishart(1, df=nu.bar, Sigma=S.bar.inv)
+      Sigma.posterior.draw   = apply(Sigma.posterior.IW,3,solve)
+      Sigma.posterior[,,s]   = Sigma.posterior.draw
+      A.posterior[,,s]       = array(rnorm(prod(c(dim(A.bar),1))),c(dim(A.bar),1))
+      L                      = t(chol(V.bar))
+      A.posterior[,,s]       = A.bar + L%*%A.posterior[,,s]%*%chol(Sigma.posterior[,,s])
+      
+      
+      # Update parameters for lambda posterior
+      p                      = lambda.priors$k - (K * N)/2              # N=10
+      diff_A                 = A.posterior[,,s] - A.prior
+      product                = t(diff_A) %*% solve(V.prior) %*% diff_A
+      b                      = sum(diag(solve(Sigma.posterior[,,s] %*% product)))
+      a                      = 2 / lambda.priors$theta
+      
+      # Draw next period value for lambda from GIG distribution
+      if (s!=total_S){
+        lambda.posterior[s+1] = GIGrvg::rgig(n=1, lambda = p, chi = b, psi = a)
+      }
+    }
+    
+      output                 = list(A.posterior.exten = A.posterior[,,(S1+1):S2], 
+                                    Sigma.posterior.exten = Sigma.posterior[,,(S1+1):S2], 
+                                    lambda.posterior.exten = lambda.posterior[(S1+1):S2,])
+  
+      return(output)
+  }
 ```
 
 
@@ -1153,28 +1176,13 @@ for (s in 1:total_S){
 #| warning: false
 
 # setup 
-kappa.1           = 1                                # shrinkage for A1 to Ap
-kappa.2           = 100                              # shrinkage for constant 
-S1                = 500                              # determine the burn-in draws
-S2                = 9500                             # number of draws from the final simulation
+
+S1                = 500                           # determine the burn-in draws
+S2                = 9500                          # number of draws from the final simulation
 total_S           = S1+S2
-A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
-Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
-k.posterior       = matrix(NA, S1+S2, 1)
-k.posterior[1]    = 10                               # set k0 
-lambda.posterior  = matrix(NA, S1+S2, 1)
-
-# initial value of lambda
-lambda.posterior[1] = 10                               # set lambda0 
-
-# Prior Gamma distribution: k, theta
-lambda.priors = list(
-  k = 1,
-  theta = .1
-)
 
 # Applying function 
-posterior.extend.draws.p = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
+posterior.extend.draws.p = posterior.draws.exten(total_S = total_S, Y = Y, X = X)
 ```
 
 
@@ -1244,7 +1252,7 @@ Table 5 Extend Model Proofing Simulation for $\Sigma$
 
 ### Basic Model
 
-```{r Stat Setup for Basic Model, fig.align='center',fig.pos='H'}
+```{r Stat Setup, fig.align='center',fig.pos='H'}
 
 ## Create Y and X
 y             = ts(all_data[,1:ncol(all_data)])     # 10col, 135row
@@ -1254,21 +1262,6 @@ for (i in 1:frequency(Y)){
   X           = cbind(X,y[5:nrow(y)-i,])            # 10*4+1=41col, 131row
 }
  
-## Pre-setup 
-N             = ncol(Y)                             # N=10
-p             = frequency(Y)                        # p=4
-A.hat         = solve(t(X)%*%X)%*%t(X)%*%Y
-Sigma.hat     = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
-
-# Prior distribution (with Minnesota prior)
-kappa.1       = 1                                     # shrinkage for A1 to Ap
-kappa.2       = 100                                   # shrinkage for constant 
-A.prior       = matrix(0,nrow(A.hat),ncol(A.hat))
-
-A.prior[2:11,] = diag(10)
-V.prior       = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
-S.prior       = diag(diag(Sigma.hat))
-nu.prior      = N+2                                   
 ```
 
 ```{r Function Applying, fig.align='center',fig.pos='H'}
@@ -1276,8 +1269,12 @@ nu.prior      = N+2
 #| message: false
 #| warning: false
 
+## Set up 
+S                      =10000
+
 ## Function Applying
-posterior.sample.draws = posterior.draws(S=10000, Y=Y, X=X) # sample use S=10000
+posterior.sample.draws = posterior.draws(S = S, Y = Y, X = X) # sample use S=10000
+
 A.posterior.simu       = posterior.sample.draws$A.posterior
 Sigma.posterior.simu   = posterior.sample.draws$Sigma.posterior
 
@@ -1472,11 +1469,6 @@ colnames(key_data.h) = c("inf_data.h", "infexp_data.h", "crt_data.h")
 
 After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 8), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
 
-
-
-
-
-
 ```{r Basic Model Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1513,34 +1505,15 @@ Figure 8 Basic Model Key Data Plot
 
 ### Extension Model
 
-```{r Stat Setup for Extend model, fig.align='center',fig.pos='H'}
-#| echo: false
-#| message: false
-#| warning: false
-# setup 
-S1                = 500                            # determine the burn-in draws
-S2                = 9500                           # number of draws from the final simulation
-
-# Prior Gamma distribution: k, theta
-lambda.priors = list(
-  k = 1,
-  theta = .1
-)
-
-total_S           = S1+S2
-A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
-Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
-lambda.posterior  = matrix(NA, S1+S2, 1)
-
-# initial value of lambda
-lambda.posterior[1] = 10                               # set lambda0 
-
-```
 
 ```{r Extension Function Applying, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
+
+# setup 
+S1                = 500                            # determine the burn-in draws
+S2                = 9500                           # number of draws from the final simulation
 
 ## Function Applying
 posterior.extend.draws     = posterior.draws.exten(total_S = total_S, Y=Y, X=X)

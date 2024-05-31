@@ -741,7 +741,7 @@ To obtain a sample of $S$ draws from the posterior distribution:
 
 Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
 
-```{r Stat Setup, fig.align='center',fig.pos='H'}
+```{r Setseed, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -768,8 +768,7 @@ posterior.draws       = function (S, Y, X){
     Sigma.hat         = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
     
     # Prior distribution (with Minnesota prior)
-    kappa.1           = 1                                     # shrinkage for A1 to Ap
-    kappa.2           = 100                                   # shrinkage for constant 
+
     A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
     A.prior[2:t,]     = diag(N)
     V.prior           = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
@@ -780,7 +779,7 @@ posterior.draws       = function (S, Y, X){
     A.posterior       = array(NA, dim = c((1+N*p),N,S))
     Sigma.posterior   = array(NA, dim = c(N,N,S))
     
-    # --------------------------------------------------------------------------
+    # ------------------------posterior.draws----------------------------------
     
     # Normal-inverse Wishard posterior parameters
     V.bar.inv         = t(X)%*%X + diag(1/diag(V.prior))
@@ -853,16 +852,18 @@ $$
 #| message: false
 #| warning: false
 
-e1 = cumsum(rnorm(1000, 0, sd=1))
-e2 = cumsum(rnorm(1000, 0, sd=1))
-e  = cbind(e1,e2)
+e1        = cumsum(rnorm(1000, 0, sd=1))
+e2         = cumsum(rnorm(1000, 0, sd=1))
+e          = cbind(e1,e2)
 
 ## Define data X, Y 
-Y = ts(e[2:nrow(e),], frequency=1)
-X = matrix(1,nrow(Y),1)
-X = cbind(X,e[2:nrow(e)-1,])
+Y          = ts(e[2:nrow(e),], frequency=1)
+X          = matrix(1,nrow(Y),1)
+X          = cbind(X,e[2:nrow(e)-1,])
 
-S = 10000
+S          = 10000
+kappa.1    = 1                                     # shrinkage for A1 to Ap
+kappa.2    = 100                                   # shrinkage for constant 
 # Applying function 
 posterior.sample.draws.p = posterior.draws(S=S, Y=Y, X=X)
 
@@ -1105,8 +1106,7 @@ posterior.draws.exten = function (total_S, Y, X){
   
   
   # Prior distribution (with Minnesota prior)
-  kappa.1           = 1                                     # shrinkage for A1 to Ap
-  kappa.2           = 100                                   # shrinkage for constant 
+
   A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
   A.prior[2:t,]     = diag(N)
   V.prior           = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
@@ -1119,12 +1119,9 @@ posterior.draws.exten = function (total_S, Y, X){
   lambda.posterior  = matrix(NA, S1+S2, 1)
   
   # initial value of lambda
-  lambda.posterior[1] = 10                               # set lambda0 
+  lambda.posterior[1] = 10                            # set lambda0 
 
-  # Prior Gamma distribution: k, theta
-  lambda.priors = list(k = 1, theta = .1)
-  
-  # --------------------------------------------------------------------------
+  # ----------------------posterior.draws.exten------------------------------
   
   for (s in 1:total_S){
       # NIW posterior parameters
@@ -1165,9 +1162,6 @@ posterior.draws.exten = function (total_S, Y, X){
   }
 ```
 
-
-
-
 #### Function Proofing
 
 ```{r Extend Model Function Proof, fig.align='center',fig.pos='H'}
@@ -1176,10 +1170,16 @@ posterior.draws.exten = function (total_S, Y, X){
 #| warning: false
 
 # setup 
+kappa.1             = 1                             # shrinkage for A1 to Ap
+kappa.2             = 100                           # shrinkage for constant   
 
-S1                = 500                           # determine the burn-in draws
-S2                = 9500                          # number of draws from the final simulation
-total_S           = S1+S2
+
+# Prior Gamma distribution: k, theta
+lambda.priors       = list(k = 1, theta = .1)
+
+S1                  = 500                           # determine the burn-in draws
+S2                  = 9500                          # number of draws from the final simulation
+total_S             = S1+S2
 
 # Applying function 
 posterior.extend.draws.p = posterior.draws.exten(total_S = total_S, Y = Y, X = X)
@@ -1252,7 +1252,7 @@ Table 5 Extend Model Proofing Simulation for $\Sigma$
 
 ### Basic Model
 
-```{r Stat Setup, fig.align='center',fig.pos='H'}
+```{r Stat Setup for applying, fig.align='center',fig.pos='H'}
 
 ## Create Y and X
 y             = ts(all_data[,1:ncol(all_data)])     # 10col, 135row
@@ -1270,10 +1270,12 @@ for (i in 1:frequency(Y)){
 #| warning: false
 
 ## Set up 
-S                      =10000
+S                      = 10000
+kappa.1                = 1               # shrinkage for A1 to Ap
+kappa.2                = 100             # shrinkage for constant 
 
 ## Function Applying
-posterior.sample.draws = posterior.draws(S = S, Y = Y, X = X) # sample use S=10000
+posterior.sample.draws = posterior.draws(S = S, Y = Y, X = X) 
 
 A.posterior.simu       = posterior.sample.draws$A.posterior
 Sigma.posterior.simu   = posterior.sample.draws$Sigma.posterior
@@ -1286,11 +1288,13 @@ Sigma.posterior.simu   = posterior.sample.draws$Sigma.posterior
 #| message: false
 #| warning: false
 
-## Two-year ahead forecasting h=8
+## Two-year ahead forecasting h = 8 and with p = 4
+
 # set up
 h                      = 8
-S                      = 10000
+N                      = ncol(Y) 
 Y.h                    = array(NA,c(h,N,S))
+p                      = 4
 
 # sampling predictive density
 for (s in 1:S){
@@ -1307,7 +1311,6 @@ for (s in 1:S){
 }
 
 ```
-
 
 
 Figure 6 and 7 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty. 
@@ -1395,9 +1398,9 @@ Figure 6 3D forecasting graph on basic model
 
 ```{r 2d forecasting graph on basic model, fig.align='center',fig.pos='H'}
 
-point.lcpi.f    = apply(Y.h[,1,],1,mean)
-interval.lcpi.f = apply(Y.h[,1,],1,hdi,credMass=0.90)
-lcpi.range      = range(y[,1],interval.lcpi.f)
+point.lcpi.f         = apply(Y.h[,1,],1,mean)
+interval.lcpi.f      = apply(Y.h[,1,],1,hdi,credMass=0.90)
+lcpi.range           = range(y[,1],interval.lcpi.f)
 
 point.infexp.f       = apply(Y.h[,2,],1,mean)
 interval.infexp.f    = apply(Y.h[,2,],1,hdi,credMass=0.90)
@@ -1455,14 +1458,8 @@ point.infexp.h            = ts(round(apply(Y.h[,2,],1,mean),6))
 point.infexp.h            = xts(point.infexp.h, order.by = dates)
 infexp.data.h             = c(infexp_data["/2023-12-31"], point.infexp.h )
 
-## cash rate
-
-point.crt.h            = ts(round(apply(Y.h[,4,],1,mean),6))
-point.crt.h            = xts(point.crt.h, order.by = dates)
-crt.data.h             = c(crt_data["/2023-12-31"], point.crt.h )
-
-key_data.h           = na.omit(merge(inf.data.h, infexp.data.h, crt.data.h))
-colnames(key_data.h) = c("inf_data.h", "infexp_data.h", "crt_data.h")
+key_data.h           = na.omit(merge(inf.data.h, infexp.data.h))
+colnames(key_data.h) = c("inf_data.h", "infexp_data.h")
 
 ```
 
@@ -1512,8 +1509,16 @@ Figure 8 Basic Model Key Data Plot
 #| warning: false
 
 # setup 
-S1                = 500                            # determine the burn-in draws
-S2                = 9500                           # number of draws from the final simulation
+S1                  = 500                           # determine the burn-in draws
+S2                  = 9500                          # number of draws from the final simulation
+total_S             = S1 + S2
+
+kappa.1             = 1                             # shrinkage for A1 to Ap
+kappa.2             = 100                           # shrinkage for constant   
+
+# Prior Gamma distribution: k, theta
+lambda.priors       = list(k = 1, theta = .1)
+
 
 ## Function Applying
 posterior.extend.draws     = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
@@ -1526,11 +1531,13 @@ Sigma.posterior.ext.simu   = posterior.extend.draws[["Sigma.posterior.exten"]]
 #| echo: false
 #| message: false
 #| warning: false
-## two-year ahead forecasting h=8
+## two-year ahead forecasting h = 8 and p = 4
 # set up
 h                 = 8
 S                 = 9000
+N                 = ncol(Y) 
 Y.h.ext           = array(NA,c(h,N,S))
+p                 = 4
 
 # sampling predictive density
 for (s in 1:S){
@@ -1692,15 +1699,8 @@ point.infexp.h.ext          = ts(round(apply(Y.h.ext[,2,],1,mean),6))
 point.infexp.h.ext          = xts(point.infexp.h.ext , order.by = dates)
 infexp.data.h.ext           = c(infexp_data["/2023-12-31"], point.infexp.h.ext  )
 
-
-## cash rate
-
-point.crt.h.ext             = ts(round(apply(Y.h.ext[,4,],1,mean),6))
-point.crt.h.ext             = xts(point.crt.h.ext, order.by = dates)
-crt.data.h.ext              = c(crt_data["/2023-12-31"], point.crt.h.ext)
-
-key_data.h.ext              = na.omit(merge(inf.data.h.ext, infexp.data.h.ext, crt.data.h.ext))
-colnames(key_data.h.ext)    = c("inf_data.h", "infexp_data.h", "crt_data.h")
+key_data.h.ext              = na.omit(merge(inf.data.h.ext, infexp.data.h.ext))
+colnames(key_data.h.ext)    = c("inf_data.h", "infexp_data.h")
 
 ```
 
@@ -1801,19 +1801,9 @@ colors <- c(color[1], color[2], color[3], color[4])
 par(mfcol = c(2, 2), mar = c(2, 2, 2, 2))
 
 for (i in 1:4) {
-  k <- lambda.priors$k[i]
-  theta <- lambda.priors$theta[i]
-  color <- colors[i]
-  
-  A.posterior       = array(NA, dim = c((1+N*p),N,S1+S2))
-  Sigma.posterior   = array(NA, dim = c(N,N,S1+S2))
-  lambda.posterior  = matrix(NA, S1+S2, 1)
-  
-  # initial value of lambda
-  lambda.posterior[1] = 10                               # set lambda0 
-
-  #set.seed(param_index)
-
+  k     = lambda.priors$k[i]
+  theta = lambda.priors$theta[i]
+  color = colors[i]
 
   posterior.extend.draws <- posterior.draws.exten(total_S = S1 + S2, Y = Y, X = X)
   A.posterior.ext.simu <- posterior.extend.draws[["A.posterior.exten"]]
@@ -1860,8 +1850,7 @@ for (i in 1:4) {
             y = c(1:h, h:1), 
             z = rep(0, 2*h), 
             col = adjustcolor(color, alpha.f = 0.3), border = NA, add = TRUE, plot = TRUE)
-  print(interval.lcpi.f.ext[1,])
-  print(interval.lcpi.f.ext[2,h:1])
+
   for (i in 1:h) {
     f4.l <- trans3d(x = x, y = yy[i], z = z[,i], pmat = f4)
     lines(f4.l, lwd = 1, col = color)
@@ -1874,7 +1863,7 @@ for (i in 1:4) {
 
 Figure 12 predictive density of lcpi with different k and theta
 
-The predictive density distribution remains stable despite changes in the prior distribution of the Gamma distribution in lambda, indicating that the predictive values have stabilized in the Gibbs sampler. This suggests that with sufficient data, the influence of the prior distribution is overshadowed by the data, resulting in a stable posterior distribution and predictive outcome. Consequently, the predictive results are primarily driven by the data rather than the prior assumptions.
+The predictive density distribution remains stable despite changes in the prior distribution of the Gamma distribution in lambda, indicating that the predictive values have stabilized in the Gibbs sampler. This suggests that our forecast is robust, and resulting in a stable posterior distribution and predictive outcome. Consequently, the predictive results are primarily driven by the data rather than the prior assumptions.
 
 
 ## References {.unnumbered}

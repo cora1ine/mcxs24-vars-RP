@@ -13,6 +13,7 @@ execute:
 bibliography: references.bib
 ---
 
+
 > **Abstract.** The purpose of this research is to explore the trend in Australia's inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model.
 
 > **Keywords.** bsvars, quarto, R, Australia inflation rate
@@ -28,6 +29,7 @@ Will Australia's inflation rate fall back to the 2-3% inflation target range in 
 **Objective and Motivation:**
 
 Inflation has always been a topic of interest for economists, as trends in the inflation rate provide essential guidance for key decisions by economic participants, thus playing a crucial role in the economic and social development of a country [@bernoth2021]. The Reserve Bank of Australia (RBA) forecasts that by 2025, inflation will fall back to the target range of 2% to 3% and reach the midpoint of this range by 2026. Influenced by the COVID-19 pandemic, Blot et al. deduced that the inflation rate is affected by a variety of factors, such as GDP, exchange rates, interest rates, and unemployment rates [@EuropeanParliament.2022]. Therefore, this study will assess the reasonableness of the RBA's inflation rate forecast for the next two years. During the COVID-19 period, Australia's inflation rate sharply rose to 7.8%, in response to which the RBA implemented a monetary tightening policy and began raising interest rates at the end of 2022, slowing the pace of rate hikes in the latter half of 2023. Hence, this report will further discuss whether the RBA has correctly assumed that its monetary policy measures have effectively curbed inflation.
+
 
 ```{r Start}
 rm(list=ls())
@@ -84,6 +86,7 @@ green3.rgb   = col2rgb(green3)
 green3.shade1= rgb(green3.rgb[1],green3.rgb[2],green3.rgb[3], alpha=120, maxColorValue=255)
 ```
 
+
 ## Data and Data Properties
 
 ### Data Selection and Rationale
@@ -137,6 +140,7 @@ green3.shade1= rgb(green3.rgb[1],green3.rgb[2],green3.rgb[3], alpha=120, maxColo
     10. $exr_t$: AUD/USD exchange rate from RBA.
 
     It affects the price of imports and exports, contributing to inflation.
+
 
 ```{r Data Downloading, fig.pos="H"}
 #| echo: false
@@ -283,6 +287,7 @@ colnames(all_data)   = c("cpi_data",    "infexp_data",
                          "aord_data",   "exr_data")
 ```
 
+
 Following Figure shows the correlation between CPI and other variables.
 
 Despite the low direct correlation between inflation expectations and CPI, inflation expectations may more closely reflect concerns about core inflation, which excludes volatile items like food and energy, whereas the CPI includes all items. If the trends between core inflation and overall inflation differ, this discrepancy can reduce the correlation between inflation expectations and the CPI. However, inflation expectations provide additional insight into how future economic conditions are perceived by consumers, businesses, and investors. This forward-looking perspective is important as it might influence economic decisions that are not immediately apparent through current CPI data.
@@ -290,6 +295,7 @@ Despite the low direct correlation between inflation expectations and CPI, infla
 Exchange rate fluctuations are typically sensitive to immediate market sentiment and short-term capital flows, whereas the CPI, as a measure of past price level changes, often exhibits a lag in responding to market changes. Even if the correlation between the CPI and the AUD/USD exchange rate is low, including this variable can help researchers understand economic changes from a broader perspective. For example, changes in the exchange rate can indirectly affect domestic price levels through the cost of imports, especially in open economies.
 
 It should be noted that the unemployment rate exhibits a weak correlation with the CPI. This could be attributed to the Phillips Curve, which illustrates a short-term inverse relationship between unemployment and inflation. Over the long term, however, this correlation may diminish due to various influencing factors. For instance, following COVID, the inflation rate in the United States has been continuously rising due to the bankruptcy crisis among small and medium-sized enterprises (SMEs), part of which is attributed to the inadequate supply of export goods produced by SMEs leading to a decline in export volumes, thereby driving up the domestic inflation rate in the US [@kalemli-ozcan2020]. This impact can be seen as an indirect effect of rising unemployment rates on inflation. Therefore, despite the weak correlation between unemployment rate and CPI, it is still important to include it in the model for a comprehensive analysis.
+
 
 ```{r Corr Plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -317,6 +323,7 @@ corrplot(cor_matrix, method = "color",
 )
 ```
 
+
 In summary, the dataset included data from 1990Q2 to 2024Q1, total 137 observation points with 10 variables.
 
 ### Data Transformation
@@ -328,6 +335,7 @@ All data have been quarterly converted by selecting the data on the last day of 
 -   **Log Transformation**
 
 Based on the line graph of the original data below (Figure 2), we can observe that exponentially growing variables need to be linearized, such as $cpi_t$, $gdp_t$, $m_t$, $export_t$, $import_t$, $aord_t$. Therefore, its logarithmically transformed form will be used in the following analysis.
+
 
 ```{r Data plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -345,7 +353,9 @@ for (i in 1:10) {
 }
 ```
 
+
 Figure 2 Line plot of original data
+
 
 ```{r Log transfomation}
 #| echo: false
@@ -376,9 +386,11 @@ colnames(all_data)   = c("lcpi_data",      "infexp_data",
                          "laord_data",     "exr_data")
 ```
 
+
 -   **Integration transformation**
 
 According to ACF plot for all data (Figure 3), we can see all data with autocorrelation. It suggests that the series is not white noise and might not be stationary.
+
 
 ```{r ACF plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -397,9 +409,11 @@ for (i in 1:10){
 
 
 
+
 Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).
 
 According to Table 1, we can see that $infexp_t$, $lm_t$, require more than first order integration, while other require first-order integration(under 5% level of confidence).
+
 
 ```{r ACF test, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -498,7 +512,9 @@ kable(Unit_Root_Test_table, align = "c") %>%
 
 
 
+
 Consider that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply not differencing to any of the data sets.
+
 
 ```{r Diff Data, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -509,7 +525,9 @@ Consider that differencing might eliminate some of the long-term information (li
 
 ```
 
+
 After logarithmic transformation of part of the data, the line plot of the dataset is as shown below (Figure 4). The dataset still retains some trend characteristics. For example, almost all variables showed significant changes before and after COVID (the x-aisx is 120).
+
 
 ```{r Data Plot 2, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -528,7 +546,9 @@ for (i in 1:10) {
 
 
 
+
 ### Importance of Key Variables Analysis
+
 
 ```{r Compute inf, fig.align='center',fig.pos='H'}
 cpi_lag4 = lag(cpi_data, 4)
@@ -541,11 +561,13 @@ key_data           = na.omit(merge(inf_data, infexp_data, crt_data))
 colnames(key_data) = c("inf_data", "infexp_data", "crt_data")
 ```
 
+
 The model selects ten variables related to Australian inflation. Among the variables most directly related to inflation is inflation and inflation target. Meanwhile, because we use CPI as key variable, we first need to calculate quarterly inflation through CPI. Below we focus on analyzing these two variables:
 
 -   The actual and expected inflation rates appear to move in tandem over much of the time period, suggesting that expectations may be influenced by current and past inflation rates, or vice versa. At the same time, we see that people's expectations for inflation are relatively conservative. For example, during the COVID, the expected inflation was around 5%, but the actual inflation later surged to about 7.8%.
 
 -   Regarding the specific inflation zone of 2-3%, it appears that both the expected and actual inflation rates oscillate into this range periodically. However, it seems that starting just before 2020, there's a pronounced peak where expected inflation sharply rises above the actual inflation rate, which then converges back into the 2-3% range shortly after (although actual inflation rate still need some time). So we can foresee that inflation will indeed fall back to the 2-3% range in the near future.
+
 
 ```{r Plot inf infexp, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -574,6 +596,7 @@ legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate"),
 title(main = "Inflation Rate vs Expected Inflation Rate")
 
 ```
+
 
 
 
@@ -752,6 +775,7 @@ To obtain a sample of $S$ draws from the posterior distribution:
 
 Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}} \right\}^{S}_{s=1}$.
 
+
 ```{r Setseed, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -761,7 +785,9 @@ set.seed(11)
 
 ```
 
+
 Function below is `posterior.draws`:
+
 
 ```{r Basic Model, fig.align='center',fig.pos='H'}
 #| echo: true
@@ -816,6 +842,7 @@ posterior.draws       = function (S, Y, X){
 }
 ```
 
+
 #### Function Proofing
 
 Consider Bi-variate Gaussian random walk process:
@@ -855,6 +882,7 @@ X = \begin{bmatrix}
 \end{bmatrix}
 $$
 
+
 ```{r Basic Model Function Proof, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -877,9 +905,11 @@ posterior.sample.draws.p = posterior.draws(S=S, Y=Y, X=X)
 
 ```
 
+
 After estimating a model that includes a constant term and one lag using artificial data, we observe that the posterior mean of the autoregressive and covariance matrices closely approximates an identity matrix, and the posterior mean of the constant term is nearly a vector of zeros.
 
 -   The posterior mean of the $A$ is:
+
 
 ```{r Basic Model Proof A, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -912,7 +942,9 @@ kable(basic.model.proof.A, align = "c") %>%
 
 
 
+
 -   The posterior mean of the $\Sigma$ is:
+
 
 ```{r Basic Model Proof Sigma, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -940,6 +972,7 @@ kable(basic.model.proof.Sigma, align = "c") %>%
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 
 ```
+
 
 
 
@@ -1094,6 +1127,7 @@ Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s
 
 Function below is `posterior.draws.exten`:
 
+
 ```{r Exten Model, fig.align='center',fig.pos='H'}
 #| echo: true
 #| message: false
@@ -1168,7 +1202,9 @@ posterior.draws.exten = function (total_S, Y, X){
   }
 ```
 
+
 #### Function Proofing
+
 
 ```{r Extend Model Function Proof, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1191,9 +1227,11 @@ total_S             = S1+S2
 posterior.extend.draws.p = posterior.draws.exten(total_S = total_S, Y = Y, X = X)
 ```
 
+
 After fitting a model that includes a constant term and one lag with artificial data, just like the basic model, the extend model also shows that the posterior mean of both the autoregressive and covariance matrices closely identity matrix, and the posterior mean of the constant term is almost a vector of zeros.
 
 -   The posterior mean of the $A$ is:
+
 
 ```{r Extend Model Proof A, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1224,7 +1262,9 @@ kable(extend.model.proof.A, align = "c") %>%
 
 
 
+
 -   The posterior mean of the $\Sigma$ is:
+
 
 ```{r Extend Model Proof Sigma, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1254,9 +1294,11 @@ kable(extend.model.proof.Sigma, align = "c") %>%
 
 
 
+
 ## Empirical Analysis - Model Applying and Forecasing
 
 ### Basic Model
+
 
 ```{r Stat Setup for applying, fig.align='center',fig.pos='H'}
 
@@ -1317,7 +1359,9 @@ for (s in 1:S){
 
 ```
 
+
 Figure 6 and 7 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.
+
 
 ```{r 3d forecasting graph on basic model, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1398,8 +1442,6 @@ lines(f4.l1, lwd=1.5, col=green1)
 
 ```
 
-
-
 ```{r 2d forecasting graph on basic model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1437,8 +1479,6 @@ polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]
 
 ```
 
-
-
 ```{r Basic Model forecast data transform, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1469,7 +1509,9 @@ colnames(key_data.h) = c("inf_data.h", "infexp_data.h")
 
 ```
 
+
 After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 8), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
+
 
 ```{r Basic Model Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1506,7 +1548,9 @@ title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Mode
 
 
 
+
 ### Extension Model
+
 
 ```{r Extension Function Applying, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1559,7 +1603,9 @@ for (s in 1:S){
 }
 ```
 
+
 Figure 9 and 10 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.
+
 
 ```{r 3d forecasting graph on extension model, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1640,8 +1686,6 @@ f4.l1 = trans3d(x=point.infexp.f.ext, y=yy, z=0, pmat=f4)
 lines(f4.l1, lwd=1.5, col=green1)
 ```
 
-
-
 ```{r 2d forecasting graph on extension model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1678,8 +1722,6 @@ polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]
 
 ```
 
-
-
 ```{r Extend Model forecast data transform, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1710,7 +1752,9 @@ colnames(key_data.h.ext)    = c("inf_data.h", "infexp_data.h")
 
 ```
 
+
 For the analysis of key data, we can see that the extension model presents a more aggressive outlook compared to the basic model (Figure 11). The expected inflation rate continues to decline over the next eight quarters, reaching negative values by the end of 2024 (deflation). People's inflation expectations are also volatile, fluctuating within the 0%-2% range.
+
 
 ```{r Extend Model Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1747,7 +1791,9 @@ title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Mod
 
 
 
+
 Until here, we realized that the extended model is more radical, and we decided to rethink the prior settings in the extended model and compare: In the extended model, consider the coefficient $\lambda$(follow gamma distribution.)
+
 
 ```{r gamma dist, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1783,7 +1829,9 @@ color = scales::hue_pal()(4)
 
 
 
+
 For the Gamma distribution with parameters $(k,θ)=(1,0.1)$ (red line), the density is highly concentrated near zero, making it very steep. This distribution is ideal for modeling high-frequency, short-duration events such as waiting times or time between failures. Compared to distributions with larger shape or scale parameters, this one lacks support for larger values, indicating most events occur within a very short time frame.
+
 
 ```{r prior test, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1864,6 +1912,7 @@ for (i in 1:4) {
 }
 
 ```
+
 
 
 
@@ -1985,6 +2034,7 @@ $$
 $$
 
 **Step 3**:
+
 
 ```{r heteroskedasticity model, fig.align='center',fig.pos='H'}
 #| echo: true
@@ -2258,8 +2308,6 @@ lines(f4.l1, lwd=1.5, col=green1)
 
 ```
 
-
-
 ```{r 2d forecasting graph on basic model with hetero, fig.align='center',fig.pos='H'}
 
 # point.lcpi.f         = apply(Y.h[,1,],1,mean)
@@ -2363,4 +2411,6 @@ title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Mode
 
 
 
+
 ## References {.unnumbered}
+

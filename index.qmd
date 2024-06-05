@@ -1500,7 +1500,7 @@ abline(h = 0, col = green1, lty = 1)
 
 legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2024-03-31"),
        col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
-title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Model")
+# title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Model")
 
 ```
 
@@ -1741,7 +1741,7 @@ abline(h = 0, col = green1, lty = 1)
 
 legend("topleft", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2024-03-31"),
        col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
-title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Model")
+# title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Model")
 
 ```
 
@@ -1931,25 +1931,25 @@ $$
 -   kernel:
 
 $$
-\begin{align} 
+\begin{align*} 
 p\left( {A},{\Sigma} |Y,X\right) 
 &\propto  \text{det}({\Sigma})^{-\frac{T}{2}}\\
 &\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) \right] \right\}\\
 &\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) \right] \right\}\\
 & \quad\times\text{det}({\Sigma})^{-\frac{N+K+\underline{\nu}+1}{2}}\\
 &\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) \right] \right\}\\
-&\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}\underline{S} \right] \right\} 
-\\
-&\propto\text{det}({\Sigma})^{-\frac{\overbrace{T+\underline{\nu}}^{\overline{\nu}} +N+K++1}{2}}\\&\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1} 
-\underbrace{\left[({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S} \right]}_{*} \right] \right\} 
-\end{align} 
+&\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}\underline{S} \right] \right\} \\
+&\propto\text{det}({\Sigma})^{-\frac{\overbrace{T+\underline{\nu}}^{\overline{\nu}} +N+K++1}{2}} \\
+&\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1} 
+\color{blue}{\left[({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A})  +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S} \right]} \right] \right\}
+\end{align*}
 $$
 
-Focus on the star (\*) part:
+Focus on the blue part:
 
 $$
 \begin{align} 
-& \quad ({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S} 
+& \quad \quad({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S} 
 \\
 &= A'X'\mathrm{diag}(\sigma_{T}^{2})XA - A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} -\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})XA + \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A}}_{\text{cancel out 1}}  + A'\underline{V}^{-1}A -A'\underline{V}^{-1}\underline{A} - \underline{A}'\underline{V}^{-1}A +\underline{A}'\underline{V}^{-1}\underline{A}' 
 \\
@@ -2357,7 +2357,7 @@ abline(h = 0, col = green1, lty = 1)
 
 legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2024-03-31"),
        col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
-title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Model with heteroskedasticity")
+# title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Model with heteroskedasticity")
 
 ```
 

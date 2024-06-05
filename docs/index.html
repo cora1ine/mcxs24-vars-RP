@@ -1246,23 +1246,23 @@ p\left( {A}, {\color{purple}\Sigma}|Y,X \right)
 <li>kernel:</li>
 </ul>
 <p><span class="math display">\[
-\begin{align}
+\begin{align*}
 p\left( {A},{\Sigma} |Y,X\right)
 &amp;\propto  \text{det}({\Sigma})^{-\frac{T}{2}}\\
 &amp;\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) \right] \right\}\\
 &amp;\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) \right] \right\}\\
 &amp; \quad\times\text{det}({\Sigma})^{-\frac{N+K+\underline{\nu}+1}{2}}\\
 &amp;\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) \right] \right\}\\
-&amp;\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}\underline{S} \right] \right\}
-\\
-&amp;\propto\text{det}({\Sigma})^{-\frac{\overbrace{T+\underline{\nu}}^{\overline{\nu}} +N+K++1}{2}}\\&amp;\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}
-\underbrace{\left[({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S} \right]}_{*} \right] \right\}
-\end{align}
+&amp;\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}\underline{S} \right] \right\} \\
+&amp;\propto\text{det}({\Sigma})^{-\frac{\overbrace{T+\underline{\nu}}^{\overline{\nu}} +N+K++1}{2}} \\
+&amp;\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}
+\color{blue}{\left[({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A})  +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S} \right]} \right] \right\}
+\end{align*}
 \]</span></p>
-<p>Focus on the star (*) part:</p>
+<p>Focus on the blue part:</p>
 <p><span class="math display">\[
 \begin{align}
-&amp; \quad ({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S}
+&amp; \quad \quad({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S}
 \\
 &amp;= A'X'\mathrm{diag}(\sigma_{T}^{2})XA - A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} -\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})XA + \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A}}_{\text{cancel out 1}}  + A'\underline{V}^{-1}A -A'\underline{V}^{-1}\underline{A} - \underline{A}'\underline{V}^{-1}A +\underline{A}'\underline{V}^{-1}\underline{A}'
 \\

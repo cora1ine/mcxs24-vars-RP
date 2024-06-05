@@ -278,7 +278,7 @@ div.csl-indent {
 </div>
 </div>
 <p>Figure 1 Correlation Matrix</p>
-<p>In summary, the dataset included data from 1990Q2 to 2023Q4, total 136 observation points with 10 variables.</p>
+<p>In summary, the dataset included data from 1990Q2 to 2024Q1, total 137 observation points with 10 variables.</p>
 </section>
 <section id="data-transformation" class="level3">
 <h3 class="anchored" data-anchor-id="data-transformation">Data Transformation</h3>
@@ -331,61 +331,61 @@ div.csl-indent {
 <tbody>
 <tr class="odd">
 <td style="text-align: center;">lcpi</td>
-<td style="text-align: center;">0.9864</td>
-<td style="text-align: center;">0.1132</td>
+<td style="text-align: center;">0.9875</td>
+<td style="text-align: center;">0.1048</td>
 <td style="text-align: center;">lcpi~I(n)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">infexp</td>
-<td style="text-align: center;">0.0123</td>
+<td style="text-align: center;">0.0124</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">infexp~I(0)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">lgdp</td>
-<td style="text-align: center;">0.0223</td>
+<td style="text-align: center;">0.0188</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">lgdp~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">crt</td>
-<td style="text-align: center;">0.5912</td>
-<td style="text-align: center;">0.0111</td>
+<td style="text-align: center;">0.5879</td>
+<td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">crt~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">unemp</td>
-<td style="text-align: center;">0.3015</td>
+<td style="text-align: center;">0.3196</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">unemp~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">lm</td>
-<td style="text-align: center;">0.9051</td>
-<td style="text-align: center;">0.2150</td>
+<td style="text-align: center;">0.9045</td>
+<td style="text-align: center;">0.2166</td>
 <td style="text-align: center;">lm~I(n)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">lexport</td>
-<td style="text-align: center;">0.4559</td>
+<td style="text-align: center;">0.5164</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">lexport~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">limport</td>
-<td style="text-align: center;">0.9333</td>
+<td style="text-align: center;">0.8191</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">limport~I(1)</td>
 </tr>
 <tr class="odd">
 <td style="text-align: center;">laord</td>
-<td style="text-align: center;">0.5570</td>
+<td style="text-align: center;">0.5774</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">laord~I(1)</td>
 </tr>
 <tr class="even">
 <td style="text-align: center;">exr</td>
-<td style="text-align: center;">0.2857</td>
+<td style="text-align: center;">0.3046</td>
 <td style="text-align: center;">0.0100</td>
 <td style="text-align: center;">exr~I(1)</td>
 </tr>
@@ -432,7 +432,7 @@ div.csl-indent {
 <section id="model-and-hypothesis" class="level2">
 <h2 class="anchored" data-anchor-id="model-and-hypothesis">Model and Hypothesis</h2>
 <p>Regarding model selection, the VAR model, capable of concurrently integrating the effects of multiple economic indicators on inflation such as GDP, exchange rates, interest rates, unemployment rates, and other variables, offers coherent and reliable results by analyzing the time series of these variables for data analysis and forecasting <span class="citation" data-cites="stock2001">(<a href="#ref-stock2001" role="doc-biblioref">Stock and Watson 2001</a>)</span>.</p>
-<p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10, T=135.</p>
+<p>Based on the above analysis, all 10 variables play an important role in the fitting of the model. Use VAR(p) model for modeling, where N=10, T=137.</p>
 <p><span id="eq-2"><span class="math display">\[
 \begin{align}
 y_t &amp;= \mu_0 + A_1y_{t-1} +...+A_py_{t-p} +\epsilon_t

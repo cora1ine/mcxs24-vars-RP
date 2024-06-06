@@ -1301,19 +1301,30 @@ N                      = ncol(Y)
 Y.h                    = array(NA,c(h,N,S))
 p                      = 4
 
-# sampling predictive density
-for (s in 1:S){
-  A.posterior.draw     = A.posterior.simu[,,s]
-  Sigma.posterior.draw = Sigma.posterior.simu[,,s]
-    x.Ti               = Y[(nrow(Y)-p+1):nrow(Y),]
-    x.Ti               = x.Ti[p:1,]
-  for (i in 1:h){
-    x.T                = c(1,as.vector(t(x.Ti)))
-    Y.f                = rmvnorm(1, mean = x.T%*%A.posterior.draw, sigma=Sigma.posterior.draw)
-      x.Ti             = rbind(Y.f,x.Ti[1:(p-1),])
-    Y.h[i,,s]          = Y.f[1:N]
+
+
+# create sampling predictive density function 
+sampling.predictive.density.fun = function(A.posterior.simu, Sigma.posterior.simu, S = S) 
+{
+  for (s in 1:S){
+    A.posterior.draw     = A.posterior.simu[,,s]
+    Sigma.posterior.draw = Sigma.posterior.simu[,,s]
+      x.Ti               = Y[(nrow(Y)-p+1):nrow(Y),]
+      x.Ti               = x.Ti[p:1,]
+    for (i in 1:h){
+      x.T                = c(1,as.vector(t(x.Ti)))
+      Y.f                = rmvnorm(1, mean = x.T%*%A.posterior.draw, sigma=Sigma.posterior.draw)
+        x.Ti             = rbind(Y.f,x.Ti[1:(p-1),])
+      Y.h[i,,s]          = Y.f[1:N]
+    }
   }
+    return (Y.h)
 }
+
+# sampling predictive density
+Y.h       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.simu,
+                                            Sigma.posterior.simu = Sigma.posterior.simu,
+                                            S = S) 
 
 ```
 
@@ -1325,77 +1336,85 @@ Figure 6 and 7 presents a 3D and 2D visualization of the density intervals for t
 #| warning: false
 #| fig-cap: "Figure 6 3D forecasting graph on basic model"
 
-par(mfcol = c(1, 2), mar=c(2,2,2,2)-0.1)
 
-# Log CPI forecasting 
-limits.lcpi      = range(Y.h[,1,])
-point.lcpi.f     = apply(Y.h[,1,],1,mean)
-interval.lcpi.f  = apply(Y.h[,1,],1,hdi,credMass=0.90)
+# create 3D forecasting graph function 
 
-x                = seq(from=limits.lcpi[1], to=limits.lcpi[2], length.out=100)
-z                = matrix(NA,h,99)
-for (i in 1:h){
-  z[i,]          = hist(Y.h[i,1,], breaks=x, plot=FALSE)$density
+threed.graph = function(Y.h){
+
+  par(mfcol = c(1, 2), mar=c(2,2,2,2)-0.1)
+  
+  # Log CPI forecasting 
+  limits.lcpi      = range(Y.h[,1,])
+  point.lcpi.f     = apply(Y.h[,1,],1,mean)
+  interval.lcpi.f  = apply(Y.h[,1,],1,hdi,credMass=0.90)
+  
+  x                = seq(from=limits.lcpi[1], to=limits.lcpi[2], length.out=100)
+  z                = matrix(NA,h,99)
+  for (i in 1:h){
+    z[i,]          = hist(Y.h[i,1,], breaks=x, plot=FALSE)$density
+  }
+  x                = hist(Y.h[i,1,], breaks=x, plot=FALSE)$mids
+  yy               = 1:h
+  z                = t(z)
+  
+  f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
+                             xlab="\ncpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi",
+                             shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
+                             col=NA,plot=FALSE)
+  perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
+            xlab="\nlog.cpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi", 
+            ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
+  
+  polygon3D(x=c(interval.lcpi.f[1,],interval.lcpi.f[2,h:1]), 
+            y=c(1:h,h:1), 
+            z=rep(0,2*h), 
+            col = blue2, NAcol = blue5, border = NA, add = TRUE, plot = TRUE)
+  
+  for (i in 1:h){
+    f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
+    lines(f4.l, lwd=1, col=blue3)
+  }
+  f4.l1 = trans3d(x=point.lcpi.f, y=yy, z=0, pmat=f4)
+  lines(f4.l1, lwd=1.5, col=green1)
+  
+  # Expected inflation rate forecasting 
+  limits.infexp      = range(Y.h[,2,])
+  point.infexp.f     = apply(Y.h[,2,],1,mean)
+  
+  interval.infexp.f  = apply(Y.h[,2,],1,hdi,credMass=0.90)
+  
+  x                = seq(from=limits.infexp[1], to=limits.infexp[2], length.out=100)
+  z                = matrix(NA,h,99)
+  for (i in 1:h){
+    z[i,]          = hist(Y.h[i,2,], breaks=x, plot=FALSE)$density
+  }
+  x                = hist(Y.h[i,2,], breaks=x, plot=FALSE)$mids
+  yy               = 1:h
+  z                = t(z)
+  
+  f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
+                             xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp",
+                             shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
+                             col=NA,plot=FALSE)
+  perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
+            xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp", 
+            ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
+  
+  polygon3D(x=c(interval.infexp.f[1,],interval.infexp.f[2,h:1]), 
+            y=c(1:h,h:1), 
+            z=rep(0,2*h), 
+            col = green5, NAcol = green2, border = NA, add = TRUE, plot = TRUE)
+  
+  for (i in 1:h){
+    f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
+    lines(f4.l, lwd=1, col=green6)
+  }
+  f4.l1 = trans3d(x=point.infexp.f, y=yy, z=0, pmat=f4)
+  lines(f4.l1, lwd=1.5, col=green1)
+
 }
-x                = hist(Y.h[i,1,], breaks=x, plot=FALSE)$mids
-yy               = 1:h
-z                = t(z)
 
-f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
-                           xlab="\ncpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi",
-                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
-                           col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
-          xlab="\nlog.cpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi", 
-          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
-
-polygon3D(x=c(interval.lcpi.f[1,],interval.lcpi.f[2,h:1]), 
-          y=c(1:h,h:1), 
-          z=rep(0,2*h), 
-          col = blue2, NAcol = blue5, border = NA, add = TRUE, plot = TRUE)
-
-for (i in 1:h){
-  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
-  lines(f4.l, lwd=1, col=blue3)
-}
-f4.l1 = trans3d(x=point.lcpi.f, y=yy, z=0, pmat=f4)
-lines(f4.l1, lwd=1.5, col=green1)
-
-# Expected inflation rate forecasting 
-limits.infexp      = range(Y.h[,2,])
-point.infexp.f     = apply(Y.h[,2,],1,mean)
-
-interval.infexp.f  = apply(Y.h[,2,],1,hdi,credMass=0.90)
-
-x                = seq(from=limits.infexp[1], to=limits.infexp[2], length.out=100)
-z                = matrix(NA,h,99)
-for (i in 1:h){
-  z[i,]          = hist(Y.h[i,2,], breaks=x, plot=FALSE)$density
-}
-x                = hist(Y.h[i,2,], breaks=x, plot=FALSE)$mids
-yy               = 1:h
-z                = t(z)
-
-f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
-                           xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp",
-                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
-                           col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
-          xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp", 
-          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
-
-polygon3D(x=c(interval.infexp.f[1,],interval.infexp.f[2,h:1]), 
-          y=c(1:h,h:1), 
-          z=rep(0,2*h), 
-          col = green5, NAcol = green2, border = NA, add = TRUE, plot = TRUE)
-
-for (i in 1:h){
-  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
-  lines(f4.l, lwd=1, col=green6)
-}
-f4.l1 = trans3d(x=point.infexp.f, y=yy, z=0, pmat=f4)
-lines(f4.l1, lwd=1.5, col=green1)
-
+threed.basic.graph = threed.graph(Y.h = Y.h)
 ```
 
 
@@ -1406,35 +1425,39 @@ lines(f4.l1, lwd=1.5, col=green1)
 #| warning: false
 #| fig-cap: "Figure 7 2D forecasting graph on basic model"
 
-point.lcpi.f         = apply(Y.h[,1,],1,mean)
-interval.lcpi.f      = apply(Y.h[,1,],1,hdi,credMass=0.90)
-lcpi.range           = range(y[,1],interval.lcpi.f)
+twod.graph = function(Y.h){
 
-point.infexp.f       = apply(Y.h[,2,],1,mean)
-interval.infexp.f    = apply(Y.h[,2,],1,hdi,credMass=0.90)
-infexp.range         = range(y[,2],interval.infexp.f)
+  point.lcpi.f         = apply(Y.h[,1,],1,mean)
+  interval.lcpi.f      = apply(Y.h[,1,],1,hdi,credMass=0.90)
+  lcpi.range           = range(y[,1],interval.lcpi.f)
+  
+  point.infexp.f       = apply(Y.h[,2,],1,mean)
+  interval.infexp.f    = apply(Y.h[,2,],1,hdi,credMass=0.90)
+  infexp.range         = range(y[,2],interval.infexp.f)
+  
+  par(mfcol = c(2,1), mar=c(2,2,2,2)-0.1)
+  plot(1:(length(y[,1])+h),c(y[,1],point.lcpi.f), type="l", ylim=c(3.9, 5.1), axes=FALSE, xlab="lcpi", ylab="", lwd=2, col=blue1)
+  axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
+  
+  axis(2, at = pretty(lcpi.range), labels = pretty(lcpi.range), col = green1)
+  abline(v=137, col=green1)
+  polygon(c(length(y[,1]):(length(y[,1])+h),(length(y[,1]):(length(y[,1])+h))[9:1]),
+          c(y[137,1],interval.lcpi.f[1,],interval.lcpi.f[2,8:1],y[137,1]),
+          col=blue4.shade1, border=blue4.shade1)
+  
+  plot(1:(length(y[,2])+h),c(y[,2],point.infexp.f), type="l", ylim=c(0,5), axes=FALSE, xlab="infexp", ylab="", lwd=2, col=green6)
+  axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
+  
+  axis(2, at = pretty(infexp.range), labels = pretty(infexp.range), col = green1)
+  
+  abline(v=137, col=green1)
+  polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]),
+          c(y[137,2],interval.infexp.f[1,],interval.infexp.f[2,8:1],y[137,2]),
+          col=green3.shade1, border=green3.shade1)
 
-par(mfcol = c(2,1), mar=c(2,2,2,2)-0.1)
-plot(1:(length(y[,1])+h),c(y[,1],point.lcpi.f), type="l", ylim=c(3.9, 5.1), axes=FALSE, xlab="lcpi", ylab="", lwd=2, col=blue1)
-axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
+}
 
-axis(2, at = pretty(lcpi.range), labels = pretty(lcpi.range), col = green1)
-abline(v=137, col=green1)
-polygon(c(length(y[,1]):(length(y[,1])+h),(length(y[,1]):(length(y[,1])+h))[9:1]),
-        c(y[137,1],interval.lcpi.f[1,],interval.lcpi.f[2,8:1],y[137,1]),
-        col=blue4.shade1, border=blue4.shade1)
-
-plot(1:(length(y[,2])+h),c(y[,2],point.infexp.f), type="l", ylim=c(0,5), axes=FALSE, xlab="infexp", ylab="", lwd=2, col=green6)
-axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
-
-axis(2, at = pretty(infexp.range), labels = pretty(infexp.range), col = green1)
-
-abline(v=137, col=green1)
-polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]),
-        c(y[137,2],interval.infexp.f[1,],interval.infexp.f[2,8:1],y[137,2]),
-        col=green3.shade1, border=green3.shade1)
-
-
+twod.basic.graph = twod.graph(Y.h = Y.h)
 ```
 
 
@@ -1445,28 +1468,35 @@ polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]
 #| warning: false
 # transform cpi into inflation rate, collect with it with infexp and cash rate
 
-## transform cpi into inflation rate
-point.lcpi.h            = ts(apply(Y.h[,1,],1,mean))
 dates = as.Date(c("2024-06-30", "2024-09-30", "2024-12-31",
                    "2025-03-31", "2025-06-30", "2025-09-30", "2025-12-31", "2026-03-31" ))
-point.lcpi.h = xts(point.lcpi.h, order.by = dates)
 
-lcpi.data.h             = c(lcpi_data["/2024-03-31"], point.lcpi.h)
-cpi.data.h              = exp(lcpi.data.h)
+# create data transform function
+data.trans = function(Y.h){
+  ## transform cpi into inflation rate
+  point.lcpi.h            = ts(apply(Y.h[,1,],1,mean))
+  point.lcpi.h = xts(point.lcpi.h, order.by = dates)
+  
+  lcpi.data.h             = c(lcpi_data["/2024-03-31"], point.lcpi.h)
+  cpi.data.h              = exp(lcpi.data.h)
+  
+  cpi.lag4.h = lag(cpi.data.h, 4)
+  inf.data.h = ((cpi.data.h / cpi.lag4.h)-1)*100
+  inf.data.h = na.omit(inf.data.h)
+  
+  ## inflation expectation
+  
+  point.infexp.h            = ts(round(apply(Y.h[,2,],1,mean),6))
+  point.infexp.h            = xts(point.infexp.h, order.by = dates)
+  infexp.data.h             = c(infexp_data["/2024-03-31"], point.infexp.h )
+  
+  key_data.h           = na.omit(merge(inf.data.h, infexp.data.h))
+  colnames(key_data.h) = c("inf_data.h", "infexp_data.h")
+  
+  return(key_data.h)
+}
 
-cpi.lag4.h = lag(cpi.data.h, 4)
-inf.data.h = ((cpi.data.h / cpi.lag4.h)-1)*100
-inf.data.h = na.omit(inf.data.h)
-
-## inflation expectation
-
-point.infexp.h            = ts(round(apply(Y.h[,2,],1,mean),6))
-point.infexp.h            = xts(point.infexp.h, order.by = dates)
-infexp.data.h             = c(infexp_data["/2024-03-31"], point.infexp.h )
-
-key_data.h           = na.omit(merge(inf.data.h, infexp.data.h))
-colnames(key_data.h) = c("inf_data.h", "infexp_data.h")
-
+key.data.h = data.trans(Y.h = Y.h)
 ```
 
 After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 8), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
@@ -1477,31 +1507,35 @@ After an in-depth examination of key variables and converting the log CPI to CPI
 #| warning: false
 #| fig-cap: "Figure 8 Basic Model key data plot"
 
-num.h      = nrow(key_data.h)
-num        = num.h-h
-data_df    = fortify.zoo(key_data.h)
+key.data.plot = function(key.data.h)
+{
+  num.h      = nrow(key.data.h)
+  num        = num.h-h
+  data_df    = fortify.zoo(key.data.h)
+  
+  par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
+  
+  plot(data_df$Index, data_df$inf_data.h, type = "l", col = blue1,
+       xlab = "Date", ylab = "Rate (%)", ylim = c(0, 11))
+  
+  rect(xleft = min(data_df$Index), xright = max(data_df$Index),
+       ybottom = 2, ytop = 3, col = green5, border = NA)  
+  
+  lines(data_df$Index[1:num], data_df$inf_data.h[1:num], col = blue1)
+  lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = green2)
+  
+  lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = blue4)
+  lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
+  
+  abline(v = data_df$Index[139], col = green1, lty = 2) 
+  abline(h = 0, col = green1, lty = 1) 
+  
+  legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2024-03-31"),
+         col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
+  # title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Model")
+}
 
-par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
-
-plot(data_df$Index, data_df$inf_data.h, type = "l", col = blue1,
-     xlab = "Date", ylab = "Rate (%)", ylim = c(0, 11))
-
-rect(xleft = min(data_df$Index), xright = max(data_df$Index),
-     ybottom = 2, ytop = 3, col = green5, border = NA)  
-
-lines(data_df$Index[1:num], data_df$inf_data.h[1:num], col = blue1)
-lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = green2)
-
-lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = blue4)
-lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
-
-abline(v = data_df$Index[139], col = green1, lty = 2) 
-abline(h = 0, col = green1, lty = 1) 
-
-legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2024-03-31"),
-       col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
-# title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Model")
-
+key.data.basic.graph = key.data.plot(key.data.h = key.data.h)
 ```
 
 
@@ -1544,19 +1578,12 @@ N                 = ncol(Y)
 Y.h.ext           = array(NA,c(h,N,S))
 p                 = 4
 
+
 # sampling predictive density
-for (s in 1:S){
-  A.posterior.draw         = A.posterior.ext.simu[,,s]
-  Sigma.posterior.draw     = Sigma.posterior.ext.simu[,,s]
-    x.Ti                   = Y[(nrow(Y)-p+1):nrow(Y),]
-    x.Ti                   = x.Ti[p:1,]
-  for (i in 1:h){
-    x.T                    = c(1,as.vector(t(x.Ti)))
-    Y.f                    = rmvnorm(1, mean = x.T%*%A.posterior.draw, sigma=Sigma.posterior.draw)
-      x.Ti                 = rbind(Y.f,x.Ti[1:(p-1),])
-    Y.h.ext[i,,s]          = Y.f[1:N]
-  }
-}
+
+Y.h.ext       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.ext.simu,
+                                                Sigma.posterior.simu = Sigma.posterior.ext.simu,
+                                                S = S) 
 ```
 
 Figure 9 and 10 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.
@@ -1567,77 +1594,7 @@ Figure 9 and 10 presents a 3D and 2D visualization of the density intervals for 
 #| warning: false
 #| fig-cap: "Figure 9 3d forecasting graph on extension model"
 
-par(mfcol = c(1, 2), mar=c(2,2,2,2)-0.1)
-
-# Log CPI forecasting 
-limits.lcpi.ext      = range(Y.h.ext[,1,])
-point.lcpi.f.ext     = apply(Y.h.ext[,1,],1,mean)
-
-interval.lcpi.f.ext  = apply(Y.h.ext[,1,],1,hdi,credMass=0.90)
-
-x                = seq(from=limits.lcpi.ext[1], to=limits.lcpi.ext[2], length.out=100)
-z                = matrix(NA,h,99)
-for (i in 1:h){
-  z[i,]          = hist(Y.h.ext[i,1,], breaks=x, plot=FALSE)$density
-}
-x                = hist(Y.h.ext[i,1,], breaks=x, plot=FALSE)$mids
-yy               = 1:h
-z                = t(z)
-
-f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
-                           xlab="\ncpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi",
-                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
-                           col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
-          xlab="\nlog.cpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi", 
-          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
-
-polygon3D(x=c(interval.lcpi.f.ext[1,],interval.lcpi.f.ext[2,h:1]), 
-          y=c(1:h,h:1), 
-          z=rep(0,2*h), 
-          col = blue2, NAcol = blue5, border = NA, add = TRUE, plot = TRUE)
-
-for (i in 1:h){
-  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
-  lines(f4.l, lwd=1, col=blue3)
-}
-f4.l1 = trans3d(x=point.lcpi.f.ext, y=yy, z=0, pmat=f4)
-lines(f4.l1, lwd=1.5, col=green1)
-
-# Expected inflation rate forecasting 
-limits.infexp.ext      = range(Y.h.ext[,2,])
-point.infexp.f.ext     = apply(Y.h.ext[,2,],1,mean)
-
-interval.infexp.f.ext  = apply(Y.h.ext[,2,],1,hdi,credMass=0.90)
-
-x                = seq(from=limits.infexp.ext[1], to=limits.infexp.ext[2], length.out=100)
-z                = matrix(NA,h,99)
-for (i in 1:h){
-  z[i,]          = hist(Y.h.ext[i,2,], breaks=x, plot=FALSE)$density
-}
-x                = hist(Y.h.ext[i,2,], breaks=x, plot=FALSE)$mids
-yy               = 1:h
-z                = t(z)
-
-f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
-                           xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp",
-                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
-                           col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
-          xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp", 
-          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
-
-polygon3D(x=c(interval.infexp.f.ext[1,],interval.infexp.f.ext[2,h:1]), 
-          y=c(1:h,h:1), 
-          z=rep(0,2*h), 
-          col = green5, NAcol = green2, border = NA, add = TRUE, plot = TRUE)
-
-for (i in 1:h){
-  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
-  lines(f4.l, lwd=1, col=green6)
-}
-f4.l1 = trans3d(x=point.infexp.f.ext, y=yy, z=0, pmat=f4)
-lines(f4.l1, lwd=1.5, col=green1)
+threed.ext.graph = threed.graph(Y.h = Y.h.ext)
 ```
 
 
@@ -1648,33 +1605,7 @@ lines(f4.l1, lwd=1.5, col=green1)
 #| warning: false
 #| fig-cap: "Figure 10 2d forecasting graph on extension model"
 
-point.lcpi.f.ext    = apply(Y.h.ext[,1,],1,mean)
-interval.lcpi.f.ext = apply(Y.h.ext[,1,],1,hdi,credMass=0.90)
-lcpi.range.ext      = range(y[,1],interval.lcpi.f.ext)
-
-point.infexp.f.ext       = apply(Y.h.ext[,2,],1,mean)
-interval.infexp.f.ext    = apply(Y.h.ext[,2,],1,hdi,credMass=0.90)
-infexp.range.ext        = range(y[,2],interval.infexp.f.ext)
-
-par(mfcol = c(2,1), mar=c(2,2,2,2)-0.1)
-
-plot(1:(length(y[,1])+h),c(y[,1],point.lcpi.f.ext), type="l", ylim=c(3.9, 5.1), axes=FALSE, xlab="lcpi", ylab="", lwd=2, col=blue1)
-axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
-axis(2, at = pretty(lcpi.range.ext), labels = pretty(lcpi.range.ext), col = green1)
-abline(v=137, col=green1)
-polygon(c(length(y[,1]):(length(y[,1])+h),(length(y[,1]):(length(y[,1])+h))[9:1]),
-        c(y[137,1],interval.lcpi.f.ext[1,],interval.lcpi.f.ext[2,8:1],y[137,1]),
-        col=blue4.shade1, border=blue4.shade1)
-
-plot(1:(length(y[,2])+h),c(y[,2],point.infexp.f.ext), type="l", ylim=c(0,5), axes=FALSE, xlab="infexp", ylab="", lwd=2, col=green6)
-axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
-axis(2, at = pretty(infexp.range.ext), labels = pretty(infexp.range.ext), col = green1)
-
-abline(v=137, col=green1)
-polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]),
-        c(y[137,2],interval.infexp.f.ext[1,],interval.infexp.f.ext[2,8:1],y[137,2]),
-        col=green3.shade1, border=green3.shade1)
-
+twod.ext.graph = twod.graph(Y.h = Y.h.ext)
 
 ```
 
@@ -1687,26 +1618,7 @@ polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]
 
 # transform cpi into inflation rate, collect with it with infexp and cash rate
 
-## transform cpi into inflation rate
-point.lcpi.h.ext            = ts(apply(Y.h.ext[,1,],1,mean))
-point.lcpi.h.ext            = xts(point.lcpi.h.ext, order.by = dates)
-
-
-lcpi.data.h.ext             = c(lcpi_data["/2024-03-31"], point.lcpi.h.ext)
-cpi.data.h.ext              = exp(lcpi.data.h.ext)
-cpi.lag4.h.ext              = lag(cpi.data.h.ext , 4)
-inf.data.h.ext              = ((cpi.data.h.ext/cpi.lag4.h.ext)-1)*100
-inf.data.h.ext              = na.omit(inf.data.h.ext)
-
-
-## inflation expectation
-
-point.infexp.h.ext          = ts(round(apply(Y.h.ext[,2,],1,mean),6))
-point.infexp.h.ext          = xts(point.infexp.h.ext , order.by = dates)
-infexp.data.h.ext           = c(infexp_data["/2024-03-31"], point.infexp.h.ext  )
-
-key_data.h.ext              = na.omit(merge(inf.data.h.ext, infexp.data.h.ext))
-colnames(key_data.h.ext)    = c("inf_data.h", "infexp_data.h")
+key.data.h.ext = data.trans(Y.h = Y.h.ext)
 
 ```
 
@@ -1718,31 +1630,7 @@ For the analysis of key data, we can see that the extension model presents a mor
 #| warning: false
 #| fig-cap: "Figure 11 Extend Model key data plot"
 
-num.h      = nrow(key_data.h.ext)
-num        = num.h-h
-data_df    = fortify.zoo(key_data.h.ext)
-
-par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
-
-plot(data_df$Index, data_df$inf_data.h, type = "l", col = blue1,
-     xlab = "Date", ylab = "Rate (%)", ylim = c(-1, 11))
-
-rect(xleft = min(data_df$Index), xright = max(data_df$Index),
-     ybottom = 2, ytop = 3, col = green5, border = NA)  
-
-lines(data_df$Index[1:num], data_df$inf_data.h[1:num], col = blue1)
-lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = green2)
-
-lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = blue4)
-lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
-
-abline(v = data_df$Index[139], col = green1, lty = 2) 
-abline(h = 0, col = green1, lty = 1) 
-
-legend("topleft", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2024-03-31"),
-       col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
-# title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Extend Model")
-
+key.data.ext.graph = key.data.plot(key.data.h.ext)
 ```
 
 
@@ -1805,33 +1693,25 @@ colors <- c(color[1], color[2], color[3], color[4])
 par(mfcol = c(2, 2), mar = c(2, 2, 2, 2))
 
 for (i in 1:4) {
-  k     = lambda.priors$k[i]
-  theta = lambda.priors$theta[i]
-  color = colors[i]
+  k                        = lambda.priors$k[i]
+  theta                    = lambda.priors$theta[i]
+  color                    = colors[i]
 
-  posterior.extend.draws <- posterior.draws.exten(total_S = S1 + S2, Y = Y, X = X)
-  A.posterior.ext.simu <- posterior.extend.draws[["A.posterior.exten"]]
-  Sigma.posterior.ext.simu <- posterior.extend.draws[["Sigma.posterior.exten"]]
+  posterior.extend.draws.  = posterior.draws.exten(total_S = S1 + S2, Y = Y, X = X)
+  A.posterior.ext.simu     = posterior.extend.draws[["A.posterior.exten"]]
+  Sigma.posterior.ext.simu = posterior.extend.draws[["Sigma.posterior.exten"]]
 
-  Y.h.ext <- array(NA, c(h, N, S))
+  Y.h.ext                  = array(NA, c(h, N, S))
 
-  for (s in 1:S) {
-    A.posterior.draw <- A.posterior.ext.simu[,,s]
-    Sigma.posterior.draw <- Sigma.posterior.ext.simu[,,s]
-    x.Ti <- Y[(nrow(Y) - p + 1):nrow(Y),]
-    x.Ti <- x.Ti[p:1,]
-    for (i in 1:h) {
-      x.T <- c(1, as.vector(t(x.Ti)))
-      Y.f <- rmvnorm(1, mean = x.T %*% A.posterior.draw, sigma = Sigma.posterior.draw)
-      x.Ti <- rbind(Y.f, x.Ti[1:(p - 1),])
-      Y.h.ext[i,,s] <- Y.f[1:N]
-    }
-  }
+  Y.h.ext                  = sampling.predictive.density.fun(
+    A.posterior.simu = A.posterior.simu,
+    Sigma.posterior.simu = Sigma.posterior.simu,
+    S = S) 
 
-  limits.lcpi.ext <- range(Y.h.ext[,1,])
-  point.lcpi.f.ext <- apply(Y.h.ext[,1,], 1, mean)
+  limits.lcpi.ext         = range(Y.h.ext[,1,])
+  point.lcpi.f.ext        = apply(Y.h.ext[,1,], 1, mean)
 
-  interval.lcpi.f.ext <- apply(Y.h.ext[,1,], 1, hdi, credMass = 0.90)
+  interval.lcpi.f.ext     = apply(Y.h.ext[,1,], 1, hdi, credMass = 0.90)
 
   x <- seq(from = limits.lcpi.ext[1], to = limits.lcpi.ext[2], length.out = 100)
   z <- matrix(NA, h, 99)
@@ -1871,7 +1751,7 @@ The predictive density distribution remains stable despite changes in the prior 
 
 ## Stochastic Volatility Conditional Heteroskedasticity
 
-Until now, we acknowledge that our model has not achieved the most optimal results. Our modeling approach has operated under the assumption of homoscedasticity. However, real-world events, such as the 2008 financial crisis and the 2020 COVID-19 pandemic, have demonstrated the significant and often abrupt fluctuations in the economy and financial markets. These events underscore the necessity of incorporating heteroscedasticity into our model to more accurately reflect the variable nature of economic conditions and market volatility.
+Until now, we acknowledge that our model has not achieved the most optimal results. Our modeling approach has operated under the assumption of homoscedasticity. However, in real-world, such as the 2008 financial crisis and the 2020 COVID-19 pandemic, have demonstrated the significant and often abrupt fluctuations in the economy and financial markets. These events underscore the necessity of incorporating heteroscedasticity into our model to more accurately reflect the variable nature of economic conditions and market volatility.
 
 ### Basic Model with Heteroskedasticity
 
@@ -1992,7 +1872,7 @@ $$
 #| warning: false
 
 # Posterior sample draw function for heteroskedasticity on basic 
-posterior.draws.hetero = function (total_S, Y, X){
+posterior.draws.hetero = function (S, Y, X){
   
   ## Pre-setup 
      
@@ -2027,13 +1907,13 @@ posterior.draws.hetero = function (total_S, Y, X){
 
   # Define posterior
   posteriors    = list(                        
-    H           = matrix(NA,T,total_S),
-    sigma2      = matrix(NA,T,total_S),
-    s           = matrix(NA,T,total_S),
-    h0          = rep(NA,total_S),
-    sigma.v2    = rep(NA,total_S),
-    A           = array(NA, c((1 + N * p), N, total_S)),
-    Sigma       = array(NA, c(N, N, total_S))
+    H           = matrix(NA,T,S),
+    sigma2      = matrix(NA,T,S),
+    s           = matrix(NA,T,S),
+    h0          = rep(NA,S),
+    sigma.v2    = rep(NA,S),
+    A           = array(NA, c((1 + N * p), N, S)),
+    Sigma       = array(NA, c(N, N, S))
   )
   
   # Define auxiliary
@@ -2049,15 +1929,16 @@ posterior.draws.hetero = function (total_S, Y, X){
     sigma2   = matrix(1, T, 1)
   )
   
-  for (s in 1:total_S){
+  for (s in 1:S){
       # normal-inverse Wishard posterior 
       V.bar.inv              = t(aux$X)%*%diag(1/as.vector(aux$sigma2))%*%aux$X + diag(1/ diag(V.prior))
       V.bar                  = solve(V.bar.inv)
-      A.bar                  = V.bar%*%(t(aux$X)%*%diag(1/as.vector(aux$sigma2))%*%aux$Y + diag(1/diag( V.prior))%*%A.prior)
+      A.bar                  = V.bar%*%(t(aux$X)%*%diag(1/as.vector(aux$sigma2))%*%aux$Y + diag(1/diag( V.prior))%*%A.prior) 
       nu.bar                 = T + nu.prior
-      S.bar                  = S.prior + t(aux$Y)%*%diag(1/as.vector(aux$sigma2))%*%aux$Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar
+      S.bar                  = S.prior + t(aux$Y)%*%diag(1/as.vector(aux$sigma2))%*%aux$Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar 
 
       S.bar.inv              = solve(S.bar)
+      S.bar.inv              = 0.5 * (t(S.bar.inv) + S.bar.inv) # positive-definite
     
       # posterior draws for A and Sigma
       Sigma.posterior.IW     = rWishart(1, df=nu.bar, Sigma=S.bar.inv)
@@ -2137,14 +2018,13 @@ posterior.draws.hetero = function (total_S, Y, X){
 #| warning: false
 
 # Setup 
-S1                     = 500             # determine the burn-in draws
-S2                     = 4500             # number of draws from the final simulation
-total_S                = S1+S2
+
+S                      = 5000
 kappa.1                = 1               # shrinkage for A1 to Ap
 kappa.2                = 100             # shrinkage for constant 
 
 ## Function Applying
-posterior.hetero = posterior.draws.hetero(total_S = total_S, Y = Y, X = X) 
+posterior.hetero       = posterior.draws.hetero(S = S, Y = Y, X = X) 
 
 A.posterior.simu       = posterior.hetero[["A"]]
 Sigma.posterior.simu   = posterior.hetero[["Sigma"]]
@@ -2158,24 +2038,14 @@ Sigma.posterior.simu   = posterior.hetero[["Sigma"]]
 ## Two-year ahead forecasting h = 8 and with p = 4
 
 # set up
-h                      = 8
-N                      = ncol(Y) 
-Y.h                    = array(NA,c(h,N,total_S))
-p                      = 4
+h         = 8
+N         = ncol(Y) 
+Y.h       = array(NA,c(h,N,S))
+p         = 4
 
-# sampling predictive density
-for (s in 1:total_S){
-  A.posterior.draw     = A.posterior.simu[,,s]
-  Sigma.posterior.draw = Sigma.posterior.simu[,,s]
-    x.Ti               = Y[(nrow(Y)-p+1):nrow(Y),]
-    x.Ti               = x.Ti[p:1,]
-  for (i in 1:h){
-    x.T                = c(1,as.vector(t(x.Ti)))
-    Y.f                = rmvnorm(1, mean = x.T%*%A.posterior.draw, sigma=Sigma.posterior.draw)
-      x.Ti             = rbind(Y.f,x.Ti[1:(p-1),])
-    Y.h[i,,s]          = Y.f[1:N]
-  }
-}
+Y.h       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.simu,
+                                                Sigma.posterior.simu = Sigma.posterior.simu,
+                                                S = S) 
 
 ```
 
@@ -2185,112 +2055,19 @@ for (s in 1:total_S){
 #| warning: false
 #| fig-cap: "Figure 14 3D forecasting graph on basic model with heteroskedasticity"
 
-par(mfcol = c(1, 2), mar=c(2,2,2,2)-0.1)
-
-# Log CPI forecasting 
-limits.lcpi      = range(Y.h[,1,])
-point.lcpi.f     = apply(Y.h[,1,],1,mean)
-interval.lcpi.f  = apply(Y.h[,1,],1,hdi,credMass=0.90)
-
-x                = seq(from=limits.lcpi[1], to=limits.lcpi[2], length.out=100)
-z                = matrix(NA,h,99)
-for (i in 1:h){
-  z[i,]          = hist(Y.h[i,1,], breaks=x, plot=FALSE)$density
-}
-x                = hist(Y.h[i,1,], breaks=x, plot=FALSE)$mids
-yy               = 1:h
-z                = t(z)
-
-f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
-                           xlab="\ncpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi",
-                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
-                           col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
-          xlab="\nlog.cpi[t+h|t]", ylab="h", zlab="\npredictive densities of cpi", 
-          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
-
-polygon3D(x=c(interval.lcpi.f[1,],interval.lcpi.f[2,h:1]), 
-          y=c(1:h,h:1), 
-          z=rep(0,2*h), 
-          col = blue2, NAcol = blue5, border = NA, add = TRUE, plot = TRUE)
-
-for (i in 1:h){
-  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
-  lines(f4.l, lwd=1, col=blue3)
-}
-f4.l1 = trans3d(x=point.lcpi.f, y=yy, z=0, pmat=f4)
-lines(f4.l1, lwd=1.5, col=green1)
-
-# Expected inflation rate forecasting 
-limits.infexp      = range(Y.h[,2,])
-point.infexp.f     = apply(Y.h[,2,],1,mean)
-
-interval.infexp.f  = apply(Y.h[,2,],1,hdi,credMass=0.90)
-
-x                = seq(from=limits.infexp[1], to=limits.infexp[2], length.out=100)
-z                = matrix(NA,h,99)
-for (i in 1:h){
-  z[i,]          = hist(Y.h[i,2,], breaks=x, plot=FALSE)$density
-}
-x                = hist(Y.h[i,2,], breaks=x, plot=FALSE)$mids
-yy               = 1:h
-z                = t(z)
-
-f4               = persp3D(x=x, y=yy, z=z, phi=15.5, theta=180, 
-                           xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp",
-                           shade=NA, border=NA, ticktype="detailed", nticks=3,cex.lab=1,
-                           col=NA,plot=FALSE)
-perspbox (x=x, y=yy, z=z, bty="f", col.axis="black", phi=15.5, theta=180, 
-          xlab="\ninfexp[t+h|t]", ylab="h", zlab="\npredictive densities of infexp", 
-          ticktype="detailed", nticks=3,cex.lab=1, col = NULL, plot = TRUE)
-
-polygon3D(x=c(interval.infexp.f[1,],interval.infexp.f[2,h:1]), 
-          y=c(1:h,h:1), 
-          z=rep(0,2*h), 
-          col = green5, NAcol = green2, border = NA, add = TRUE, plot = TRUE)
-
-for (i in 1:h){
-  f4.l = trans3d(x=x, y=yy[i], z=z[,i], pmat=f4)
-  lines(f4.l, lwd=1, col=green6)
-}
-f4.l1 = trans3d(x=point.infexp.f, y=yy, z=0, pmat=f4)
-lines(f4.l1, lwd=1.5, col=green1)
+threed.basic.hetero.graph = threed.graph(Y.h = Y.h)
 
 ```
 
 
 
 ```{r 2d forecasting graph on basic model with hetero, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 15 2D forecasting graph on basic model with heteroskedasticity"
 
-# point.lcpi.f         = apply(Y.h[,1,],1,mean)
-# interval.lcpi.f      = apply(Y.h[,1,],1,hdi,credMass=0.90)
-# lcpi.range           = range(y[,1],interval.lcpi.f)
-# 
-# point.infexp.f       = apply(Y.h[,2,],1,mean)
-# interval.infexp.f    = apply(Y.h[,2,],1,hdi,credMass=0.90)
-# infexp.range         = range(y[,2],interval.infexp.f)
-# 
-# par(mfcol = c(2,1), mar=c(2,2,2,2)-0.1)
-# plot(1:(length(y[,1])+h),c(y[,1],point.lcpi.f), type="l", ylim=c(3.9, 5.1), axes=FALSE, xlab="lcpi", ylab="", lwd=2, col=blue1)
-# axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
-# 
-# axis(2, at = pretty(lcpi.range), labels = pretty(lcpi.range), col = green1)
-# abline(v=137, col=green1)
-# polygon(c(length(y[,1]):(length(y[,1])+h),(length(y[,1]):(length(y[,1])+h))[9:1]),
-#         c(y[137,1],interval.lcpi.f[1,],interval.lcpi.f[2,8:1],y[137,1]),
-#         col=blue4.shade1, border=blue4.shade1)
-# 
-# plot(1:(length(y[,2])+h),c(y[,2],point.infexp.f), type="l", ylim=c(0,5), axes=FALSE, xlab="infexp", ylab="", lwd=2, col=green6)
-# axis(1,c(1,41,81,121,nrow(y),nrow(y)+h),c("1990","2000","2010","2020","",""), col=green1)
-# 
-# axis(2, at = pretty(infexp.range), labels = pretty(infexp.range), col = green1)
-# 
-# abline(v=137, col=green1)
-# polygon(c(length(y[,2]):(length(y[,2])+h),(length(y[,2]):(length(y[,2])+h))[9:1]),
-#         c(y[137,2],interval.infexp.f[1,],interval.infexp.f[2,8:1],y[137,2]),
-#         col=green3.shade1, border=green3.shade1)
-
-
+# twod.basic.hetero.graph = twod.graph(Y.h = Y.h)
 ```
 
 ```{r Basic Model with hetero forecast data transform, fig.align='center',fig.pos='H'}
@@ -2300,28 +2077,7 @@ lines(f4.l1, lwd=1.5, col=green1)
 
 # transform cpi into inflation rate, collect with it with infexp and cash rate
 
-## transform cpi into inflation rate
-point.lcpi.h            = ts(apply(Y.h[,1,],1,mean))
-dates = as.Date(c("2024-06-30", "2024-09-30", "2024-12-31",
-                   "2025-03-31", "2025-06-30", "2025-09-30", "2025-12-31", "2026-03-31" ))
-point.lcpi.h = xts(point.lcpi.h, order.by = dates)
-
-lcpi.data.h             = c(lcpi_data["/2024-03-31"], point.lcpi.h)
-cpi.data.h              = exp(lcpi.data.h)
-
-cpi.lag4.h = lag(cpi.data.h, 4)
-inf.data.h = ((cpi.data.h / cpi.lag4.h)-1)*100
-inf.data.h = na.omit(inf.data.h)
-
-## inflation expectation
-
-point.infexp.h            = ts(round(apply(Y.h[,2,],1,mean),6))
-point.infexp.h            = xts(point.infexp.h, order.by = dates)
-infexp.data.h             = c(infexp_data["/2024-03-31"], point.infexp.h )
-
-key_data.h           = na.omit(merge(inf.data.h, infexp.data.h))
-colnames(key_data.h) = c("inf_data.h", "infexp_data.h")
-
+key.data.h = data.trans(Y.h = Y.h)
 ```
 
 ```{r Basic Model with hetero Key Data Plot, fig.align='center',fig.pos='H'}
@@ -2330,34 +2086,7 @@ colnames(key_data.h) = c("inf_data.h", "infexp_data.h")
 #| warning: false
 #| fig-cap: "Figure 15 Basic Model with heteroskedasticity key data plot"
 
-num.h      = nrow(key_data.h)
-num        = num.h-h
-data_df    = fortify.zoo(key_data.h)
-
-# Ensure the columns are vectors
-data_df$inf_data.h <- as.vector(data_df$inf_data.h)
-data_df$infexp_data.h <- as.vector(data_df$infexp_data.h)
-
-par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
-
-plot(data_df$Index, data_df$inf_data.h, type = "l", col = blue1,
-     xlab = "Date", ylab = "Rate (%)", ylim = c(0, 11))
-
-rect(xleft = min(data_df$Index), xright = max(data_df$Index),
-     ybottom = 2, ytop = 3, col = green5, border = NA)  
-
-lines(data_df$Index[1:num], data_df$inf_data.h[1:num], col = blue1)
-lines(data_df$Index[1:num], data_df$infexp_data.h[1:num], col = green2)
-
-lines(data_df$Index[num:length(data_df$Index)], data_df$inf_data.h[num:length(data_df$Index)], col = blue4)
-lines(data_df$Index[num:length(data_df$Index)], data_df$infexp_data.h[num:length(data_df$Index)], col = green3)
-
-abline(v = data_df$Index[139], col = green1, lty = 2) 
-abline(h = 0, col = green1, lty = 1) 
-
-legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate", "Inflation Rate Forecast", "Expected Inflation Rate Forecast", "2024-03-31"),
-       col = c(blue1, green2, blue4, green3, green1), lty = 1, cex = 0.6)
-# title(main = "Inflation Rate vs Expected Inflation Rate Forecasing by Basic Model with heteroskedasticity")
+key.data.basic.hetero.graph = key.data.plot(key.data.h = key.data.h)
 
 ```
 

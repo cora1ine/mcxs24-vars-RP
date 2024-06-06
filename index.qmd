@@ -283,7 +283,7 @@ colnames(all_data)   = c("cpi_data",    "infexp_data",
                          "aord_data",   "exr_data")
 ```
 
-Following Figure shows the correlation between CPI and other variables.
+Following Figure 1 shows the correlation between CPI and other variables.
 
 Despite the low direct correlation between inflation expectations and CPI, inflation expectations may more closely reflect concerns about core inflation, which excludes volatile items like food and energy, whereas the CPI includes all items. If the trends between core inflation and overall inflation differ, this discrepancy can reduce the correlation between inflation expectations and the CPI. However, inflation expectations provide additional insight into how future economic conditions are perceived by consumers, businesses, and investors. This forward-looking perspective is important as it might influence economic decisions that are not immediately apparent through current CPI data.
 
@@ -316,6 +316,7 @@ corrplot(cor_matrix, method = "color",
          cl.ratio = 0.1
 )
 ```
+
 
 In summary, the dataset included data from 1990Q2 to 2024Q1, total 137 observation points with 10 variables.
 
@@ -394,8 +395,6 @@ for (i in 1:10){
   title(main = paste(colnames(all_data)[i]), line = 0.5)
 }
 ```
-
-
 
 Considering the selection of the order of single-order integration, the unit root test (ADF test) is used and the p value is used to determine its significance. A small p-value means the null hypothesis is rejected (non-stationary).
 
@@ -496,8 +495,6 @@ kable(Unit_Root_Test_table, align = "c") %>%
 
 ```
 
-
-
 Consider that differencing might eliminate some of the long-term information (like trends) within the data, and considering the Minnesota prior method can be effective with nonstationary data, we have opted apply not differencing to any of the data sets.
 
 ```{r Diff Data, fig.align='center',fig.pos='H'}
@@ -525,8 +522,6 @@ for (i in 1:10) {
           ylab = "", xlab = "", col = green3)
 }
 ```
-
-
 
 ### Importance of Key Variables Analysis
 
@@ -574,8 +569,6 @@ legend("topright", legend = c("Inflation Rate", "Expected Inflation Rate"),
 title(main = "Inflation Rate vs Expected Inflation Rate")
 
 ```
-
-
 
 ## Model and Hypothesis
 
@@ -885,7 +878,7 @@ After estimating a model that includes a constant term and one lag using artific
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Table 2 Basic Model proofing simulation for A"
+#| tbl-cap: "Table 2 Basic Model proofing simulation for A"
 
 basic.model.proof.A <- 
   tibble( "A" = c("Constant term", "Y1 lag","Y2 lag"),
@@ -910,15 +903,13 @@ kable(basic.model.proof.A, align = "c") %>%
 
 ```
 
-
-
 -   The posterior mean of the $\Sigma$ is:
 
 ```{r Basic Model Proof Sigma, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Table 3 Basic Model proofing simulation for Sigma"
+#| tbl-cap: "Table 3 Basic Model proofing simulation for Sigma"
 
 basic.model.proof.Sigma <-
   tibble( "Sigma" = c("Y1 lag","Y2 lag"),
@@ -940,8 +931,6 @@ kable(basic.model.proof.Sigma, align = "c") %>%
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 
 ```
-
-
 
 ### Model Extension
 
@@ -1199,7 +1188,8 @@ After fitting a model that includes a constant term and one lag with artificial 
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Table 4 Extend Model proofing simulation for A"
+#| tbl-cap: "Table 4 Extend Model proofing simulation for A"
+
 extend.model.proof.A <-
   tibble( "A" = c("Constant term", "Y1 lag","Y2 lag"),
           "Simulation Parameter Y1" 
@@ -1222,15 +1212,13 @@ kable(extend.model.proof.A, align = "c") %>%
 
 ```
 
-
-
 -   The posterior mean of the $\Sigma$ is:
 
 ```{r Extend Model Proof Sigma, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Table 5 Extend Model proofing simulation for Sigma"
+#| tbl-cap: "Table 5 Extend Model proofing simulation for Sigma"
 
 extend.model.proof.Sigma <-
   tibble( "Sigma" = c("Y1 lag","Y2 lag"),
@@ -1251,8 +1239,6 @@ kable(extend.model.proof.Sigma, align = "c") %>%
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 
 ```
-
-
 
 ## Empirical Analysis - Model Applying and Forecasing
 
@@ -1300,8 +1286,6 @@ h                      = 8
 N                      = ncol(Y) 
 Y.h                    = array(NA,c(h,N,S))
 p                      = 4
-
-
 
 # create sampling predictive density function 
 sampling.predictive.density.fun = function(A.posterior.simu, Sigma.posterior.simu, S = S) 
@@ -1417,8 +1401,6 @@ threed.graph = function(Y.h){
 threed.basic.graph = threed.graph(Y.h = Y.h)
 ```
 
-
-
 ```{r 2d forecasting graph on basic model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1459,8 +1441,6 @@ twod.graph = function(Y.h){
 
 twod.basic.graph = twod.graph(Y.h = Y.h)
 ```
-
-
 
 ```{r Basic Model forecast data transform, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1538,8 +1518,6 @@ key.data.plot = function(key.data.h)
 key.data.basic.graph = key.data.plot(key.data.h = key.data.h)
 ```
 
-
-
 ### Extension Model
 
 ```{r Extension Function Applying, fig.align='center',fig.pos='H'}
@@ -1597,8 +1575,6 @@ Figure 9 and 10 presents a 3D and 2D visualization of the density intervals for 
 threed.ext.graph = threed.graph(Y.h = Y.h.ext)
 ```
 
-
-
 ```{r 2d forecasting graph on extension model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1608,8 +1584,6 @@ threed.ext.graph = threed.graph(Y.h = Y.h.ext)
 twod.ext.graph = twod.graph(Y.h = Y.h.ext)
 
 ```
-
-
 
 ```{r Extend Model forecast data transform, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1632,8 +1606,6 @@ For the analysis of key data, we can see that the extension model presents a mor
 
 key.data.ext.graph = key.data.plot(key.data.h.ext)
 ```
-
-
 
 Until here, we realized that the extended model is more radical, and we decided to rethink the prior settings in the extended model and compare: In the extended model, consider the coefficient $\lambda$(follow gamma distribution.)
 
@@ -1668,8 +1640,6 @@ ggplot(lambda, aes(x = x, y = y, color = interaction(k, theta))) +
 color = scales::hue_pal()(4)
 
 ```
-
-
 
 For the Gamma distribution with parameters $(k,θ)=(1,0.1)$ (red line), the density is highly concentrated near zero, making it very steep. This distribution is ideal for modeling high-frequency, short-duration events such as waiting times or time between failures. Compared to distributions with larger shape or scale parameters, this one lacks support for larger values, indicating most events occur within a very short time frame.
 
@@ -1744,8 +1714,6 @@ for (i in 1:4) {
 }
 
 ```
-
-
 
 The predictive density distribution remains stable despite changes in the prior distribution of the Gamma distribution in lambda, indicating that the predictive values have stabilized in the Gibbs sampler. This suggests that our forecast is robust, and resulting in a stable posterior distribution and predictive outcome. Consequently, the predictive results are primarily driven by the data rather than the prior assumptions.
 
@@ -2059,8 +2027,6 @@ threed.basic.hetero.graph = threed.graph(Y.h = Y.h)
 
 ```
 
-
-
 ```{r 2d forecasting graph on basic model with hetero, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -2089,7 +2055,5 @@ key.data.h = data.trans(Y.h = Y.h)
 key.data.basic.hetero.graph = key.data.plot(key.data.h = key.data.h)
 
 ```
-
-
 
 ## References {.unnumbered}

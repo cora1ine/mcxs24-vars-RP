@@ -1837,7 +1837,7 @@ $$
 Function below is `posterior.draws.hetero`:
 
 ```{r Basic Heteroskedasticity Model, fig.align='center',fig.pos='H'}
-#| echo: true
+#| echo: false
 #| message: false
 #| warning: false
 
@@ -2019,7 +2019,7 @@ Y.h       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.simu,
 
 ```
 
-```{r 3d Forecasting Graph on Basic Model with Hetero, fig.align='center',fig.pos='H'}
+```{r 3d Forecasting Graph on Basic Hetero, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -2127,7 +2127,7 @@ $$
 Function below is `posterior.draws.exten.hetero`:
 
 ```{r Extend Heteroskedasticity Model, fig.align='center',fig.pos='H'}
-#| echo: true
+#| echo: false
 #| message: false
 #| warning: false
 

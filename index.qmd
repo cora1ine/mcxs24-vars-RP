@@ -1314,7 +1314,7 @@ Y.h       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.simu,
 
 Figure 6 and 7 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.
 
-```{r 3d Forecasting Graph on Basic Model, fig.align='center',fig.pos='H'}
+```{r 3d Forecasting Graph on Basic, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1401,7 +1401,7 @@ threed.graph = function(Y.h){
 threed.basic.graph = threed.graph(Y.h = Y.h)
 ```
 
-```{r 2d Forecasting Graph on Basic Model, fig.align='center',fig.pos='H'}
+```{r 2d Forecasting Graph on Basic, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1481,7 +1481,7 @@ key.data.h = data.trans(Y.h = Y.h)
 
 After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 8), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
 
-```{r Basic Model Key Data Plot, fig.align='center',fig.pos='H'}
+```{r Basic Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1566,7 +1566,7 @@ Y.h.ext       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.e
 
 Figure 9 and 10 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.
 
-```{r 3d Forecasting Graph on Extension Model, fig.align='center',fig.pos='H'}
+```{r 3d Forecasting Graph on Extension, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1575,7 +1575,7 @@ Figure 9 and 10 presents a 3D and 2D visualization of the density intervals for 
 threed.ext.graph = threed.graph(Y.h = Y.h.ext)
 ```
 
-```{r 2d Forecasting Graph on Extension Model, fig.align='center',fig.pos='H'}
+```{r 2d Forecasting Graph on Extension, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1609,7 +1609,7 @@ key.data.ext.graph = key.data.plot(key.data.h.ext)
 
 Until here, we realized that the extended model is more radical, and we decided to rethink the prior settings in the extended model and compare: In the extended model, consider the coefficient $\lambda$(follow gamma distribution.)
 
-```{r Gamma Dist, fig.align='center',fig.pos='H'}
+```{r Gamma dist, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1643,7 +1643,7 @@ color = scales::hue_pal()(4)
 
 For the Gamma distribution with parameters $(k,θ)=(1,0.1)$ (red line), the density is highly concentrated near zero, making it very steep. This distribution is ideal for modeling high-frequency, short-duration events such as waiting times or time between failures. Compared to distributions with larger shape or scale parameters, this one lacks support for larger values, indicating most events occur within a very short time frame.
 
-```{r Prior Test, fig.align='center',fig.pos='H'}
+```{r Prior test, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
@@ -1837,7 +1837,7 @@ $$
 Function below is `posterior.draws.hetero`:
 
 ```{r Basic Heteroskedasticity Model, fig.align='center',fig.pos='H'}
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
@@ -2127,7 +2127,7 @@ $$
 Function below is `posterior.draws.exten.hetero`:
 
 ```{r Extend Heteroskedasticity Model, fig.align='center',fig.pos='H'}
-#| echo: false
+#| echo: true
 #| message: false
 #| warning: false
 
@@ -2280,7 +2280,6 @@ posterior.draws.exten.hetero = function (total_S, Y, X){
       posteriors$A[,,s]            = aux$A
       posteriors$Sigma[,,s]        = aux$Sigma
       posteriors$lambda[s]        = aux$lambda[s]
-      
       
   }
         

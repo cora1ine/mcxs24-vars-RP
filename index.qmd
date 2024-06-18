@@ -13,7 +13,7 @@ execute:
 bibliography: references.bib
 ---
 
-> **Abstract.** The purpose of this research is to explore the trend in Australia's inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model.
+> **Abstract.** The purpose of this research is to explore the trend in Australia's inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model. This study aims to provide a comprehensive analysis of inflation dynamics using advanced econometric techniques to forecast future trends. By applying the BVAR model, which incorporates both Bayesian statistical methods and vector auto-regression, evaluates various specifications of the BVAR model, including different priors and assumptions about the volatility of economic indicators. 
 
 > **Keywords.** bsvars, quarto, R, Australia inflation rate
 
@@ -853,7 +853,7 @@ $$
 #| message: false
 #| warning: false
 
-e1        = cumsum(rnorm(1000, 0, sd=1))
+e1         = cumsum(rnorm(1000, 0, sd=1))
 e2         = cumsum(rnorm(1000, 0, sd=1))
 e          = cbind(e1,e2)
 
@@ -1274,6 +1274,64 @@ Sigma.posterior.simu   = posterior.sample.draws$Sigma.posterior
 
 ```
 
+
+```{r Mean Sigma of Basic Model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+# Presenting output
+A.posterior.simu.mean = head(round(apply(A.posterior.simu, 1:2, mean), 6),11)
+Sigma.posterior.simu.mean = round(apply(Sigma.posterior.simu, 1:2, mean),6)      
+```
+
+
+```{r Mean Sigma of Basic Model Output1, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Table 6 Mean Values of A.posterior.simu (head 11)"
+
+kable(A.posterior.simu.mean, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+```
+
+```{r Mean Sigma of Basic Model Output2, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Table 7 Mean Values of Sigma.posterior.simu"
+
+kable(Sigma.posterior.simu.mean, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+```
+
+
+```{r Histograms Trace Plots Basic, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 6 Histograms and trace plots on key variables using basic model"
+
+par(mfrow=c(2,2), mar=c(4,4,2,2))
+plot.ts(A.posterior.simu[2,1,], xlab = "Simulation times S", ylab = "lcpi", col = blue3) 
+hist(A.posterior.simu[2,1,], xlab = "lcpi", col = blue3, main = '')
+plot.ts(A.posterior.simu[2,2,], xlab = "Simulation times S", ylab = "infexp", col = green3) 
+hist(A.posterior.simu[2,2,], xlab = "infexp", col = green3, main = '')
+
+```
+
+
+
 ```{r Basic Model Forecasting, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1290,6 +1348,7 @@ p                      = 4
 # create sampling predictive density function 
 sampling.predictive.density.fun = function(A.posterior.simu, Sigma.posterior.simu, S = S) 
 {
+  Y.h                    = array(NA,c(h,N,S))
   for (s in 1:S){
     A.posterior.draw     = A.posterior.simu[,,s]
     Sigma.posterior.draw = Sigma.posterior.simu[,,s]
@@ -1312,13 +1371,13 @@ Y.h       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.simu,
 
 ```
 
-Figure 6 and 7 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.
+Figure 6 presents a 3D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.
 
 ```{r 3d Forecasting Graph on Basic, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Figure 6 3D forecasting graph on basic model"
+#| fig-cap: "Figure 7 3D forecasting graph on basic model"
 
 
 # create 3D forecasting graph function 
@@ -1328,7 +1387,8 @@ threed.graph = function(Y.h){
   par(mfcol = c(1, 2), mar=c(2,2,2,2)-0.1)
   
   # Log CPI forecasting 
-  limits.lcpi      = range(Y.h[,1,])
+  # limits.lcpi      = range(Y.h[,1,])
+  limits.lcpi      = c(4.5,5.5)
   point.lcpi.f     = apply(Y.h[,1,],1,mean)
   interval.lcpi.f  = apply(Y.h[,1,],1,hdi,credMass=0.90)
   
@@ -1362,7 +1422,8 @@ threed.graph = function(Y.h){
   lines(f4.l1, lwd=1.5, col=green1)
   
   # Expected inflation rate forecasting 
-  limits.infexp      = range(Y.h[,2,])
+  # limits.infexp      = range(Y.h[,2,])
+  limits.infexp      = c(-8,13)
   point.infexp.f     = apply(Y.h[,2,],1,mean)
   
   interval.infexp.f  = apply(Y.h[,2,],1,hdi,credMass=0.90)
@@ -1405,7 +1466,7 @@ threed.basic.graph = threed.graph(Y.h = Y.h)
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Figure 7 2D forecasting graph on basic model"
+#| fig-cap: "Figure 2D forecasting graph on basic model"
 
 twod.graph = function(Y.h){
 
@@ -1439,7 +1500,7 @@ twod.graph = function(Y.h){
 
 }
 
-twod.basic.graph = twod.graph(Y.h = Y.h)
+# twod.basic.graph = twod.graph(Y.h = Y.h)
 ```
 
 ```{r Basic Model Forecast Data Transform, fig.align='center',fig.pos='H'}
@@ -1479,7 +1540,7 @@ data.trans = function(Y.h){
 key.data.h = data.trans(Y.h = Y.h)
 ```
 
-After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 8), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
+After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 7), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
 
 ```{r Basic Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1496,7 +1557,7 @@ key.data.plot = function(key.data.h)
   par(mfcol = c(1, 1), mar = c(4, 4, 2, 2) +2)
   
   plot(data_df$Index, data_df$inf_data.h, type = "l", col = blue1,
-       xlab = "Date", ylab = "Rate (%)", ylim = c(0, 11))
+       xlab = "Date", ylab = "Rate (%)", ylim = c(-1, 11))
   
   rect(xleft = min(data_df$Index), xright = max(data_df$Index),
        ybottom = 2, ytop = 3, col = green5, border = NA)  
@@ -1539,8 +1600,66 @@ lambda.priors       = list(k = 1, theta = .1)
 
 ## Function Applying
 posterior.extend.draws     = posterior.draws.exten(total_S = total_S, Y=Y, X=X)
+
 A.posterior.ext.simu       = posterior.extend.draws[["A.posterior.exten"]]
 Sigma.posterior.ext.simu   = posterior.extend.draws[["Sigma.posterior.exten"]]
+
+```
+
+
+```{r Mean Sigma of Extended Model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Presenting output
+A.posterior.ext.simu.mean = head(round(apply(A.posterior.ext.simu, 1:2, mean), 6),11)
+Sigma.posterior.ext.simu.mean = round(apply(Sigma.posterior.ext.simu, 1:2, mean),6)      
+```
+
+
+```{r Mean Sigma of Extended Model Output1, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Table 8 Mean Values of A.posterior.ext.simu (head 11)"
+
+kable(A.posterior.ext.simu.mean, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+```
+
+```{r Mean Sigma of Extended Model Output2, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Table 9 Mean Values of Sigma.posterior.ext.simu"
+
+kable(Sigma.posterior.ext.simu.mean, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+```
+
+
+```{r Histograms Trace Plots Extended, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 9 Histograms and trace plots on key variables using extended model"
+
+par(mfrow=c(2,2), mar=c(4,4,2,2))
+plot.ts(A.posterior.ext.simu[2,1,], xlab = "Simulation times S", ylab = "lcpi", col = blue3) 
+hist(A.posterior.ext.simu[2,1,], xlab = "lcpi", col = blue3, main = '')
+plot.ts(A.posterior.ext.simu[2,2,], xlab = "Simulation times S", ylab = "infexp", col = green3) 
+hist(A.posterior.ext.simu[2,2,], xlab = "infexp", col = green3, main = '')
 
 ```
 
@@ -1564,13 +1683,15 @@ Y.h.ext       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.e
                                                 S = S) 
 ```
 
-Figure 9 and 10 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.
+
+
+Figure 10 presents a 3D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.
 
 ```{r 3d Forecasting Graph on Extension, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Figure 9 3d forecasting graph on extension model"
+#| fig-cap: "Figure 10 3d forecasting graph on extension model"
 
 threed.ext.graph = threed.graph(Y.h = Y.h.ext)
 ```
@@ -1579,9 +1700,9 @@ threed.ext.graph = threed.graph(Y.h = Y.h.ext)
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-cap: "Figure 10 2d forecasting graph on extension model"
+#| fig-cap: "Figure  2d forecasting graph on extension model"
 
-twod.ext.graph = twod.graph(Y.h = Y.h.ext)
+# twod.ext.graph = twod.graph(Y.h = Y.h.ext)
 
 ```
 
@@ -1620,7 +1741,7 @@ lambda.priors = list(
   theta = c(0.1, 0.1, 0.5, 0.5)
 )
 
-x <- seq(0, 15, length.out = 1000)
+x <- seq(0, 12, length.out = 1000)
 
 lambda <- data.frame()
 for (i in 1:4) {
@@ -1656,7 +1777,6 @@ h                 = 8
 S                 = 9000 
 
 # Prior Gamma distribution: k, theta
-
 # set up color
 colors <- c(color[1], color[2], color[3], color[4])
 
@@ -1720,6 +1840,851 @@ The predictive density distribution remains stable despite changes in the prior 
 ## Stochastic Volatility Conditional Heteroskedasticity
 
 Until now, we acknowledge that our model has not achieved the most optimal results. Our modeling approach has operated under the assumption of homoscedasticity. However, in real-world, such as the 2008 financial crisis and the 2020 COVID-19 pandemic, have demonstrated the significant and often abrupt fluctuations in the economy and financial markets. These events underscore the necessity of incorporating heteroscedasticity into our model to more accurately reflect the variable nature of economic conditions and market volatility.
+
+### Basic Model with Heteroskedasticity
+
+The model specification is as below:
+
+$$
+\begin{align}
+Y &= X A +E 
+\\
+E|X &\sim \mathcal{MN}_{T\times 10}(\textbf{0},\Sigma,\mathrm{diag}(\sigma_{T}^{2}))
+\end{align} 
+$$ {#eq-4}
+
+**Step 1**: Prior distribution is presented below. We will specify $\underline{A}$, $\underline{V}$, $\underline{S}$ and $\underline{v}$.
+
+$$
+\begin{align}
+p(A,\Sigma) &\propto L(A,\Sigma | Y,X) \ p(A,\Sigma) \\
+p(A,\Sigma) &\propto L(A,\Sigma | Y,X) \ p(A|\Sigma) \ p(\Sigma) 
+\\
+\\
+A|\Sigma &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V}) 
+\\ 
+\Sigma &\sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
+\end{align}
+$$
+
+-   Likelihood function
+
+$$
+\begin{align} 
+L\left( {A},{\Sigma}|Y,X \right) &\propto \text{det}({\Sigma})^{-\frac{T}{2}}\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}(Y-X{A})'(Y-X{A}) \right] \right\}\\
+&=\text{det}({\Sigma})^{-\frac{T}{2}}\\
+&\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) \right] \right\}\\
+&\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) \right] \right\}
+\end{align} 
+$$
+
+-   Natural-conjugate prior distribution (kernel)
+
+$$
+\begin{align} 
+p\left({A},{\Sigma} \right) &\propto \text{det}({\Sigma})^{-\frac{N+K+\underline{\nu}+1}{2}}\\&\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) \right] \right\}\\&\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}\underline{S} \right] \right\}
+\end{align} 
+$$
+
+**Step 2**: Posterior distribution shows below with the implementation of the specification in Step 1
+
+$$
+\begin{align} 
+p\left( A, \Sigma|Y,X \right) 
+&\propto L({A},{\Sigma}|Y,X)p\left( {A}, {\Sigma} \right)\\
+&= L({A},{\Sigma}|Y,X)p\left( {A}| {\Sigma} \right)p\left( {\Sigma} \right)
+\end{align} 
+$$
+
+-   kernel:
+
+$$
+\begin{align*} 
+p\left( {A},{\Sigma} |Y,X\right) 
+&\propto  \text{det}({\Sigma})^{-\frac{T}{2}}\\
+&\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) \right] \right\}\\
+&\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) \right] \right\}\\
+& \quad\times\text{det}({\Sigma})^{-\frac{N+K+\underline{\nu}+1}{2}}\\
+&\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) \right] \right\}\\
+&\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}\underline{S} \right] \right\} \\
+&\propto\text{det}({\Sigma})^{-\frac{\overbrace{T+\underline{\nu}}^{\overline{\nu}} +N+K+1}{2}} \\
+&\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1} 
+\color{blue}{\left[({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A})  +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S} \right]} \right] \right\}
+\end{align*}
+$$
+
+Focus on the blue part:
+
+$$
+\begin{align} 
+& \quad \quad({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S} 
+\\
+&= A'X'\mathrm{diag}(\sigma_{T}^{2})XA - A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} -\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})XA + \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A}}_{\text{cancel out 1}}  + A'\underline{V}^{-1}A -A'\underline{V}^{-1}\underline{A} - \underline{A}'\underline{V}^{-1}A +\underline{A}'\underline{V}^{-1}\underline{A}' 
+\\
+& \qquad + Y'\mathrm{diag}(\sigma_{T}^{2})Y - \underbrace{Y'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A}}_{\text{cancel out 2}}  - \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})Y}_{\text{cancel out 2} }  + \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} }_{\text{cancel out 1}} +\underline{S} 
+\\
+&= \underbrace{A'X'\mathrm{diag}(\sigma_{T}^{2})XA}_{\text{merge 1}}  - A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} -\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})XA  + \underbrace{ A'\underline{V}^{-1}A}_{\text{merge 1}} - A'\underline{V}^{-1}\underline{A} - \underline{A}'\underline{V}^{-1}A +\underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S} 
+\\
+& = A' \underbrace{[X'\mathrm{diag}(\sigma_{T}^{2}) X + \underline{V}^{-1}]}_{\overline{V}^{-1}} A - \underbrace{A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} }_{A'X'\mathrm{diag}(\sigma_{T}^{2})Y}  - \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})XA}_{A'X'\mathrm{diag}(\sigma_{T}^{2})Y}    - A'\underline{V}^{-1}\underline{A} - \underline{A}'\underline{V}^{-1}A +\underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S} 
+\\
+& = A'\overline{V}^{-1}A - 2A'  [ X'\mathrm{diag}(\sigma_{T}^{2})Y + \underline{V}^{-1}\underline{A} ] + \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S} 
+\\
+& = A'\overline{V}^{-1}A - 2A' \overline{V}^{-1} \underbrace{\overline{V}[X'\mathrm{diag}(\sigma_{T}^{2})Y + \underline{V}^{-1}\underline{A} ]}_{\overline{A}}  + \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S} 
+\\
+& = A'\overline{V}^{-1}A - 2A'\overline{V}^{-1}\overline{A} +  \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S} 
+\\
+& = A'\overline{V}^{-1}A - 2A'\overline{V}^{-1}\overline{A} + [ \overline{A}'\overline{V}^{-1}\overline{A} -  \overline{A}'\overline{V}^{-1}\overline{A} ]+ \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S} \\
+& = \underbrace{ A'\overline{V}^{-1}A - 2A'\overline{V}^{-1}\overline{A} + \overline{A}'\overline{V}^{-1}\overline{A}}_{\text{MN part}}  \quad
+\underbrace{-  \overline{A}'\overline{V}^{-1}\overline{A} + \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S}}_{\text{IW part}\quad \overline{S}} 
+\\
+\\
+\\
+& \qquad \text{where} \ A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} = A'X'\mathrm{diag}(\sigma_{T}^{2})X(X'X)^{-1}X'Y=A'X'\mathrm{diag}(\sigma_{T}^{2})Y
+\end{align} 
+$$
+
+$$
+\begin{align}
+\overline{V} &= (X'\mathrm{diag}(\sigma_{T}^{2})^{-1}X + \underline{V}^{-1})^{-1}\\
+\overline{A} &= \overline{V}[X'\mathrm{diag}(\sigma_{T}^{2})^{-1}Y+\underline{V}^{-1}\underline{A}] \\
+\overline{\nu} &= T+\underline{\nu}\\
+\overline{S} &= \underline{S}+Y'\mathrm{diag}(\sigma_{T}^{2})^{-1}Y+\underline{A}'\underline{V}^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} 
+\end{align}
+$$
+
+**Step 3**:
+
+As $\overline{A}$, $\overline{V}$, $\overline{S}$ and $\overline{v}$ are specified:
+
+To obtain a sample of $S$ draws from the posterior distribution:
+
+1.  Sample $S$ draws from the marginal posterior distribution for $\Sigma^{(s)}$ given by $\mathcal{IW}_{10}(\overline{S}, \overline{v})$, and collect the draws in $\{\Sigma^{(s)}\}_{s=1}^{S}$
+
+2.  For each draw $\Sigma^{(s)}$ for $s=1,\dots,S$ sample the corresponding draw of $A^{(s)}$ from $\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma^{(s)},\overline{V})$
+
+3. Draw the logarithmic volatilities $H$ using a function designed to handle tridiagonal precision matrices, incorporating both the prior on $h_0$ and the conditional distributions of the log-volatilities
+
+4. Compute $\sigma^2$ from the exponential transformation of the drawn logarithmic volatilities $H$.
+
+5.Draw $\sigma_v^2$ from the inverse gamma distribution, considering the sum of squared differences between successive $H$ values and $h0$
+
+6. Update the State Variable $s$:
+
+Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}},H^{(s)}, \sigma^{2(s)},h_0^{(s)}, \sigma_v^{2(s)}, s^{(s)} \right\}^{S}_{s=1}$.
+
+Function below is `posterior.draws.hetero`:
+
+```{r Basic Heteroskedasticity Model, fig.align='center',fig.pos='H'}
+#| echo: true
+#| message: false
+#| warning: false
+
+# Posterior sample draw function for heteroskedasticity on basic 
+posterior.draws.hetero = function (S, Y, X){
+  
+  ## Pre-setup 
+     
+  N             = ncol(Y) 
+  t             = N + 1
+  p             = frequency(Y)                        
+  A.hat         = solve(t(X)%*%X)%*%t(X)%*%Y
+  Sigma.hat     = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+  T             = dim(Y)[1] # 133
+  K             = dim(X)[2] # 41
+  H             = diag(T)
+  sdiag(H,-1)   = -1
+  HH            = 2*diag(T)
+  sdiag(HH,-1)  = -1
+  sdiag(HH,1)   = -1
+  
+  # Prior distribution (with Minnesota prior)
+  A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
+  A.prior[2:t,]     = diag(N)
+  V.prior           = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+  S.prior           = diag(diag(Sigma.hat))
+  nu.prior          = N + 2
+  # 
+  HH                = HH
+  h0.m              = 0
+  h0.v              = 1
+  sigmav.s          = 1
+  sigmav.nu         = 1
+  # Define posterior
+  posteriors    = list(                        
+    H           = matrix(NA,T,S),
+    sigma2      = matrix(NA,T,S),
+    s           = matrix(NA,T,S),
+    h0          = rep(NA,S),
+    sigma.v2    = rep(NA,S),
+    A           = array(NA, c((1 + N * p), N, S)),
+    Sigma       = array(NA, c(N, N, S))
+  )
+  
+  # Define auxiliary
+  aux        = list(
+    Y        = Y,
+    X        = X,
+    H        = matrix(1, T, 1),
+    h0       = 0,
+    sigma.v2 = 1,
+    s        = matrix(1, T, 1),
+    A        = matrix(0, K, N),
+    Sigma    = matrix(0, N, N),             
+    sigma2   = matrix(1, T, 1)
+  )
+  
+   # ----------------------posterior.draws.hetero------------------------------
+  
+  for (s in 1:S){
+      # normal-inverse Wishard posterior 
+      V.bar.inv              = t(aux$X)%*%diag(1/as.vector(aux$sigma2))%*%aux$X + diag(1/ diag(V.prior))
+      V.bar                  = solve(V.bar.inv)
+      A.bar                  = V.bar%*%(t(aux$X)%*%diag(1/as.vector(aux$sigma2))%*%aux$Y + diag(1/diag( V.prior))%*%A.prior) 
+      nu.bar                 = T + nu.prior
+      S.bar                  = S.prior + t(aux$Y)%*%diag(1/as.vector(aux$sigma2))%*%aux$Y + t(A.prior)%*%diag(1/diag(V.prior))%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar 
+      S.bar.inv              = solve(S.bar)
+      S.bar.inv              = 0.5 * (t(S.bar.inv) + S.bar.inv) # positive-definite
+    
+      # posterior draws for A and Sigma
+      Sigma.posterior.IW     = rWishart(1, df=nu.bar, Sigma=S.bar.inv)
+      Sigma.posterior.draw   = apply(Sigma.posterior.IW, 3 ,solve)
+      aux$Sigma              = array(Sigma.posterior.draw,c(N,N,1))
+      A.norm                 = array(rnorm(prod(c(K,N,1))),c(K,N,1))
+      L                      = t(chol(V.bar))
+      aux$A                  = A.bar + L%*%A.norm[,,1]%*%chol(aux$Sigma[,,1])
+    
+      # posterior draw for sigma2   
+      N             = dim(aux$Y)[2] # 10
+      alpha.st      = c(1.92677,1.34744,0.73504,0.02266,0-0.85173,-1.97278,-3.46788,-5.55246,-8.68384,-14.65000)
+      sigma.st      = c(0.11265,0.17788,0.26768,0.40611,0.62699,0.98583,1.57469,2.54498,4.16591,7.33342)
+      pi.st         = c(0.00609,0.04775,0.13057,0.20674,0.22715,0.18842,0.12047,0.05591,0.01575,0.00115)
+      
+      Lambda        = solve(chol(aux$Sigma[,,1]))
+      Z             = rowSums( ( aux$Y - aux$X %*% aux$A ) %*% Lambda ) / sqrt(N)
+      Y.tilde       = as.vector(log((Z + 0.0000001)^2))
+      Ytilde.alpha  = as.matrix(Y.tilde - alpha.st[as.vector(aux$s)])
+        
+      # sampling initial condition
+      V.h0.bar      = 1/((1 / h0.v) + (1 / aux$sigma.v2))
+      m.h0.bar      = V.h0.bar*((h0.m / h0.v) + (aux$H[1] / aux$sigma.v2))
+      h0.draw       = rnorm(1, mean = m.h0.bar, sd = sqrt(V.h0.bar))
+      aux$h0        = h0.draw
+      
+      # sampling sigma.v2
+      sigma.v2.s    = sigmav.s + sum(c(aux$H[1] - aux$h0, diff(aux$H))^2)
+      sigma.v2.draw = sigma.v2.s / rchisq(1, sigmav.nu + T)
+      aux$sigma.v2  = sigma.v2.draw
+      
+      # sampling auxiliary states
+      Pr.tmp        = simplify2array(lapply(1:10,function(x){
+        dnorm(Y.tilde, mean = as.vector(aux$H + alpha.st[x]), sd = sqrt(sigma.st[x]), log = TRUE) + log(pi.st[x])
+      }))
+      Pr            = t(apply(Pr.tmp, 1, function(x){exp(x - max(x)) / sum(exp(x - max(x)))}))
+      s.cum         = t(apply(Pr, 1, cumsum))
+      r             = matrix(rep(runif(T), 10), ncol = 10)
+      ss            = apply(s.cum < r, 1, sum) + 1
+      aux$s         = as.matrix(ss)
+      
+      # sampling log-volatilities using functions for tridiagonal precision matrix
+      Sigma.s.inv   = diag(1 / sigma.st[as.vector(aux$s)])
+      D.inv         = Sigma.s.inv + (1 / aux$sigma.v2) * HH
+      b             = as.matrix(Ytilde.alpha / sigma.st[as.vector(aux$s)] + (aux$h0/aux$sigma.v2)*diag(T)[,1])
+      lead.diag     = diag(D.inv)
+      sub.diag      = mgcv::sdiag(D.inv, -1)
+      D.chol        = mgcv::trichol(ld = lead.diag, sd = sub.diag)
+      D.L           = diag(D.chol$ld)
+      mgcv::sdiag(D.L,-1) = D.chol$sd
+      x             = as.matrix(rnorm(T))
+      a             = forwardsolve(D.L, b)
+      draw          = backsolve(t(D.L), a + x)
+      aux$H         = as.matrix(draw)
+      aux$sigma2    = as.matrix(exp(draw))
+        
+      # output list
+      posteriors$H[,s]             = aux$H
+      posteriors$sigma2[,s]        = aux$sigma2
+      posteriors$s[,s]             = aux$s
+      posteriors$h0[s]             = aux$h0
+      posteriors$sigma.v2[s]       = aux$sigma.v2
+      posteriors$A[,,s]            = aux$A
+      posteriors$Sigma[,,s]        = aux$Sigma
+      
+  }
+        
+  return(posteriors)
+}
+```
+
+
+```{r Heteroskedasticity Function Applying, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Setup 
+S                      = 5000
+kappa.1                = 1               # shrinkage for A1 to Ap
+kappa.2                = 100             # shrinkage for constant 
+
+## Function Applying
+posterior.hetero       = posterior.draws.hetero(S = S, Y = Y, X = X) 
+
+A.posterior.het.simu       = posterior.hetero[["A"]]
+Sigma.posterior.het.simu   = posterior.hetero[["Sigma"]]
+Sigma2.posterior.het.simu  = posterior.hetero[["sigma2"]]
+```
+
+
+```{r Mean Sigma of Basic SV Model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Presenting output
+A.posterior.het.simu.mean = head(round(apply(A.posterior.het.simu, 1:2, mean), 6),11)
+Sigma.posterior.het.simu.mean = round(apply(Sigma.posterior.het.simu, 1:2, mean),6)    
+
+
+```
+
+
+```{r Mean Sigma of Basic SV Model Output1, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Table 10 Mean Values of A.posterior.het.simu (head 11)"
+
+kable(A.posterior.het.simu.mean, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+```
+
+```{r Mean Sigma of Basic SV Model Output2, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Table 11 Mean Values of Sigma.posterior.het.simu"
+
+kable(Sigma.posterior.het.simu.mean, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+```
+
+```{r Histograms Trace Plots Basic Hetero, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 14 Histograms and trace plots on key variables using basic hetero model"
+
+par(mfrow=c(2,2), mar=c(4,4,2,2))
+plot.ts(A.posterior.het.simu[2,1,], xlab = "Simulation times S", ylab = "lcpi", col = blue3) 
+hist(A.posterior.het.simu[2,1,], xlab = "lcpi", col = blue3, main = '')
+plot.ts(A.posterior.het.simu[2,2,], xlab = "Simulation times S", ylab = "infexp", col = green3) 
+hist(A.posterior.het.simu[2,2,], xlab = "infexp", col = green3, main = '')
+
+```
+
+```{r Basic Model with Hetero Forecasting, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+## Two-year ahead forecasting h = 8 and with p = 4
+
+# set up
+h         = 8
+N         = ncol(Y) 
+S         = 5000
+Y.h       = array(NA,c(h,N,S))
+p         = 4
+
+Y.h       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.het.simu,
+                                                Sigma.posterior.simu = Sigma.posterior.het.simu,
+                                                S = S) 
+
+```
+
+
+Figure 11 displays a 3D visualization that, as anticipated, exhibits confidence intervals expanding from narrow to wide. Furthermore, the confidence intervals appear narrower than those in the model without heteroscedasticity, suggesting that incorporating heteroscedasticity is efficacious.
+
+
+```{r 3d Forecasting Graph on Basic Hetero, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 15 3D forecasting graph on basic model with heteroskedasticity"
+
+threed.basic.hetero.graph = threed.graph(Y.h = Y.h)
+
+```
+
+```{r 2d Forecasting Graph on Basic Model with Hetero, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 2D forecasting graph on basic model with heteroskedasticity"
+
+# twod.basic.hetero.graph = twod.graph(Y.h = Y.h)
+```
+
+```{r Basic Model with Hetero Forecast Data Transform, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# transform cpi into inflation rate, collect with it with infexp and cash rate
+
+key.data.h = data.trans(Y.h = Y.h)
+```
+
+As analyzed above, Figure 12 also shows improved forecasts, with the predicted inflation rate gradually declining to 2-3% over the next eight periods. Additionally, people's expectations of inflation are also decreasing in sync, aligning with the initial inquiry.
+
+```{r Basic Model with hetero Key Data Plot, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 16 Basic Model with heteroskedasticity key data plot"
+
+key.data.basic.hetero.graph = key.data.plot(key.data.h = key.data.h)
+```
+
+
+### Extended Model with Heteroskedasticity
+
+Similar like before, the model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda $\lambda$ is introduced to adjust $V$. 
+
+**Step 1**: Prior distribution is presented below. $\underline{A}$, $\underline{V}$, $\underline{S}$, $\underline{\nu}$ by Minnesota shrinkage parameter lambda $\lambda$ will be simplified.
+
+$$
+\begin{align}
+p(A,\Sigma, \lambda |Y,X) &\propto L(A,\Sigma | Y,X) \ p(A,\Sigma, \lambda) \\
+&\propto L(A,\Sigma | Y,X)  \ p(A |\Sigma, \lambda) \ p(\Sigma) \ p(\lambda)
+\end{align}
+$$
+
+where, each $p(A |\Sigma, k)$, $p(\Sigma)$, $p(k)$ is specified below:
+
+$$
+\begin{align}
+A |\Sigma, \lambda &\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V}) \\
+\Sigma &\sim \mathcal{IW}_{N}(\underline{S},\underline{\nu}) \\
+\lambda &\sim \mathcal{Gamma}(\underline{k_{\lambda}}, \underline{\theta_{\lambda}} ) \\ 
+\end{align}
+$$
+
+**Step 2**: All kernal shown below
+
+$$
+\begin{align}
+L(A,\Sigma | Y,X) &= \mathrm{det} (\Sigma)^{-\frac{T}{2}}\times \mathrm{exp}\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(A-\widehat{A})'X' \mathrm{diag}(\sigma_{T}^{2}) X (A-\widehat{A})\right]\right\} \times \mathrm{exp}\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(Y-X\widehat{A})' \mathrm{diag}(\sigma_{T}^{2})(Y-X\widehat{A})\right]\right\} 
+\\
+p(A |\Sigma, \lambda) &= \mathrm{det} (\Sigma)^{-\frac{K}{2}} \mathrm{det}(\lambda \underline{V} )^{-\frac{N}{2}}\mathrm{exp}\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\} 
+\\ 
+p(\Sigma) &= \mathrm{det}(\Sigma)^{\frac{\underline{\nu}+N+1}{2}} \mathrm{exp}\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} \underline{S}\right]\right\}  
+\\
+p(\lambda) &= \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}}
+\end{align}
+$$
+
+Similar like before,
+
+-   The kernel of the fully conditional posterior distribution of $A$ and $\Sigma$:
+
+$$
+\begin{align}
+\overline{V} &= (X'\mathrm{diag}(\sigma_{T}^{2})^{-1}X + (\lambda\underline{V})^{-1})^{-1}\\
+\overline{A} &= \overline{V}[X'\mathrm{diag}(\sigma_{T}^{2})^{-1}Y+(\lambda\underline{V})^{-1}\underline{A}] \\
+\overline{\nu} &= T+\underline{\nu}\\
+\overline{S} &= \underline{S}+Y'\mathrm{diag}(\sigma_{T}^{2})^{-1}Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A} 
+\end{align}
+$$
+
+-   The kernel of the fully conditional posterior distribution of $\lambda$:
+
+$$
+\begin{align}
+\overline{a} &= \frac{2}{\underline{\theta_{\lambda}} }
+\\
+\overline{b} &= \mathrm{tr}  \left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right] 
+\\ 
+\overline{p} &= -\frac{KN}{2} + \underline{k_{\lambda}}
+\end{align}
+$$
+
+**Step 3**: As $\overline{A}$, $\overline{V}$, $\overline{S}$, $\overline{v}$, $\overline{a}$, $\overline{b}$, $\overline{p}$ are specified:
+
+```{r eigenvalue fix, fig.align='center',fig.pos='H'}
+#| echo: true
+#| message: false
+#| warning: false
+
+invfunc = function(inv){
+eigen_decomp <- eigen(inv, symmetric = TRUE)
+      eigen_decomp$values[eigen_decomp$values <= 0] <- 1
+      inv <- eigen_decomp$vectors %*% diag(eigen_decomp$values) %*% t(eigen_decomp$vectors)
+}
+```
+
+
+Function below is `posterior.draws.exten.hetero`:
+
+```{r Extend Heteroskedasticity Model, fig.align='center',fig.pos='H'}
+#| echo: true
+#| message: false
+#| warning: false
+
+# Posterior sample draw function for heteroskedasticity on entended model
+posterior.draws.exten.hetero = function (total_S, Y, X){
+  
+  ## Pre-setup 
+     
+  N             = ncol(Y) # 10
+  t             = N + 1
+  p             = frequency(Y)  # 4                     
+  A.hat         = solve(t(X)%*%X)%*%t(X)%*%Y
+  Sigma.hat     = t(Y-X%*%A.hat)%*%(Y-X%*%A.hat)/nrow(Y)
+  T             = dim(Y)[1] # 133
+  K             = dim(X)[2] # 41
+  H             = diag(T)
+  sdiag(H,-1)   = -1
+  HH            = 2*diag(T)
+  sdiag(HH,-1)  = -1
+  sdiag(HH,1)   = -1
+  
+  # Prior distribution (with Minnesota prior)
+
+  A.prior           = matrix(0,nrow(A.hat),ncol(A.hat))
+  A.prior[2:t,]     = diag(N)
+  V.prior           = diag(c(kappa.2,kappa.1*((1:p)^(-2))%x%rep(1,N)))
+  S.prior           = diag(diag(Sigma.hat))
+  nu.prior          = N + 2
+  lambda.priors     = list(k = 1, theta = .1)
+  # 
+  HH                = HH
+  h0.m              = 0
+  h0.v              = 1
+  sigmav.s          = 1
+  sigmav.nu         = 1
+
+
+  # Define posterior
+  posteriors    = list(                        
+    H           = matrix(NA, T, total_S),
+    sigma2      = matrix(NA, T, total_S),
+    s           = matrix(NA, T, total_S),
+    h0          = rep(NA, total_S),
+    sigma.v2    = rep(NA, total_S),
+    A           = array(NA, c((1 + N * p), N, total_S)),
+    Sigma       = array(NA, c(N, N, total_S)),
+    lambda      = rep(NA, total_S)  
+)
+  
+  # Define auxiliary
+  aux        = list(
+    Y        = Y,
+    X        = X,
+    H        = matrix(1, T, 1),
+    h0       = 0,
+    sigma.v2 = 1,
+    s        = matrix(1, T, 1),
+    A        = matrix(0, K, N),
+    Sigma    = matrix(0, N, N),             
+    sigma2   = matrix(1, T, 1),
+    lambda   = 10
+  )
+
+   # ----------------------posterior.draws.exten.hetero------------------------------
+
+ for (s in 1:total_S){ 
+
+  # normal-inverse Wishard posterior 
+      V.bar.inv              = t(aux$X)%*%diag(1/as.vector(aux$sigma2))%*%aux$X + solve(aux$lambda* V.prior)
+      V.bar.inv              = invfunc(V.bar.inv)
+      V.bar                  = solve(V.bar.inv)
+      A.bar                  = V.bar%*%(t(aux$X)%*%diag(1/as.vector(aux$sigma2))%*%aux$Y + solve(aux$lambda * V.prior)%*%A.prior) 
+      nu.bar                 = T + nu.prior
+      S.bar                  = S.prior + t(aux$Y)%*%diag(1/as.vector(aux$sigma2))%*%aux$Y + t(A.prior)%*%solve(aux$lambda * V.prior)%*%A.prior - t(A.bar)%*%V.bar.inv%*%A.bar 
+      S.bar                  = invfunc(S.bar)
+      S.bar.inv              = solve(S.bar)
+      # S.bar.inv              = 0.5 * (t(S.bar.inv) + S.bar.inv) # positive-definite
+      
+
+    # posterior draws for A and Sigma
+      Sigma.posterior.IW     = rWishart(1, df=nu.bar, Sigma=S.bar.inv)
+      Sigma.posterior.draw   = apply(Sigma.posterior.IW, 3 ,solve)
+      aux$Sigma              = array(Sigma.posterior.draw,c(N,N,1))
+      
+      for (i in 1:dim(aux$Sigma)[3]) {
+          eigen_decomp <- eigen(aux$Sigma[, , i], symmetric = TRUE)
+          eigen_decomp$values[eigen_decomp$values <= 0] <- 1
+          aux$Sigma[, , i] <- eigen_decomp$vectors %*% diag(eigen_decomp$values) %*% t(eigen_decomp$vectors)
+      }
+      A.norm                 = array(rnorm(prod(c(K,N,1))),c(K,N,1))
+      L                      = t(chol(V.bar))      
+      aux$A                  = A.bar + L%*%A.norm[,,1]%*%chol(aux$Sigma[,,1])
+      
+      
+    # posterior draws for lambda
+      lambda.p = lambda.priors$k - (K * N) / 2
+      diff_A = aux$A - A.prior
+      product = t(diff_A) %*% solve(V.prior) %*% diff_A
+      chi.b = sum(diag(aux$Sigma[,,1] %*% product))
+      psi.a = 2 / lambda.priors$theta
+      lambda.draw = GIGrvg::rgig(n = 1, lambda = lambda.p, chi = chi.b, psi = psi.a)
+      aux$lambda = lambda.draw
+  
+
+      # posterior draw for sigma2   
+      N             = dim(aux$Y)[2] # 10
+      alpha.st      = c(1.92677,1.34744,0.73504,0.02266,0-0.85173,-1.97278,-3.46788,-5.55246,-8.68384,-14.65000)
+      sigma.st      = c(0.11265,0.17788,0.26768,0.40611,0.62699,0.98583,1.57469,2.54498,4.16591,7.33342)
+      pi.st         = c(0.00609,0.04775,0.13057,0.20674,0.22715,0.18842,0.12047,0.05591,0.01575,0.00115)
+      
+      Lambda        = solve(chol(aux$Sigma[,,1]))
+      Z             = rowSums( ( aux$Y - aux$X %*% aux$A ) %*% Lambda ) / sqrt(N)
+      Y.tilde       = as.vector(log((Z + 0.0000001)^2))
+      Ytilde.alpha  = as.matrix(Y.tilde - alpha.st[as.vector(aux$s)])
+        
+      # sampling initial condition
+      V.h0.bar      = 1/((1 / h0.v) + (1 / aux$sigma.v2))
+      m.h0.bar      = V.h0.bar*((h0.m / h0.v) + (aux$H[1] / aux$sigma.v2))
+      h0.draw       = rnorm(1, mean = m.h0.bar, sd = sqrt(V.h0.bar))
+      aux$h0        = h0.draw
+      
+      # sampling sigma.v2
+      sigma.v2.s    = sigmav.s + sum(c(aux$H[1] - aux$h0, diff(aux$H))^2)
+      sigma.v2.draw = sigma.v2.s / rchisq(1, sigmav.nu + T)
+      aux$sigma.v2  = sigma.v2.draw
+      
+      # sampling auxiliary states
+      Pr.tmp        = simplify2array(lapply(1:10,function(x){
+        dnorm(Y.tilde, mean = as.vector(aux$H + alpha.st[x]), sd = sqrt(sigma.st[x]), log = TRUE) + log(pi.st[x])
+      }))
+      Pr            = t(apply(Pr.tmp, 1, function(x){exp(x - max(x)) / sum(exp(x - max(x)))}))
+      s.cum         = t(apply(Pr, 1, cumsum))
+      r             = matrix(rep(runif(T), 10), ncol = 10)
+      ss            = apply(s.cum < r, 1, sum) + 1
+      aux$s         = as.matrix(ss)
+      
+      # sampling log-volatilities using functions for tridiagonal precision matrix
+      Sigma.s.inv   = diag(1 / sigma.st[as.vector(aux$s)])
+      D.inv         = Sigma.s.inv + (1 / aux$sigma.v2) * HH
+      b             = as.matrix(Ytilde.alpha / sigma.st[as.vector(aux$s)] + (aux$h0/aux$sigma.v2)*diag(T)[,1])
+      lead.diag     = diag(D.inv)
+      sub.diag      = mgcv::sdiag(D.inv, -1)
+      D.chol        = mgcv::trichol(ld = lead.diag, sd = sub.diag)
+      D.L           = diag(D.chol$ld)
+      mgcv::sdiag(D.L,-1) = D.chol$sd
+      x             = as.matrix(rnorm(T))
+      a             = forwardsolve(D.L, b)
+      draw          = backsolve(t(D.L), a + x)
+      aux$H         = as.matrix(draw)
+      aux$sigma2    = as.matrix(exp(draw))
+        
+      # output list
+      posteriors$H[,s]             = aux$H
+      posteriors$sigma2[,s]        = aux$sigma2
+      posteriors$s[,s]             = aux$s
+      posteriors$h0[s]             = aux$h0
+      posteriors$sigma.v2[s]       = aux$sigma.v2
+      posteriors$A[,,s]            = aux$A
+      posteriors$Sigma[,,s]        = aux$Sigma
+      posteriors$lambda[s]         = aux$lambda
+      
+  }
+        
+  return(posteriors)
+  
+}
+```
+
+```{r Extend Heteroskedasticity Function Applying, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Setup 
+
+S1 = 500
+S2 = 4500
+S = S1+S2
+kappa.1                = 1               # shrinkage for A1 to Ap
+kappa.2                = 100             # shrinkage for constant 
+
+## Function Applying
+posterior.exten.hetero = posterior.draws.exten.hetero(total_S = S, Y = Y, X = X) 
+
+A.posterior.ext.het.simu       = posterior.exten.hetero[["A"]][,,(S1+1):S]
+Sigma.posterior.ext.het.simu   = posterior.exten.hetero[["Sigma"]][,,(S1+1):S]
+Sigma2.posterior.ext.het.simu  = posterior.exten.hetero[["sigma2"]][,(S1+1):S]
+```
+
+
+```{r Mean Sigma of Extended SV Model, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# Presenting output
+A.posterior.ext.het.simu.mean = head(round(apply(A.posterior.ext.het.simu, 1:2, mean), 6),11)
+Sigma.posterior.ext.het.simu.mean = round(apply(Sigma.posterior.ext.het.simu, 1:2, mean),6)      
+```
+
+
+```{r Mean Sigma of Extended SV Model Output1, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Table 12 Mean Values of A.posterior.ext.het.simu (head 11)"
+
+kable(A.posterior.ext.het.simu.mean, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+```
+
+```{r Mean Sigma of Extended SV Model Output2, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| tbl-cap: "Table 13 Mean Values of Sigma.posterior.ext.het.simu"
+
+kable(Sigma.posterior.ext.het.simu.mean, align = "c") %>% 
+  kable_styling(font_size = 8, 
+                fixed_thead = TRUE, 
+                full_width = FALSE, 
+                position = "center",
+                latex_options = c("HOLD_position"),
+                bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
+```
+
+
+```{r Histograms Trace Plots Extended Hetero, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 16 Histograms and trace plots on key variables using extended hetero model"
+
+par(mfrow=c(2,2), mar=c(4,4,2,2))
+plot.ts(A.posterior.ext.het.simu[2,1,], xlab = "Simulation times S", ylab = "lcpi", col = blue3) 
+hist(A.posterior.ext.het.simu[2,1,], xlab = "lcpi", col = blue3, main = '')
+plot.ts(A.posterior.ext.het.simu[2,2,], xlab = "Simulation times S", ylab = "infexp", col = green3) 
+hist(A.posterior.ext.het.simu[2,2,], xlab = "infexp", col = green3, main = '')
+
+```
+
+
+```{r Extend Model with Hetero Forecasting, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+## Two-year ahead forecasting h = 8 and with p = 4
+
+# set up
+h         = 8
+N         = ncol(Y) 
+Y.h.ext   = array(NA,c(h,N,S)) # for function
+S         = 4000
+p         = 4
+
+Y.h.ext   = sampling.predictive.density.fun(A.posterior.simu = A.posterior.ext.het.simu,
+                                                Sigma.posterior.simu = Sigma.posterior.ext.het.simu,
+                                                S = S) 
+
+```
+
+```{r 3d Forecasting Graph on Extend model with Hetero, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 3D forecasting graph on extended model with heteroskedasticity"
+
+# threed.exten.hetero.graph = threed.graph(Y.h = Y.h.ext)
+
+```
+
+```{r 2d forecasting graph on extend model with hetero, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure  2D forecasting graph on basic model with heteroskedasticity"
+
+# twod.basic.hetero.graph = twod.graph(Y.h = Y.h.ext)
+```
+
+```{r Extend Model with hetero forecast data transform, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+
+# transform cpi into inflation rate, collect with it with infexp and cash rate
+
+key.data.h = data.trans(Y.h = Y.h.ext)
+```
+
+
+Applying heteroscedasticity to the expanded model, we observe markedly aggressive results (similar to the comparison between the expanded and standard models). Figure 17 illustrates that under the extended model, the forecast for the next eight periods of inflation again shows negative inflation, with an even greater degree of deflation. Although the model's predictions of 'people's expectations of inflation' remain relatively stable, these results are not acceptable considering our understanding.
+
+
+```{r Extended Model with hetero Key Data Plot, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 17 Extended model with heteroskedasticity key data plot"
+
+key.data.exten.hetero.graph = key.data.plot(key.data.h = key.data.h)
+
+```
+
+### Heteroskadasticity Analysis
+
+Notably, in Figure 18 both models exhibit signs of heteroscedasticity around the time point 120 (Year 2020), where there is a sharp increase in sigma squared values.
+
+More specifically, the "sigma2.basic" model (black line) shows a more pronounced increase in sigma squared values around time point 120 compared to the "sigma2.heter" model (blue line). This suggests that the basic model may be more sensitive or effective in capturing the variance anomalies at this juncture. This enhanced sensitivity could be attributed to differences in the internal parameter settings or data handling methodologies of the models.
+Thus, it can be inferred that although both models are capable of detecting heteroscedasticity within the data, the "sigma2.basic" model may exhibit superior performance in accommodating periods of high volatility. This observation might indicate that the settings of the basic model are better suited for capturing extreme fluctuations, thereby suggesting that the "sigma2.basic" model is potentially more robust in such scenarios.
+
+```{r Sigma2Plot, fig.align='center',fig.pos='H'}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-cap: "Figure 18 Sigma2 time series plot" 
+
+
+plot.ts(apply(Sigma2.posterior.ext.het.simu, 1, mean), 
+        ylab = "sigma2 values", 
+        col = blue4, 
+        ylim = range(c(apply(Sigma2.posterior.ext.het.simu, 1, mean), apply(Sigma2.posterior.het.simu, 1, mean))))
+
+lines(apply(Sigma2.posterior.het.simu, 1, mean), col = blue6)
+
+legend("topleft", legend = c("sigma2.ext.heter", "sigma2.basic.heter"), col = c(blue4, blue6), lty = 1)
+
+```
+
+
+
+## Conclusion 
+
+In this research, we analyzed four Bayesian Vector Autoregression (VAR) models aimed at forecasting inflation and people's expectations of inflation. Beginning with a basic model featuring a simple Minnesota prior to capture the characteristics and dynamic relationships observed in the variables, we constructed a hierarchical model by implementing the Minnesota shrinkage hyperparameter $\lambda$. Building on the basic model, we introduced stochastic volatility to enhance the model's performance. We conducted an 8-step ahead forecast for each model and compared the results. 
+
+Overall, all four models predicted a downward trend in Australia's inflation rate. The decline was quite pronounced without considering heteroscedasticity; however, with heteroscedasticity accounted for, the basic model's smooth decline to 2-3% was most in line with expectations. In contrast, the application of heteroscedasticity in the extended model did not perform as well.
+
+
+
+
+
 
 
 

@@ -171,7 +171,13 @@ div.csl-indent {
   <li><a href="#basic-model-1" id="toc-basic-model-1" class="nav-link" data-scroll-target="#basic-model-1"><span class="header-section-number">5.1</span> Basic Model</a></li>
   <li><a href="#extended-model-1" id="toc-extended-model-1" class="nav-link" data-scroll-target="#extended-model-1"><span class="header-section-number">5.2</span> Extended Model</a></li>
   </ul></li>
-  <li><a href="#stochastic-volatility-conditional-heteroskedasticity" id="toc-stochastic-volatility-conditional-heteroskedasticity" class="nav-link" data-scroll-target="#stochastic-volatility-conditional-heteroskedasticity"><span class="header-section-number">6</span> Stochastic Volatility Conditional Heteroskedasticity</a></li>
+  <li><a href="#stochastic-volatility-conditional-heteroskedasticity" id="toc-stochastic-volatility-conditional-heteroskedasticity" class="nav-link" data-scroll-target="#stochastic-volatility-conditional-heteroskedasticity"><span class="header-section-number">6</span> Stochastic Volatility Conditional Heteroskedasticity</a>
+  <ul class="collapse">
+  <li><a href="#basic-model-with-heteroskedasticity" id="toc-basic-model-with-heteroskedasticity" class="nav-link" data-scroll-target="#basic-model-with-heteroskedasticity"><span class="header-section-number">6.1</span> Basic Model with Heteroskedasticity</a></li>
+  <li><a href="#extended-model-with-heteroskedasticity" id="toc-extended-model-with-heteroskedasticity" class="nav-link" data-scroll-target="#extended-model-with-heteroskedasticity"><span class="header-section-number">6.2</span> Extended Model with Heteroskedasticity</a></li>
+  <li><a href="#heteroskadasticity-analysis" id="toc-heteroskadasticity-analysis" class="nav-link" data-scroll-target="#heteroskadasticity-analysis"><span class="header-section-number">6.3</span> Heteroskadasticity Analysis</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion"><span class="header-section-number">7</span> Conclusion</a></li>
   <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
   </ul>
 </nav>
@@ -207,7 +213,7 @@ div.csl-indent {
 </header>
 
 <blockquote class="blockquote">
-<p><strong>Abstract.</strong> The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model.</p>
+<p><strong>Abstract.</strong> The purpose of this research is to explore the trend in Australia’s inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model. This study aims to provide a comprehensive analysis of inflation dynamics using advanced econometric techniques to forecast future trends. By applying the BVAR model, which incorporates both Bayesian statistical methods and vector auto-regression, evaluates various specifications of the BVAR model, including different priors and assumptions about the volatility of economic indicators.</p>
 </blockquote>
 <blockquote class="blockquote">
 <p><strong>Keywords.</strong> bsvars, quarto, R, Australia inflation rate</p>
@@ -1019,28 +1025,334 @@ p(x|a,b,p) \propto x^{p-1} \mathrm{exp} \left\{\frac{-(ax+\frac{b}{x})}{2} \righ
 <h2 data-number="5" class="anchored" data-anchor-id="empirical-analysis---model-applying-and-forecasing"><span class="header-section-number">5</span> Empirical Analysis - Model Applying and Forecasing</h2>
 <section id="basic-model-1" class="level3" data-number="5.1">
 <h3 data-number="5.1" class="anchored" data-anchor-id="basic-model-1"><span class="header-section-number">5.1</span> Basic Model</h3>
-<p>Figure 6 and 7 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<caption>Table 6 Mean Values of A.posterior.simu (head 11) </caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.022487</td>
+<td style="text-align: center;">0.239344</td>
+<td style="text-align: center;">0.015375</td>
+<td style="text-align: center;">3.772253</td>
+<td style="text-align: center;">0.762991</td>
+<td style="text-align: center;">-0.026571</td>
+<td style="text-align: center;">0.041992</td>
+<td style="text-align: center;">0.209237</td>
+<td style="text-align: center;">0.354570</td>
+<td style="text-align: center;">0.153967</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.997695</td>
+<td style="text-align: center;">-0.113153</td>
+<td style="text-align: center;">-0.002101</td>
+<td style="text-align: center;">0.041971</td>
+<td style="text-align: center;">0.081012</td>
+<td style="text-align: center;">-0.001401</td>
+<td style="text-align: center;">0.010894</td>
+<td style="text-align: center;">0.018803</td>
+<td style="text-align: center;">0.020152</td>
+<td style="text-align: center;">0.001117</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.004636</td>
+<td style="text-align: center;">0.488874</td>
+<td style="text-align: center;">-0.000002</td>
+<td style="text-align: center;">0.172252</td>
+<td style="text-align: center;">-0.044286</td>
+<td style="text-align: center;">0.001115</td>
+<td style="text-align: center;">0.011634</td>
+<td style="text-align: center;">0.018032</td>
+<td style="text-align: center;">-0.012363</td>
+<td style="text-align: center;">-0.017317</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000967</td>
+<td style="text-align: center;">-0.084569</td>
+<td style="text-align: center;">0.998710</td>
+<td style="text-align: center;">0.246898</td>
+<td style="text-align: center;">0.013631</td>
+<td style="text-align: center;">-0.002384</td>
+<td style="text-align: center;">-0.001717</td>
+<td style="text-align: center;">0.003282</td>
+<td style="text-align: center;">0.037560</td>
+<td style="text-align: center;">0.009190</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.001482</td>
+<td style="text-align: center;">0.172613</td>
+<td style="text-align: center;">-0.000503</td>
+<td style="text-align: center;">1.039676</td>
+<td style="text-align: center;">-0.180908</td>
+<td style="text-align: center;">-0.000909</td>
+<td style="text-align: center;">0.022218</td>
+<td style="text-align: center;">0.003863</td>
+<td style="text-align: center;">0.004724</td>
+<td style="text-align: center;">0.002909</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.001882</td>
+<td style="text-align: center;">-0.167358</td>
+<td style="text-align: center;">0.005032</td>
+<td style="text-align: center;">-0.143112</td>
+<td style="text-align: center;">0.889873</td>
+<td style="text-align: center;">0.001887</td>
+<td style="text-align: center;">-0.002966</td>
+<td style="text-align: center;">-0.013108</td>
+<td style="text-align: center;">-0.006123</td>
+<td style="text-align: center;">-0.009323</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.000705</td>
+<td style="text-align: center;">0.013135</td>
+<td style="text-align: center;">-0.004998</td>
+<td style="text-align: center;">-0.149762</td>
+<td style="text-align: center;">0.141990</td>
+<td style="text-align: center;">0.989428</td>
+<td style="text-align: center;">0.014266</td>
+<td style="text-align: center;">0.072869</td>
+<td style="text-align: center;">0.019394</td>
+<td style="text-align: center;">-0.008221</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.001703</td>
+<td style="text-align: center;">-0.098460</td>
+<td style="text-align: center;">0.002827</td>
+<td style="text-align: center;">-0.094150</td>
+<td style="text-align: center;">-0.083816</td>
+<td style="text-align: center;">-0.000519</td>
+<td style="text-align: center;">0.909877</td>
+<td style="text-align: center;">-0.039209</td>
+<td style="text-align: center;">-0.027771</td>
+<td style="text-align: center;">-0.001008</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.003402</td>
+<td style="text-align: center;">0.045982</td>
+<td style="text-align: center;">-0.006957</td>
+<td style="text-align: center;">-0.429023</td>
+<td style="text-align: center;">0.138237</td>
+<td style="text-align: center;">-0.003229</td>
+<td style="text-align: center;">-0.005963</td>
+<td style="text-align: center;">0.878758</td>
+<td style="text-align: center;">-0.004867</td>
+<td style="text-align: center;">0.001058</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.003383</td>
+<td style="text-align: center;">0.669583</td>
+<td style="text-align: center;">0.013316</td>
+<td style="text-align: center;">0.181981</td>
+<td style="text-align: center;">-0.579936</td>
+<td style="text-align: center;">0.012783</td>
+<td style="text-align: center;">0.058214</td>
+<td style="text-align: center;">0.083007</td>
+<td style="text-align: center;">0.928924</td>
+<td style="text-align: center;">-0.021260</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.001894</td>
+<td style="text-align: center;">0.309709</td>
+<td style="text-align: center;">0.006359</td>
+<td style="text-align: center;">0.415477</td>
+<td style="text-align: center;">-0.135637</td>
+<td style="text-align: center;">0.008211</td>
+<td style="text-align: center;">0.023505</td>
+<td style="text-align: center;">0.059918</td>
+<td style="text-align: center;">-0.028299</td>
+<td style="text-align: center;">0.979138</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<caption>Table 7 Mean Values of Sigma.posterior.simu </caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.000021</td>
+<td style="text-align: center;">0.000459</td>
+<td style="text-align: center;">0.000014</td>
+<td style="text-align: center;">0.000182</td>
+<td style="text-align: center;">-0.000390</td>
+<td style="text-align: center;">-0.000004</td>
+<td style="text-align: center;">0.000002</td>
+<td style="text-align: center;">0.000049</td>
+<td style="text-align: center;">-0.000005</td>
+<td style="text-align: center;">0.000011</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000459</td>
+<td style="text-align: center;">0.220484</td>
+<td style="text-align: center;">0.000617</td>
+<td style="text-align: center;">0.034636</td>
+<td style="text-align: center;">-0.031898</td>
+<td style="text-align: center;">-0.000638</td>
+<td style="text-align: center;">0.005437</td>
+<td style="text-align: center;">0.010908</td>
+<td style="text-align: center;">-0.001779</td>
+<td style="text-align: center;">-0.000168</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000014</td>
+<td style="text-align: center;">0.000617</td>
+<td style="text-align: center;">0.000089</td>
+<td style="text-align: center;">0.000184</td>
+<td style="text-align: center;">-0.001472</td>
+<td style="text-align: center;">-0.000006</td>
+<td style="text-align: center;">0.000083</td>
+<td style="text-align: center;">0.000149</td>
+<td style="text-align: center;">-0.000017</td>
+<td style="text-align: center;">0.000017</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000182</td>
+<td style="text-align: center;">0.034636</td>
+<td style="text-align: center;">0.000184</td>
+<td style="text-align: center;">0.138102</td>
+<td style="text-align: center;">-0.001529</td>
+<td style="text-align: center;">-0.000361</td>
+<td style="text-align: center;">-0.000289</td>
+<td style="text-align: center;">-0.002042</td>
+<td style="text-align: center;">0.004264</td>
+<td style="text-align: center;">0.004481</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.000390</td>
+<td style="text-align: center;">-0.031898</td>
+<td style="text-align: center;">-0.001472</td>
+<td style="text-align: center;">-0.001529</td>
+<td style="text-align: center;">0.073025</td>
+<td style="text-align: center;">0.000112</td>
+<td style="text-align: center;">-0.001582</td>
+<td style="text-align: center;">-0.000612</td>
+<td style="text-align: center;">0.000788</td>
+<td style="text-align: center;">-0.000951</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.000004</td>
+<td style="text-align: center;">-0.000638</td>
+<td style="text-align: center;">-0.000006</td>
+<td style="text-align: center;">-0.000361</td>
+<td style="text-align: center;">0.000112</td>
+<td style="text-align: center;">0.000128</td>
+<td style="text-align: center;">0.000012</td>
+<td style="text-align: center;">-0.000036</td>
+<td style="text-align: center;">0.000016</td>
+<td style="text-align: center;">0.000005</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000002</td>
+<td style="text-align: center;">0.005437</td>
+<td style="text-align: center;">0.000083</td>
+<td style="text-align: center;">-0.000289</td>
+<td style="text-align: center;">-0.001582</td>
+<td style="text-align: center;">0.000012</td>
+<td style="text-align: center;">0.001990</td>
+<td style="text-align: center;">0.001128</td>
+<td style="text-align: center;">0.000072</td>
+<td style="text-align: center;">-0.000336</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000049</td>
+<td style="text-align: center;">0.010908</td>
+<td style="text-align: center;">0.000149</td>
+<td style="text-align: center;">-0.002042</td>
+<td style="text-align: center;">-0.000612</td>
+<td style="text-align: center;">-0.000036</td>
+<td style="text-align: center;">0.001128</td>
+<td style="text-align: center;">0.004843</td>
+<td style="text-align: center;">-0.000636</td>
+<td style="text-align: center;">-0.001085</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.000005</td>
+<td style="text-align: center;">-0.001779</td>
+<td style="text-align: center;">-0.000017</td>
+<td style="text-align: center;">0.004264</td>
+<td style="text-align: center;">0.000788</td>
+<td style="text-align: center;">0.000016</td>
+<td style="text-align: center;">0.000072</td>
+<td style="text-align: center;">-0.000636</td>
+<td style="text-align: center;">0.004417</td>
+<td style="text-align: center;">0.001134</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000011</td>
+<td style="text-align: center;">-0.000168</td>
+<td style="text-align: center;">0.000017</td>
+<td style="text-align: center;">0.004481</td>
+<td style="text-align: center;">-0.000951</td>
+<td style="text-align: center;">0.000005</td>
+<td style="text-align: center;">-0.000336</td>
+<td style="text-align: center;">-0.001085</td>
+<td style="text-align: center;">0.001134</td>
+<td style="text-align: center;">0.001518</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Histograms Trace Plots Basic-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 6 Histograms and trace plots on key variables using basic model</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 6 presents a 3D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/3d Forecasting Graph on Basic-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure 6 3D forecasting graph on basic model</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure 7 3D forecasting graph on basic model</figcaption><p></p>
 </figure>
 </div>
 </div>
 </div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/2d Forecasting Graph on Basic-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure 7 2D forecasting graph on basic model</figcaption><p></p>
-</figure>
-</div>
-</div>
-</div>
-<p>After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 8), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA’s target range for a while, they are expected to fall below 2% after 2025. As for people’s inflation expectations, the forecast indicates a fluctuating decline.</p>
+<p>After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 7), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA’s target range for a while, they are expected to fall below 2% after 2025. As for people’s inflation expectations, the forecast indicates a fluctuating decline.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1054,23 +1366,329 @@ p(x|a,b,p) \propto x^{p-1} \mathrm{exp} \left\{\frac{-(ax+\frac{b}{x})}{2} \righ
 </section>
 <section id="extended-model-1" class="level3" data-number="5.2">
 <h3 data-number="5.2" class="anchored" data-anchor-id="extended-model-1"><span class="header-section-number">5.2</span> Extended Model</h3>
-<p>Figure 9 and 10 presents a 3D and 2D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<caption>Table 8 Mean Values of A.posterior.ext.simu (head 11) </caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.188638</td>
+<td style="text-align: center;">35.636598</td>
+<td style="text-align: center;">1.195273</td>
+<td style="text-align: center;">44.207740</td>
+<td style="text-align: center;">22.216190</td>
+<td style="text-align: center;">0.595854</td>
+<td style="text-align: center;">2.075501</td>
+<td style="text-align: center;">15.213020</td>
+<td style="text-align: center;">0.602600</td>
+<td style="text-align: center;">1.928389</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.900940</td>
+<td style="text-align: center;">3.146955</td>
+<td style="text-align: center;">-0.036595</td>
+<td style="text-align: center;">2.877600</td>
+<td style="text-align: center;">3.493241</td>
+<td style="text-align: center;">-0.006319</td>
+<td style="text-align: center;">0.341870</td>
+<td style="text-align: center;">0.725178</td>
+<td style="text-align: center;">0.036034</td>
+<td style="text-align: center;">0.078436</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.004860</td>
+<td style="text-align: center;">0.319458</td>
+<td style="text-align: center;">-0.000436</td>
+<td style="text-align: center;">0.148774</td>
+<td style="text-align: center;">-0.041142</td>
+<td style="text-align: center;">0.003409</td>
+<td style="text-align: center;">0.022329</td>
+<td style="text-align: center;">0.013966</td>
+<td style="text-align: center;">0.004776</td>
+<td style="text-align: center;">-0.014972</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.019861</td>
+<td style="text-align: center;">-2.486073</td>
+<td style="text-align: center;">0.845654</td>
+<td style="text-align: center;">-4.548681</td>
+<td style="text-align: center;">-4.229855</td>
+<td style="text-align: center;">-0.013692</td>
+<td style="text-align: center;">-0.008236</td>
+<td style="text-align: center;">-0.795376</td>
+<td style="text-align: center;">0.581042</td>
+<td style="text-align: center;">-0.150850</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.001933</td>
+<td style="text-align: center;">0.060133</td>
+<td style="text-align: center;">-0.003035</td>
+<td style="text-align: center;">0.919842</td>
+<td style="text-align: center;">-0.176445</td>
+<td style="text-align: center;">-0.002643</td>
+<td style="text-align: center;">0.012271</td>
+<td style="text-align: center;">-0.032752</td>
+<td style="text-align: center;">0.019441</td>
+<td style="text-align: center;">0.011998</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.002557</td>
+<td style="text-align: center;">-0.214560</td>
+<td style="text-align: center;">0.002556</td>
+<td style="text-align: center;">-0.294931</td>
+<td style="text-align: center;">0.732430</td>
+<td style="text-align: center;">0.004052</td>
+<td style="text-align: center;">-0.020502</td>
+<td style="text-align: center;">-0.035284</td>
+<td style="text-align: center;">-0.027651</td>
+<td style="text-align: center;">-0.024297</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.022130</td>
+<td style="text-align: center;">-0.515608</td>
+<td style="text-align: center;">-0.006018</td>
+<td style="text-align: center;">0.961101</td>
+<td style="text-align: center;">0.222468</td>
+<td style="text-align: center;">0.949607</td>
+<td style="text-align: center;">-0.172691</td>
+<td style="text-align: center;">-0.297743</td>
+<td style="text-align: center;">0.880789</td>
+<td style="text-align: center;">0.457458</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.035743</td>
+<td style="text-align: center;">2.764934</td>
+<td style="text-align: center;">0.055280</td>
+<td style="text-align: center;">0.652448</td>
+<td style="text-align: center;">-1.266774</td>
+<td style="text-align: center;">-0.030087</td>
+<td style="text-align: center;">0.427812</td>
+<td style="text-align: center;">0.088200</td>
+<td style="text-align: center;">-0.407933</td>
+<td style="text-align: center;">-0.023934</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.007550</td>
+<td style="text-align: center;">-0.448692</td>
+<td style="text-align: center;">-0.023527</td>
+<td style="text-align: center;">-0.543887</td>
+<td style="text-align: center;">0.137763</td>
+<td style="text-align: center;">-0.008414</td>
+<td style="text-align: center;">-0.057218</td>
+<td style="text-align: center;">0.521559</td>
+<td style="text-align: center;">0.071008</td>
+<td style="text-align: center;">0.049988</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.010449</td>
+<td style="text-align: center;">1.917557</td>
+<td style="text-align: center;">0.034389</td>
+<td style="text-align: center;">0.136375</td>
+<td style="text-align: center;">-2.036329</td>
+<td style="text-align: center;">-0.005872</td>
+<td style="text-align: center;">0.097489</td>
+<td style="text-align: center;">0.136197</td>
+<td style="text-align: center;">0.883124</td>
+<td style="text-align: center;">-0.059768</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.024233</td>
+<td style="text-align: center;">1.018000</td>
+<td style="text-align: center;">0.033507</td>
+<td style="text-align: center;">2.871187</td>
+<td style="text-align: center;">-0.668580</td>
+<td style="text-align: center;">0.036330</td>
+<td style="text-align: center;">-0.035254</td>
+<td style="text-align: center;">0.173904</td>
+<td style="text-align: center;">-0.269526</td>
+<td style="text-align: center;">0.963305</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<caption>Table 9 Mean Values of Sigma.posterior.ext.simu </caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.000014</td>
+<td style="text-align: center;">0.000367</td>
+<td style="text-align: center;">0.000008</td>
+<td style="text-align: center;">0.000030</td>
+<td style="text-align: center;">-0.000228</td>
+<td style="text-align: center;">-0.000002</td>
+<td style="text-align: center;">0.000023</td>
+<td style="text-align: center;">0.000026</td>
+<td style="text-align: center;">0.000005</td>
+<td style="text-align: center;">0.000010</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000367</td>
+<td style="text-align: center;">0.144469</td>
+<td style="text-align: center;">0.000242</td>
+<td style="text-align: center;">0.018481</td>
+<td style="text-align: center;">-0.019191</td>
+<td style="text-align: center;">-0.000265</td>
+<td style="text-align: center;">0.004833</td>
+<td style="text-align: center;">0.006759</td>
+<td style="text-align: center;">0.000755</td>
+<td style="text-align: center;">0.000708</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000008</td>
+<td style="text-align: center;">0.000242</td>
+<td style="text-align: center;">0.000068</td>
+<td style="text-align: center;">-0.000001</td>
+<td style="text-align: center;">-0.001145</td>
+<td style="text-align: center;">-0.000008</td>
+<td style="text-align: center;">0.000090</td>
+<td style="text-align: center;">0.000081</td>
+<td style="text-align: center;">0.000013</td>
+<td style="text-align: center;">0.000014</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000030</td>
+<td style="text-align: center;">0.018481</td>
+<td style="text-align: center;">-0.000001</td>
+<td style="text-align: center;">0.110137</td>
+<td style="text-align: center;">0.001269</td>
+<td style="text-align: center;">-0.000326</td>
+<td style="text-align: center;">-0.000953</td>
+<td style="text-align: center;">-0.004963</td>
+<td style="text-align: center;">0.004482</td>
+<td style="text-align: center;">0.004446</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.000228</td>
+<td style="text-align: center;">-0.019191</td>
+<td style="text-align: center;">-0.001145</td>
+<td style="text-align: center;">0.001269</td>
+<td style="text-align: center;">0.049088</td>
+<td style="text-align: center;">0.000061</td>
+<td style="text-align: center;">-0.001900</td>
+<td style="text-align: center;">-0.000554</td>
+<td style="text-align: center;">-0.000150</td>
+<td style="text-align: center;">-0.001166</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.000002</td>
+<td style="text-align: center;">-0.000265</td>
+<td style="text-align: center;">-0.000008</td>
+<td style="text-align: center;">-0.000326</td>
+<td style="text-align: center;">0.000061</td>
+<td style="text-align: center;">0.000092</td>
+<td style="text-align: center;">-0.000021</td>
+<td style="text-align: center;">-0.000026</td>
+<td style="text-align: center;">0.000043</td>
+<td style="text-align: center;">-0.000002</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000023</td>
+<td style="text-align: center;">0.004833</td>
+<td style="text-align: center;">0.000090</td>
+<td style="text-align: center;">-0.000953</td>
+<td style="text-align: center;">-0.001900</td>
+<td style="text-align: center;">-0.000021</td>
+<td style="text-align: center;">0.001380</td>
+<td style="text-align: center;">0.000812</td>
+<td style="text-align: center;">-0.000040</td>
+<td style="text-align: center;">-0.000303</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000026</td>
+<td style="text-align: center;">0.006759</td>
+<td style="text-align: center;">0.000081</td>
+<td style="text-align: center;">-0.004963</td>
+<td style="text-align: center;">-0.000554</td>
+<td style="text-align: center;">-0.000026</td>
+<td style="text-align: center;">0.000812</td>
+<td style="text-align: center;">0.003398</td>
+<td style="text-align: center;">-0.000276</td>
+<td style="text-align: center;">-0.000899</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000005</td>
+<td style="text-align: center;">0.000755</td>
+<td style="text-align: center;">0.000013</td>
+<td style="text-align: center;">0.004482</td>
+<td style="text-align: center;">-0.000150</td>
+<td style="text-align: center;">0.000043</td>
+<td style="text-align: center;">-0.000040</td>
+<td style="text-align: center;">-0.000276</td>
+<td style="text-align: center;">0.003541</td>
+<td style="text-align: center;">0.000883</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000010</td>
+<td style="text-align: center;">0.000708</td>
+<td style="text-align: center;">0.000014</td>
+<td style="text-align: center;">0.004446</td>
+<td style="text-align: center;">-0.001166</td>
+<td style="text-align: center;">-0.000002</td>
+<td style="text-align: center;">-0.000303</td>
+<td style="text-align: center;">-0.000899</td>
+<td style="text-align: center;">0.000883</td>
+<td style="text-align: center;">0.001342</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Histograms Trace Plots Extended-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 9 Histograms and trace plots on key variables using extended model</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 10 presents a 3D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="index_files/figure-html/3d Forecasting Graph on Extension-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure 9 3d forecasting graph on extension model</figcaption><p></p>
-</figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="index_files/figure-html/2d Forecasting Graph on Extension-1.png" class="img-fluid figure-img" width="672"></p>
-<p></p><figcaption class="figure-caption">Figure 10 2d forecasting graph on extension model</figcaption><p></p>
+<p></p><figcaption class="figure-caption">Figure 10 3d forecasting graph on extension model</figcaption><p></p>
 </figure>
 </div>
 </div>
@@ -1114,6 +1732,1174 @@ p(x|a,b,p) \propto x^{p-1} \mathrm{exp} \left\{\frac{-(ax+\frac{b}{x})}{2} \righ
 <section id="stochastic-volatility-conditional-heteroskedasticity" class="level2" data-number="6">
 <h2 data-number="6" class="anchored" data-anchor-id="stochastic-volatility-conditional-heteroskedasticity"><span class="header-section-number">6</span> Stochastic Volatility Conditional Heteroskedasticity</h2>
 <p>Until now, we acknowledge that our model has not achieved the most optimal results. Our modeling approach has operated under the assumption of homoscedasticity. However, in real-world, such as the 2008 financial crisis and the 2020 COVID-19 pandemic, have demonstrated the significant and often abrupt fluctuations in the economy and financial markets. These events underscore the necessity of incorporating heteroscedasticity into our model to more accurately reflect the variable nature of economic conditions and market volatility.</p>
+<section id="basic-model-with-heteroskedasticity" class="level3" data-number="6.1">
+<h3 data-number="6.1" class="anchored" data-anchor-id="basic-model-with-heteroskedasticity"><span class="header-section-number">6.1</span> Basic Model with Heteroskedasticity</h3>
+<p>The model specification is as below:</p>
+<p><span id="eq-4"><span class="math display">\[
+\begin{align}
+Y &amp;= X A +E
+\\
+E|X &amp;\sim \mathcal{MN}_{T\times 10}(\textbf{0},\Sigma,\mathrm{diag}(\sigma_{T}^{2}))
+\end{align}
+\tag{4}\]</span></span></p>
+<p><strong>Step 1</strong>: Prior distribution is presented below. We will specify <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span> and <span class="math inline">\(\underline{v}\)</span>.</p>
+<p><span class="math display">\[
+\begin{align}
+p(A,\Sigma) &amp;\propto L(A,\Sigma | Y,X) \ p(A,\Sigma) \\
+p(A,\Sigma) &amp;\propto L(A,\Sigma | Y,X) \ p(A|\Sigma) \ p(\Sigma)
+\\
+\\
+A|\Sigma &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma,\underline{V})
+\\
+\Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S}, \underline{\nu})
+\end{align}
+\]</span></p>
+<ul>
+<li>Likelihood function</li>
+</ul>
+<p><span class="math display">\[
+\begin{align}
+L\left( {A},{\Sigma}|Y,X \right) &amp;\propto \text{det}({\Sigma})^{-\frac{T}{2}}\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}(Y-X{A})'(Y-X{A}) \right] \right\}\\
+&amp;=\text{det}({\Sigma})^{-\frac{T}{2}}\\
+&amp;\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) \right] \right\}\\
+&amp;\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) \right] \right\}
+\end{align}
+\]</span></p>
+<ul>
+<li>Natural-conjugate prior distribution (kernel)</li>
+</ul>
+<p><span class="math display">\[
+\begin{align}
+p\left({A},{\Sigma} \right) &amp;\propto \text{det}({\Sigma})^{-\frac{N+K+\underline{\nu}+1}{2}}\\&amp;\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) \right] \right\}\\&amp;\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}\underline{S} \right] \right\}
+\end{align}
+\]</span></p>
+<p><strong>Step 2</strong>: Posterior distribution shows below with the implementation of the specification in Step 1</p>
+<p><span class="math display">\[
+\begin{align}
+p\left( A, \Sigma|Y,X \right)
+&amp;\propto L({A},{\Sigma}|Y,X)p\left( {A}, {\Sigma} \right)\\
+&amp;= L({A},{\Sigma}|Y,X)p\left( {A}| {\Sigma} \right)p\left( {\Sigma} \right)
+\end{align}
+\]</span></p>
+<ul>
+<li>kernel:</li>
+</ul>
+<p><span class="math display">\[
+\begin{align*}
+p\left( {A},{\Sigma} |Y,X\right)
+&amp;\propto  \text{det}({\Sigma})^{-\frac{T}{2}}\\
+&amp;\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) \right] \right\}\\
+&amp;\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) \right] \right\}\\
+&amp; \quad\times\text{det}({\Sigma})^{-\frac{N+K+\underline{\nu}+1}{2}}\\
+&amp;\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) \right] \right\}\\
+&amp;\quad\times \exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}\underline{S} \right] \right\} \\
+&amp;\propto\text{det}({\Sigma})^{-\frac{\overbrace{T+\underline{\nu}}^{\overline{\nu}} +N+K+1}{2}} \\
+&amp;\quad\times\exp\left\{ -\frac{1}{2}\text{tr}\left[ {\Sigma}^{-1}
+\color{blue}{\left[({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A})  +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S} \right]} \right] \right\}
+\end{align*}
+\]</span></p>
+<p>Focus on the blue part:</p>
+<p><span class="math display">\[
+\begin{align}
+&amp; \quad \quad({A}-\widehat{A})'X' \ \mathrm{diag}(\sigma_{T}^{2}) \ X({A}-\widehat{A}) + ({A}-\underline{A})'\underline{V}^{-1}({A}-\underline{A}) +(Y-X\widehat{A})' \ \mathrm{diag}(\sigma_{T}^{2}) \ (Y-X\widehat{A}) + \underline{S}
+\\
+&amp;= A'X'\mathrm{diag}(\sigma_{T}^{2})XA - A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} -\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})XA + \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A}}_{\text{cancel out 1}}  + A'\underline{V}^{-1}A -A'\underline{V}^{-1}\underline{A} - \underline{A}'\underline{V}^{-1}A +\underline{A}'\underline{V}^{-1}\underline{A}'
+\\
+&amp; \qquad + Y'\mathrm{diag}(\sigma_{T}^{2})Y - \underbrace{Y'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A}}_{\text{cancel out 2}}  - \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})Y}_{\text{cancel out 2} }  + \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} }_{\text{cancel out 1}} +\underline{S}
+\\
+&amp;= \underbrace{A'X'\mathrm{diag}(\sigma_{T}^{2})XA}_{\text{merge 1}}  - A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} -\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})XA  + \underbrace{ A'\underline{V}^{-1}A}_{\text{merge 1}} - A'\underline{V}^{-1}\underline{A} - \underline{A}'\underline{V}^{-1}A +\underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S}
+\\
+&amp; = A' \underbrace{[X'\mathrm{diag}(\sigma_{T}^{2}) X + \underline{V}^{-1}]}_{\overline{V}^{-1}} A - \underbrace{A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} }_{A'X'\mathrm{diag}(\sigma_{T}^{2})Y}  - \underbrace{\widehat{A}'X'\mathrm{diag}(\sigma_{T}^{2})XA}_{A'X'\mathrm{diag}(\sigma_{T}^{2})Y}    - A'\underline{V}^{-1}\underline{A} - \underline{A}'\underline{V}^{-1}A +\underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S}
+\\
+&amp; = A'\overline{V}^{-1}A - 2A'  [ X'\mathrm{diag}(\sigma_{T}^{2})Y + \underline{V}^{-1}\underline{A} ] + \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S}
+\\
+&amp; = A'\overline{V}^{-1}A - 2A' \overline{V}^{-1} \underbrace{\overline{V}[X'\mathrm{diag}(\sigma_{T}^{2})Y + \underline{V}^{-1}\underline{A} ]}_{\overline{A}}  + \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S}
+\\
+&amp; = A'\overline{V}^{-1}A - 2A'\overline{V}^{-1}\overline{A} +  \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S}
+\\
+&amp; = A'\overline{V}^{-1}A - 2A'\overline{V}^{-1}\overline{A} + [ \overline{A}'\overline{V}^{-1}\overline{A} -  \overline{A}'\overline{V}^{-1}\overline{A} ]+ \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S} \\
+&amp; = \underbrace{ A'\overline{V}^{-1}A - 2A'\overline{V}^{-1}\overline{A} + \overline{A}'\overline{V}^{-1}\overline{A}}_{\text{MN part}}  \quad
+\underbrace{-  \overline{A}'\overline{V}^{-1}\overline{A} + \underline{A}'\underline{V}^{-1}\underline{A}' + Y'\mathrm{diag}(\sigma_{T}^{2})Y  +\underline{S}}_{\text{IW part}\quad \overline{S}}
+\\
+\\
+\\
+&amp; \qquad \text{where} \ A'X'\mathrm{diag}(\sigma_{T}^{2})X\widehat{A} = A'X'\mathrm{diag}(\sigma_{T}^{2})X(X'X)^{-1}X'Y=A'X'\mathrm{diag}(\sigma_{T}^{2})Y
+\end{align}
+\]</span></p>
+<p><span class="math display">\[
+\begin{align}
+\overline{V} &amp;= (X'\mathrm{diag}(\sigma_{T}^{2})^{-1}X + \underline{V}^{-1})^{-1}\\
+\overline{A} &amp;= \overline{V}[X'\mathrm{diag}(\sigma_{T}^{2})^{-1}Y+\underline{V}^{-1}\underline{A}] \\
+\overline{\nu} &amp;= T+\underline{\nu}\\
+\overline{S} &amp;= \underline{S}+Y'\mathrm{diag}(\sigma_{T}^{2})^{-1}Y+\underline{A}'\underline{V}^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}
+\end{align}
+\]</span></p>
+<p><strong>Step 3</strong>:</p>
+<p>As <span class="math inline">\(\overline{A}\)</span>, <span class="math inline">\(\overline{V}\)</span>, <span class="math inline">\(\overline{S}\)</span> and <span class="math inline">\(\overline{v}\)</span> are specified:</p>
+<p>To obtain a sample of <span class="math inline">\(S\)</span> draws from the posterior distribution:</p>
+<ol type="1">
+<li><p>Sample <span class="math inline">\(S\)</span> draws from the marginal posterior distribution for <span class="math inline">\(\Sigma^{(s)}\)</span> given by <span class="math inline">\(\mathcal{IW}_{10}(\overline{S}, \overline{v})\)</span>, and collect the draws in <span class="math inline">\(\{\Sigma^{(s)}\}_{s=1}^{S}\)</span></p></li>
+<li><p>For each draw <span class="math inline">\(\Sigma^{(s)}\)</span> for <span class="math inline">\(s=1,\dots,S\)</span> sample the corresponding draw of <span class="math inline">\(A^{(s)}\)</span> from <span class="math inline">\(\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma^{(s)},\overline{V})\)</span></p></li>
+<li><p>Draw the logarithmic volatilities <span class="math inline">\(H\)</span> using a function designed to handle tridiagonal precision matrices, incorporating both the prior on <span class="math inline">\(h_0\)</span> and the conditional distributions of the log-volatilities</p></li>
+<li><p>Compute <span class="math inline">\(\sigma^2\)</span> from the exponential transformation of the drawn logarithmic volatilities <span class="math inline">\(H\)</span>.</p></li>
+</ol>
+<p>5.Draw <span class="math inline">\(\sigma_v^2\)</span> from the inverse gamma distribution, considering the sum of squared differences between successive <span class="math inline">\(H\)</span> values and <span class="math inline">\(h0\)</span></p>
+<ol start="6" type="1">
+<li>Update the State Variable <span class="math inline">\(s\)</span>:</li>
+</ol>
+<p>Output is the sample draws from the joint posterior distribution <span class="math inline">\(\left\{ {A^{(s)}, \Sigma^{(s)}},H^{(s)}, \sigma^{2(s)},h_0^{(s)}, \sigma_v^{2(s)}, s^{(s)} \right\}^{S}_{s=1}\)</span>.</p>
+<p>Function below is <code>posterior.draws.hetero</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior sample draw function for heteroskedasticity on basic </span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>posterior.draws.hetero <span class="ot">=</span> <span class="cf">function</span> (S, Y, X){</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Pre-setup </span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  N             <span class="ot">=</span> <span class="fu">ncol</span>(Y) </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  t             <span class="ot">=</span> N <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  p             <span class="ot">=</span> <span class="fu">frequency</span>(Y)                        </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  A.hat         <span class="ot">=</span> <span class="fu">solve</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>X)<span class="sc">%*%</span><span class="fu">t</span>(X)<span class="sc">%*%</span>Y</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  Sigma.hat     <span class="ot">=</span> <span class="fu">t</span>(Y<span class="sc">-</span>X<span class="sc">%*%</span>A.hat)<span class="sc">%*%</span>(Y<span class="sc">-</span>X<span class="sc">%*%</span>A.hat)<span class="sc">/</span><span class="fu">nrow</span>(Y)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  T             <span class="ot">=</span> <span class="fu">dim</span>(Y)[<span class="dv">1</span>] <span class="co"># 133</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  K             <span class="ot">=</span> <span class="fu">dim</span>(X)[<span class="dv">2</span>] <span class="co"># 41</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  H             <span class="ot">=</span> <span class="fu">diag</span>(T)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sdiag</span>(H,<span class="sc">-</span><span class="dv">1</span>)   <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  HH            <span class="ot">=</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">diag</span>(T)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sdiag</span>(HH,<span class="sc">-</span><span class="dv">1</span>)  <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sdiag</span>(HH,<span class="dv">1</span>)   <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Prior distribution (with Minnesota prior)</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  A.prior           <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">0</span>,<span class="fu">nrow</span>(A.hat),<span class="fu">ncol</span>(A.hat))</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  A.prior[<span class="dv">2</span><span class="sc">:</span>t,]     <span class="ot">=</span> <span class="fu">diag</span>(N)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  V.prior           <span class="ot">=</span> <span class="fu">diag</span>(<span class="fu">c</span>(kappa<span class="fl">.2</span>,kappa<span class="fl">.1</span><span class="sc">*</span>((<span class="dv">1</span><span class="sc">:</span>p)<span class="sc">^</span>(<span class="sc">-</span><span class="dv">2</span>))<span class="sc">%x%</span><span class="fu">rep</span>(<span class="dv">1</span>,N)))</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  S.prior           <span class="ot">=</span> <span class="fu">diag</span>(<span class="fu">diag</span>(Sigma.hat))</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  nu.prior          <span class="ot">=</span> N <span class="sc">+</span> <span class="dv">2</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  HH                <span class="ot">=</span> HH</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  h0.m              <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  h0.v              <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  sigmav.s          <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  sigmav.nu         <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Define posterior</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  posteriors    <span class="ot">=</span> <span class="fu">list</span>(                        </span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">H           =</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,T,S),</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma2      =</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,T,S),</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">s           =</span> <span class="fu">matrix</span>(<span class="cn">NA</span>,T,S),</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">h0          =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,S),</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma.v2    =</span> <span class="fu">rep</span>(<span class="cn">NA</span>,S),</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">A           =</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="fu">c</span>((<span class="dv">1</span> <span class="sc">+</span> N <span class="sc">*</span> p), N, S)),</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sigma       =</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="fu">c</span>(N, N, S))</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Define auxiliary</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  aux        <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">Y        =</span> Y,</span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">X        =</span> X,</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    <span class="at">H        =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, T, <span class="dv">1</span>),</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">h0       =</span> <span class="dv">0</span>,</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma.v2 =</span> <span class="dv">1</span>,</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">s        =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, T, <span class="dv">1</span>),</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">A        =</span> <span class="fu">matrix</span>(<span class="dv">0</span>, K, N),</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sigma    =</span> <span class="fu">matrix</span>(<span class="dv">0</span>, N, N),             </span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma2   =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, T, <span class="dv">1</span>)</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>   <span class="co"># ----------------------posterior.draws.hetero------------------------------</span></span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>S){</span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>      <span class="co"># normal-inverse Wishard posterior </span></span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>      V.bar.inv              <span class="ot">=</span> <span class="fu">t</span>(aux<span class="sc">$</span>X)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">as.vector</span>(aux<span class="sc">$</span>sigma2))<span class="sc">%*%</span>aux<span class="sc">$</span>X <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span> <span class="fu">diag</span>(V.prior))</span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a>      V.bar                  <span class="ot">=</span> <span class="fu">solve</span>(V.bar.inv)</span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a>      A.bar                  <span class="ot">=</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(aux<span class="sc">$</span>X)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">as.vector</span>(aux<span class="sc">$</span>sigma2))<span class="sc">%*%</span>aux<span class="sc">$</span>Y <span class="sc">+</span> <span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>( V.prior))<span class="sc">%*%</span>A.prior) </span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a>      nu.bar                 <span class="ot">=</span> T <span class="sc">+</span> nu.prior</span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>      S.bar                  <span class="ot">=</span> S.prior <span class="sc">+</span> <span class="fu">t</span>(aux<span class="sc">$</span>Y)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">as.vector</span>(aux<span class="sc">$</span>sigma2))<span class="sc">%*%</span>aux<span class="sc">$</span>Y <span class="sc">+</span> <span class="fu">t</span>(A.prior)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">diag</span>(V.prior))<span class="sc">%*%</span>A.prior <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar </span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>      S.bar.inv              <span class="ot">=</span> <span class="fu">solve</span>(S.bar)</span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>      S.bar.inv              <span class="ot">=</span> <span class="fl">0.5</span> <span class="sc">*</span> (<span class="fu">t</span>(S.bar.inv) <span class="sc">+</span> S.bar.inv) <span class="co"># positive-definite</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>      <span class="co"># posterior draws for A and Sigma</span></span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>      Sigma.posterior.IW     <span class="ot">=</span> <span class="fu">rWishart</span>(<span class="dv">1</span>, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span>S.bar.inv)</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>      Sigma.posterior.draw   <span class="ot">=</span> <span class="fu">apply</span>(Sigma.posterior.IW, <span class="dv">3</span> ,solve)</span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>Sigma              <span class="ot">=</span> <span class="fu">array</span>(Sigma.posterior.draw,<span class="fu">c</span>(N,N,<span class="dv">1</span>))</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>      A.norm                 <span class="ot">=</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(<span class="fu">c</span>(K,N,<span class="dv">1</span>))),<span class="fu">c</span>(K,N,<span class="dv">1</span>))</span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>      L                      <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar))</span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>A                  <span class="ot">=</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.norm[,,<span class="dv">1</span>]<span class="sc">%*%</span><span class="fu">chol</span>(aux<span class="sc">$</span>Sigma[,,<span class="dv">1</span>])</span>
+<span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>      <span class="co"># posterior draw for sigma2   </span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>      N             <span class="ot">=</span> <span class="fu">dim</span>(aux<span class="sc">$</span>Y)[<span class="dv">2</span>] <span class="co"># 10</span></span>
+<span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a>      alpha.st      <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">1.92677</span>,<span class="fl">1.34744</span>,<span class="fl">0.73504</span>,<span class="fl">0.02266</span>,<span class="dv">0</span><span class="fl">-0.85173</span>,<span class="sc">-</span><span class="fl">1.97278</span>,<span class="sc">-</span><span class="fl">3.46788</span>,<span class="sc">-</span><span class="fl">5.55246</span>,<span class="sc">-</span><span class="fl">8.68384</span>,<span class="sc">-</span><span class="fl">14.65000</span>)</span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>      sigma.st      <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.11265</span>,<span class="fl">0.17788</span>,<span class="fl">0.26768</span>,<span class="fl">0.40611</span>,<span class="fl">0.62699</span>,<span class="fl">0.98583</span>,<span class="fl">1.57469</span>,<span class="fl">2.54498</span>,<span class="fl">4.16591</span>,<span class="fl">7.33342</span>)</span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>      pi.st         <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.00609</span>,<span class="fl">0.04775</span>,<span class="fl">0.13057</span>,<span class="fl">0.20674</span>,<span class="fl">0.22715</span>,<span class="fl">0.18842</span>,<span class="fl">0.12047</span>,<span class="fl">0.05591</span>,<span class="fl">0.01575</span>,<span class="fl">0.00115</span>)</span>
+<span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>      Lambda        <span class="ot">=</span> <span class="fu">solve</span>(<span class="fu">chol</span>(aux<span class="sc">$</span>Sigma[,,<span class="dv">1</span>]))</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>      Z             <span class="ot">=</span> <span class="fu">rowSums</span>( ( aux<span class="sc">$</span>Y <span class="sc">-</span> aux<span class="sc">$</span>X <span class="sc">%*%</span> aux<span class="sc">$</span>A ) <span class="sc">%*%</span> Lambda ) <span class="sc">/</span> <span class="fu">sqrt</span>(N)</span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a>      Y.tilde       <span class="ot">=</span> <span class="fu">as.vector</span>(<span class="fu">log</span>((Z <span class="sc">+</span> <span class="fl">0.0000001</span>)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>      Ytilde.alpha  <span class="ot">=</span> <span class="fu">as.matrix</span>(Y.tilde <span class="sc">-</span> alpha.st[<span class="fu">as.vector</span>(aux<span class="sc">$</span>s)])</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>      <span class="co"># sampling initial condition</span></span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>      V.h0.bar      <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span>((<span class="dv">1</span> <span class="sc">/</span> h0.v) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">/</span> aux<span class="sc">$</span>sigma.v2))</span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>      m.h0.bar      <span class="ot">=</span> V.h0.bar<span class="sc">*</span>((h0.m <span class="sc">/</span> h0.v) <span class="sc">+</span> (aux<span class="sc">$</span>H[<span class="dv">1</span>] <span class="sc">/</span> aux<span class="sc">$</span>sigma.v2))</span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>      h0.draw       <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> m.h0.bar, <span class="at">sd =</span> <span class="fu">sqrt</span>(V.h0.bar))</span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>h0        <span class="ot">=</span> h0.draw</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>      <span class="co"># sampling sigma.v2</span></span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>      sigma.v2.s    <span class="ot">=</span> sigmav.s <span class="sc">+</span> <span class="fu">sum</span>(<span class="fu">c</span>(aux<span class="sc">$</span>H[<span class="dv">1</span>] <span class="sc">-</span> aux<span class="sc">$</span>h0, <span class="fu">diff</span>(aux<span class="sc">$</span>H))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>      sigma.v2.draw <span class="ot">=</span> sigma.v2.s <span class="sc">/</span> <span class="fu">rchisq</span>(<span class="dv">1</span>, sigmav.nu <span class="sc">+</span> T)</span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>sigma.v2  <span class="ot">=</span> sigma.v2.draw</span>
+<span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>      <span class="co"># sampling auxiliary states</span></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>      Pr.tmp        <span class="ot">=</span> <span class="fu">simplify2array</span>(<span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="cf">function</span>(x){</span>
+<span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>        <span class="fu">dnorm</span>(Y.tilde, <span class="at">mean =</span> <span class="fu">as.vector</span>(aux<span class="sc">$</span>H <span class="sc">+</span> alpha.st[x]), <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma.st[x]), <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">log</span>(pi.st[x])</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>      }))</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>      Pr            <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">apply</span>(Pr.tmp, <span class="dv">1</span>, <span class="cf">function</span>(x){<span class="fu">exp</span>(x <span class="sc">-</span> <span class="fu">max</span>(x)) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">exp</span>(x <span class="sc">-</span> <span class="fu">max</span>(x)))}))</span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>      s.cum         <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">apply</span>(Pr, <span class="dv">1</span>, cumsum))</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>      r             <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="fu">runif</span>(T), <span class="dv">10</span>), <span class="at">ncol =</span> <span class="dv">10</span>)</span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>      ss            <span class="ot">=</span> <span class="fu">apply</span>(s.cum <span class="sc">&lt;</span> r, <span class="dv">1</span>, sum) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>s         <span class="ot">=</span> <span class="fu">as.matrix</span>(ss)</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>      <span class="co"># sampling log-volatilities using functions for tridiagonal precision matrix</span></span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>      Sigma.s.inv   <span class="ot">=</span> <span class="fu">diag</span>(<span class="dv">1</span> <span class="sc">/</span> sigma.st[<span class="fu">as.vector</span>(aux<span class="sc">$</span>s)])</span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>      D.inv         <span class="ot">=</span> Sigma.s.inv <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">/</span> aux<span class="sc">$</span>sigma.v2) <span class="sc">*</span> HH</span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a>      b             <span class="ot">=</span> <span class="fu">as.matrix</span>(Ytilde.alpha <span class="sc">/</span> sigma.st[<span class="fu">as.vector</span>(aux<span class="sc">$</span>s)] <span class="sc">+</span> (aux<span class="sc">$</span>h0<span class="sc">/</span>aux<span class="sc">$</span>sigma.v2)<span class="sc">*</span><span class="fu">diag</span>(T)[,<span class="dv">1</span>])</span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>      lead.diag     <span class="ot">=</span> <span class="fu">diag</span>(D.inv)</span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>      sub.diag      <span class="ot">=</span> mgcv<span class="sc">::</span><span class="fu">sdiag</span>(D.inv, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a>      D.chol        <span class="ot">=</span> mgcv<span class="sc">::</span><span class="fu">trichol</span>(<span class="at">ld =</span> lead.diag, <span class="at">sd =</span> sub.diag)</span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a>      D.L           <span class="ot">=</span> <span class="fu">diag</span>(D.chol<span class="sc">$</span>ld)</span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>      mgcv<span class="sc">::</span><span class="fu">sdiag</span>(D.L,<span class="sc">-</span><span class="dv">1</span>) <span class="ot">=</span> D.chol<span class="sc">$</span>sd</span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>      x             <span class="ot">=</span> <span class="fu">as.matrix</span>(<span class="fu">rnorm</span>(T))</span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>      a             <span class="ot">=</span> <span class="fu">forwardsolve</span>(D.L, b)</span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a>      draw          <span class="ot">=</span> <span class="fu">backsolve</span>(<span class="fu">t</span>(D.L), a <span class="sc">+</span> x)</span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>H         <span class="ot">=</span> <span class="fu">as.matrix</span>(draw)</span>
+<span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>sigma2    <span class="ot">=</span> <span class="fu">as.matrix</span>(<span class="fu">exp</span>(draw))</span>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>      <span class="co"># output list</span></span>
+<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>H[,s]             <span class="ot">=</span> aux<span class="sc">$</span>H</span>
+<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>sigma2[,s]        <span class="ot">=</span> aux<span class="sc">$</span>sigma2</span>
+<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>s[,s]             <span class="ot">=</span> aux<span class="sc">$</span>s</span>
+<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>h0[s]             <span class="ot">=</span> aux<span class="sc">$</span>h0</span>
+<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>sigma.v2[s]       <span class="ot">=</span> aux<span class="sc">$</span>sigma.v2</span>
+<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>A[,,s]            <span class="ot">=</span> aux<span class="sc">$</span>A</span>
+<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>Sigma[,,s]        <span class="ot">=</span> aux<span class="sc">$</span>Sigma</span>
+<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(posteriors)</span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<caption>Table 10 Mean Values of A.posterior.het.simu (head 11) </caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.002700</td>
+<td style="text-align: center;">0.058578</td>
+<td style="text-align: center;">0.006291</td>
+<td style="text-align: center;">0.482206</td>
+<td style="text-align: center;">-0.248578</td>
+<td style="text-align: center;">0.002801</td>
+<td style="text-align: center;">-0.009768</td>
+<td style="text-align: center;">0.003049</td>
+<td style="text-align: center;">0.007944</td>
+<td style="text-align: center;">0.023111</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.999932</td>
+<td style="text-align: center;">0.000774</td>
+<td style="text-align: center;">-0.000292</td>
+<td style="text-align: center;">-0.008386</td>
+<td style="text-align: center;">0.008515</td>
+<td style="text-align: center;">-0.000124</td>
+<td style="text-align: center;">0.000404</td>
+<td style="text-align: center;">0.000847</td>
+<td style="text-align: center;">0.000898</td>
+<td style="text-align: center;">-0.000155</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.002064</td>
+<td style="text-align: center;">0.712091</td>
+<td style="text-align: center;">-0.000395</td>
+<td style="text-align: center;">0.097315</td>
+<td style="text-align: center;">-0.004102</td>
+<td style="text-align: center;">0.000280</td>
+<td style="text-align: center;">0.001774</td>
+<td style="text-align: center;">0.001894</td>
+<td style="text-align: center;">-0.001601</td>
+<td style="text-align: center;">-0.004907</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000227</td>
+<td style="text-align: center;">0.000268</td>
+<td style="text-align: center;">1.000436</td>
+<td style="text-align: center;">0.037701</td>
+<td style="text-align: center;">-0.021641</td>
+<td style="text-align: center;">0.000325</td>
+<td style="text-align: center;">-0.001120</td>
+<td style="text-align: center;">0.000396</td>
+<td style="text-align: center;">0.001211</td>
+<td style="text-align: center;">0.002370</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000348</td>
+<td style="text-align: center;">0.016616</td>
+<td style="text-align: center;">0.000266</td>
+<td style="text-align: center;">0.972559</td>
+<td style="text-align: center;">-0.016669</td>
+<td style="text-align: center;">0.001750</td>
+<td style="text-align: center;">0.002311</td>
+<td style="text-align: center;">0.003648</td>
+<td style="text-align: center;">-0.000831</td>
+<td style="text-align: center;">0.000150</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.000338</td>
+<td style="text-align: center;">0.017375</td>
+<td style="text-align: center;">0.000170</td>
+<td style="text-align: center;">-0.078693</td>
+<td style="text-align: center;">0.982306</td>
+<td style="text-align: center;">-0.000525</td>
+<td style="text-align: center;">0.001815</td>
+<td style="text-align: center;">0.001300</td>
+<td style="text-align: center;">0.001642</td>
+<td style="text-align: center;">-0.003012</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.000225</td>
+<td style="text-align: center;">-0.012430</td>
+<td style="text-align: center;">-0.001183</td>
+<td style="text-align: center;">-0.052991</td>
+<td style="text-align: center;">0.044527</td>
+<td style="text-align: center;">0.999250</td>
+<td style="text-align: center;">0.000386</td>
+<td style="text-align: center;">0.003283</td>
+<td style="text-align: center;">0.002420</td>
+<td style="text-align: center;">-0.002224</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000212</td>
+<td style="text-align: center;">0.000229</td>
+<td style="text-align: center;">0.000064</td>
+<td style="text-align: center;">0.003434</td>
+<td style="text-align: center;">-0.001124</td>
+<td style="text-align: center;">0.000696</td>
+<td style="text-align: center;">0.995941</td>
+<td style="text-align: center;">0.000134</td>
+<td style="text-align: center;">-0.000232</td>
+<td style="text-align: center;">-0.000109</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000008</td>
+<td style="text-align: center;">0.003371</td>
+<td style="text-align: center;">-0.000450</td>
+<td style="text-align: center;">-0.024715</td>
+<td style="text-align: center;">0.027849</td>
+<td style="text-align: center;">-0.000222</td>
+<td style="text-align: center;">0.000276</td>
+<td style="text-align: center;">0.990792</td>
+<td style="text-align: center;">0.001639</td>
+<td style="text-align: center;">0.001454</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000142</td>
+<td style="text-align: center;">0.029070</td>
+<td style="text-align: center;">0.000837</td>
+<td style="text-align: center;">0.035402</td>
+<td style="text-align: center;">-0.043173</td>
+<td style="text-align: center;">0.000855</td>
+<td style="text-align: center;">0.005054</td>
+<td style="text-align: center;">0.005346</td>
+<td style="text-align: center;">0.993729</td>
+<td style="text-align: center;">-0.001910</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.000059</td>
+<td style="text-align: center;">-0.004906</td>
+<td style="text-align: center;">-0.000058</td>
+<td style="text-align: center;">-0.018559</td>
+<td style="text-align: center;">0.020761</td>
+<td style="text-align: center;">0.001158</td>
+<td style="text-align: center;">0.000649</td>
+<td style="text-align: center;">0.003824</td>
+<td style="text-align: center;">-0.004598</td>
+<td style="text-align: center;">0.995535</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<caption>Table 11 Mean Values of Sigma.posterior.het.simu </caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1.0e-06</td>
+<td style="text-align: center;">-0.000005</td>
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">0.000004</td>
+<td style="text-align: center;">-0.000014</td>
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">0.000001</td>
+<td style="text-align: center;">-0.000001</td>
+<td style="text-align: center;">0.0e+00</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-5.0e-06</td>
+<td style="text-align: center;">0.010561</td>
+<td style="text-align: center;">-2.0e-06</td>
+<td style="text-align: center;">0.000643</td>
+<td style="text-align: center;">-0.001138</td>
+<td style="text-align: center;">-6.7e-05</td>
+<td style="text-align: center;">2.6e-05</td>
+<td style="text-align: center;">0.000106</td>
+<td style="text-align: center;">-0.000129</td>
+<td style="text-align: center;">2.0e-05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">-0.000002</td>
+<td style="text-align: center;">3.0e-06</td>
+<td style="text-align: center;">0.000009</td>
+<td style="text-align: center;">-0.000034</td>
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">1.0e-06</td>
+<td style="text-align: center;">0.000001</td>
+<td style="text-align: center;">-0.000004</td>
+<td style="text-align: center;">0.0e+00</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4.0e-06</td>
+<td style="text-align: center;">0.000643</td>
+<td style="text-align: center;">9.0e-06</td>
+<td style="text-align: center;">0.004387</td>
+<td style="text-align: center;">-0.000256</td>
+<td style="text-align: center;">-5.4e-05</td>
+<td style="text-align: center;">-6.7e-05</td>
+<td style="text-align: center;">-0.000078</td>
+<td style="text-align: center;">-0.000073</td>
+<td style="text-align: center;">5.5e-05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-1.4e-05</td>
+<td style="text-align: center;">-0.001138</td>
+<td style="text-align: center;">-3.4e-05</td>
+<td style="text-align: center;">-0.000256</td>
+<td style="text-align: center;">0.003058</td>
+<td style="text-align: center;">-1.3e-05</td>
+<td style="text-align: center;">-7.9e-05</td>
+<td style="text-align: center;">-0.000083</td>
+<td style="text-align: center;">0.000052</td>
+<td style="text-align: center;">-4.0e-05</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">-0.000067</td>
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">-0.000054</td>
+<td style="text-align: center;">-0.000013</td>
+<td style="text-align: center;">9.0e-06</td>
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">-0.000002</td>
+<td style="text-align: center;">0.000002</td>
+<td style="text-align: center;">-2.0e-06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">0.000026</td>
+<td style="text-align: center;">1.0e-06</td>
+<td style="text-align: center;">-0.000067</td>
+<td style="text-align: center;">-0.000079</td>
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">8.4e-05</td>
+<td style="text-align: center;">0.000032</td>
+<td style="text-align: center;">-0.000011</td>
+<td style="text-align: center;">-2.3e-05</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1.0e-06</td>
+<td style="text-align: center;">0.000106</td>
+<td style="text-align: center;">1.0e-06</td>
+<td style="text-align: center;">-0.000078</td>
+<td style="text-align: center;">-0.000083</td>
+<td style="text-align: center;">-2.0e-06</td>
+<td style="text-align: center;">3.2e-05</td>
+<td style="text-align: center;">0.000178</td>
+<td style="text-align: center;">-0.000035</td>
+<td style="text-align: center;">-4.7e-05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-1.0e-06</td>
+<td style="text-align: center;">-0.000129</td>
+<td style="text-align: center;">-4.0e-06</td>
+<td style="text-align: center;">-0.000073</td>
+<td style="text-align: center;">0.000052</td>
+<td style="text-align: center;">2.0e-06</td>
+<td style="text-align: center;">-1.1e-05</td>
+<td style="text-align: center;">-0.000035</td>
+<td style="text-align: center;">0.000179</td>
+<td style="text-align: center;">3.8e-05</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">0.000020</td>
+<td style="text-align: center;">0.0e+00</td>
+<td style="text-align: center;">0.000055</td>
+<td style="text-align: center;">-0.000040</td>
+<td style="text-align: center;">-2.0e-06</td>
+<td style="text-align: center;">-2.3e-05</td>
+<td style="text-align: center;">-0.000047</td>
+<td style="text-align: center;">0.000038</td>
+<td style="text-align: center;">7.3e-05</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Histograms Trace Plots Basic Hetero-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 14 Histograms and trace plots on key variables using basic hetero model</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Figure 11 displays a 3D visualization that, as anticipated, exhibits confidence intervals expanding from narrow to wide. Furthermore, the confidence intervals appear narrower than those in the model without heteroscedasticity, suggesting that incorporating heteroscedasticity is efficacious.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/3d Forecasting Graph on Basic Hetero-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 15 3D forecasting graph on basic model with heteroskedasticity</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As analyzed above, Figure 12 also shows improved forecasts, with the predicted inflation rate gradually declining to 2-3% over the next eight periods. Additionally, people’s expectations of inflation are also decreasing in sync, aligning with the initial inquiry.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Basic Model with hetero Key Data Plot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 16 Basic Model with heteroskedasticity key data plot</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="extended-model-with-heteroskedasticity" class="level3" data-number="6.2">
+<h3 data-number="6.2" class="anchored" data-anchor-id="extended-model-with-heteroskedasticity"><span class="header-section-number">6.2</span> Extended Model with Heteroskedasticity</h3>
+<p>Similar like before, the model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span> is introduced to adjust <span class="math inline">\(V\)</span>.</p>
+<p><strong>Step 1</strong>: Prior distribution is presented below. <span class="math inline">\(\underline{A}\)</span>, <span class="math inline">\(\underline{V}\)</span>, <span class="math inline">\(\underline{S}\)</span>, <span class="math inline">\(\underline{\nu}\)</span> by Minnesota shrinkage parameter lambda <span class="math inline">\(\lambda\)</span> will be simplified.</p>
+<p><span class="math display">\[
+\begin{align}
+p(A,\Sigma, \lambda |Y,X) &amp;\propto L(A,\Sigma | Y,X) \ p(A,\Sigma, \lambda) \\
+&amp;\propto L(A,\Sigma | Y,X)  \ p(A |\Sigma, \lambda) \ p(\Sigma) \ p(\lambda)
+\end{align}
+\]</span></p>
+<p>where, each <span class="math inline">\(p(A |\Sigma, k)\)</span>, <span class="math inline">\(p(\Sigma)\)</span>, <span class="math inline">\(p(k)\)</span> is specified below:</p>
+<p><span class="math display">\[
+\begin{align}
+A |\Sigma, \lambda &amp;\sim \mathcal{MN}_{K\times N}(\underline{A}, \Sigma, \lambda\underline{V}) \\
+\Sigma &amp;\sim \mathcal{IW}_{N}(\underline{S},\underline{\nu}) \\
+\lambda &amp;\sim \mathcal{Gamma}(\underline{k_{\lambda}}, \underline{\theta_{\lambda}} ) \\
+\end{align}
+\]</span></p>
+<p><strong>Step 2</strong>: All kernal shown below</p>
+<p><span class="math display">\[
+\begin{align}
+L(A,\Sigma | Y,X) &amp;= \mathrm{det} (\Sigma)^{-\frac{T}{2}}\times \mathrm{exp}\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(A-\widehat{A})'X' \mathrm{diag}(\sigma_{T}^{2}) X (A-\widehat{A})\right]\right\} \times \mathrm{exp}\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1}(Y-X\widehat{A})' \mathrm{diag}(\sigma_{T}^{2})(Y-X\widehat{A})\right]\right\}
+\\
+p(A |\Sigma, \lambda) &amp;= \mathrm{det} (\Sigma)^{-\frac{K}{2}} \mathrm{det}(\lambda \underline{V} )^{-\frac{N}{2}}\mathrm{exp}\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} (A-\underline{A})' (\lambda\underline{V})^{-1} (A-\underline{A})\right]\right\}
+\\
+p(\Sigma) &amp;= \mathrm{det}(\Sigma)^{\frac{\underline{\nu}+N+1}{2}} \mathrm{exp}\left\{ -\frac{1}{2} \mathrm{tr}\left[ \Sigma^{-1} \underline{S}\right]\right\}  
+\\
+p(\lambda) &amp;= \lambda ^{\underline{k_{\lambda}}-1}e^{-\frac{\lambda}{\underline{\theta_{\lambda}}}}
+\end{align}
+\]</span></p>
+<p>Similar like before,</p>
+<ul>
+<li>The kernel of the fully conditional posterior distribution of <span class="math inline">\(A\)</span> and <span class="math inline">\(\Sigma\)</span>:</li>
+</ul>
+<p><span class="math display">\[
+\begin{align}
+\overline{V} &amp;= (X'\mathrm{diag}(\sigma_{T}^{2})^{-1}X + (\lambda\underline{V})^{-1})^{-1}\\
+\overline{A} &amp;= \overline{V}[X'\mathrm{diag}(\sigma_{T}^{2})^{-1}Y+(\lambda\underline{V})^{-1}\underline{A}] \\
+\overline{\nu} &amp;= T+\underline{\nu}\\
+\overline{S} &amp;= \underline{S}+Y'\mathrm{diag}(\sigma_{T}^{2})^{-1}Y+\underline{A}'(\lambda\underline{V})^{-1}\underline{A}-\overline{A}'\overline{V}^{-1}\overline{A}
+\end{align}
+\]</span></p>
+<ul>
+<li>The kernel of the fully conditional posterior distribution of <span class="math inline">\(\lambda\)</span>:</li>
+</ul>
+<p><span class="math display">\[
+\begin{align}
+\overline{a} &amp;= \frac{2}{\underline{\theta_{\lambda}} }
+\\
+\overline{b} &amp;= \mathrm{tr}  \left[ \Sigma^{-1} (A-\underline{A})' (\underline{V})^{-1} (A-\underline{A})\right]
+\\
+\overline{p} &amp;= -\frac{KN}{2} + \underline{k_{\lambda}}
+\end{align}
+\]</span></p>
+<p><strong>Step 3</strong>: As <span class="math inline">\(\overline{A}\)</span>, <span class="math inline">\(\overline{V}\)</span>, <span class="math inline">\(\overline{S}\)</span>, <span class="math inline">\(\overline{v}\)</span>, <span class="math inline">\(\overline{a}\)</span>, <span class="math inline">\(\overline{b}\)</span>, <span class="math inline">\(\overline{p}\)</span> are specified:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>invfunc <span class="ot">=</span> <span class="cf">function</span>(inv){</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>eigen_decomp <span class="ot">&lt;-</span> <span class="fu">eigen</span>(inv, <span class="at">symmetric =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>      eigen_decomp<span class="sc">$</span>values[eigen_decomp<span class="sc">$</span>values <span class="sc">&lt;=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>      inv <span class="ot">&lt;-</span> eigen_decomp<span class="sc">$</span>vectors <span class="sc">%*%</span> <span class="fu">diag</span>(eigen_decomp<span class="sc">$</span>values) <span class="sc">%*%</span> <span class="fu">t</span>(eigen_decomp<span class="sc">$</span>vectors)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Function below is <code>posterior.draws.exten.hetero</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Posterior sample draw function for heteroskedasticity on entended model</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>posterior.draws.exten.hetero <span class="ot">=</span> <span class="cf">function</span> (total_S, Y, X){</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Pre-setup </span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  N             <span class="ot">=</span> <span class="fu">ncol</span>(Y) <span class="co"># 10</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  t             <span class="ot">=</span> N <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  p             <span class="ot">=</span> <span class="fu">frequency</span>(Y)  <span class="co"># 4                     </span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  A.hat         <span class="ot">=</span> <span class="fu">solve</span>(<span class="fu">t</span>(X)<span class="sc">%*%</span>X)<span class="sc">%*%</span><span class="fu">t</span>(X)<span class="sc">%*%</span>Y</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  Sigma.hat     <span class="ot">=</span> <span class="fu">t</span>(Y<span class="sc">-</span>X<span class="sc">%*%</span>A.hat)<span class="sc">%*%</span>(Y<span class="sc">-</span>X<span class="sc">%*%</span>A.hat)<span class="sc">/</span><span class="fu">nrow</span>(Y)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  T             <span class="ot">=</span> <span class="fu">dim</span>(Y)[<span class="dv">1</span>] <span class="co"># 133</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  K             <span class="ot">=</span> <span class="fu">dim</span>(X)[<span class="dv">2</span>] <span class="co"># 41</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  H             <span class="ot">=</span> <span class="fu">diag</span>(T)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sdiag</span>(H,<span class="sc">-</span><span class="dv">1</span>)   <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  HH            <span class="ot">=</span> <span class="dv">2</span><span class="sc">*</span><span class="fu">diag</span>(T)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sdiag</span>(HH,<span class="sc">-</span><span class="dv">1</span>)  <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sdiag</span>(HH,<span class="dv">1</span>)   <span class="ot">=</span> <span class="sc">-</span><span class="dv">1</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Prior distribution (with Minnesota prior)</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  A.prior           <span class="ot">=</span> <span class="fu">matrix</span>(<span class="dv">0</span>,<span class="fu">nrow</span>(A.hat),<span class="fu">ncol</span>(A.hat))</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  A.prior[<span class="dv">2</span><span class="sc">:</span>t,]     <span class="ot">=</span> <span class="fu">diag</span>(N)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  V.prior           <span class="ot">=</span> <span class="fu">diag</span>(<span class="fu">c</span>(kappa<span class="fl">.2</span>,kappa<span class="fl">.1</span><span class="sc">*</span>((<span class="dv">1</span><span class="sc">:</span>p)<span class="sc">^</span>(<span class="sc">-</span><span class="dv">2</span>))<span class="sc">%x%</span><span class="fu">rep</span>(<span class="dv">1</span>,N)))</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  S.prior           <span class="ot">=</span> <span class="fu">diag</span>(<span class="fu">diag</span>(Sigma.hat))</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  nu.prior          <span class="ot">=</span> N <span class="sc">+</span> <span class="dv">2</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  lambda.priors     <span class="ot">=</span> <span class="fu">list</span>(<span class="at">k =</span> <span class="dv">1</span>, <span class="at">theta =</span> .<span class="dv">1</span>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="co"># </span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  HH                <span class="ot">=</span> HH</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>  h0.m              <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>  h0.v              <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  sigmav.s          <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  sigmav.nu         <span class="ot">=</span> <span class="dv">1</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Define posterior</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  posteriors    <span class="ot">=</span> <span class="fu">list</span>(                        </span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">H           =</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, T, total_S),</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma2      =</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, T, total_S),</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">s           =</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, T, total_S),</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">h0          =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, total_S),</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma.v2    =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, total_S),</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">A           =</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="fu">c</span>((<span class="dv">1</span> <span class="sc">+</span> N <span class="sc">*</span> p), N, total_S)),</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sigma       =</span> <span class="fu">array</span>(<span class="cn">NA</span>, <span class="fu">c</span>(N, N, total_S)),</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">lambda      =</span> <span class="fu">rep</span>(<span class="cn">NA</span>, total_S)  </span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Define auxiliary</span></span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>  aux        <span class="ot">=</span> <span class="fu">list</span>(</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">Y        =</span> Y,</span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">X        =</span> X,</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">H        =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, T, <span class="dv">1</span>),</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>    <span class="at">h0       =</span> <span class="dv">0</span>,</span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma.v2 =</span> <span class="dv">1</span>,</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a>    <span class="at">s        =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, T, <span class="dv">1</span>),</span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a>    <span class="at">A        =</span> <span class="fu">matrix</span>(<span class="dv">0</span>, K, N),</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">Sigma    =</span> <span class="fu">matrix</span>(<span class="dv">0</span>, N, N),             </span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a>    <span class="at">sigma2   =</span> <span class="fu">matrix</span>(<span class="dv">1</span>, T, <span class="dv">1</span>),</span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a>    <span class="at">lambda   =</span> <span class="dv">10</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a>   <span class="co"># ----------------------posterior.draws.exten.hetero------------------------------</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a> <span class="cf">for</span> (s <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>total_S){ </span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a>  <span class="co"># normal-inverse Wishard posterior </span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a>      V.bar.inv              <span class="ot">=</span> <span class="fu">t</span>(aux<span class="sc">$</span>X)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">as.vector</span>(aux<span class="sc">$</span>sigma2))<span class="sc">%*%</span>aux<span class="sc">$</span>X <span class="sc">+</span> <span class="fu">solve</span>(aux<span class="sc">$</span>lambda<span class="sc">*</span> V.prior)</span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>      V.bar.inv              <span class="ot">=</span> <span class="fu">invfunc</span>(V.bar.inv)</span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>      V.bar                  <span class="ot">=</span> <span class="fu">solve</span>(V.bar.inv)</span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>      A.bar                  <span class="ot">=</span> V.bar<span class="sc">%*%</span>(<span class="fu">t</span>(aux<span class="sc">$</span>X)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">as.vector</span>(aux<span class="sc">$</span>sigma2))<span class="sc">%*%</span>aux<span class="sc">$</span>Y <span class="sc">+</span> <span class="fu">solve</span>(aux<span class="sc">$</span>lambda <span class="sc">*</span> V.prior)<span class="sc">%*%</span>A.prior) </span>
+<span id="cb5-70"><a href="#cb5-70" aria-hidden="true" tabindex="-1"></a>      nu.bar                 <span class="ot">=</span> T <span class="sc">+</span> nu.prior</span>
+<span id="cb5-71"><a href="#cb5-71" aria-hidden="true" tabindex="-1"></a>      S.bar                  <span class="ot">=</span> S.prior <span class="sc">+</span> <span class="fu">t</span>(aux<span class="sc">$</span>Y)<span class="sc">%*%</span><span class="fu">diag</span>(<span class="dv">1</span><span class="sc">/</span><span class="fu">as.vector</span>(aux<span class="sc">$</span>sigma2))<span class="sc">%*%</span>aux<span class="sc">$</span>Y <span class="sc">+</span> <span class="fu">t</span>(A.prior)<span class="sc">%*%</span><span class="fu">solve</span>(aux<span class="sc">$</span>lambda <span class="sc">*</span> V.prior)<span class="sc">%*%</span>A.prior <span class="sc">-</span> <span class="fu">t</span>(A.bar)<span class="sc">%*%</span>V.bar.inv<span class="sc">%*%</span>A.bar </span>
+<span id="cb5-72"><a href="#cb5-72" aria-hidden="true" tabindex="-1"></a>      S.bar                  <span class="ot">=</span> <span class="fu">invfunc</span>(S.bar)</span>
+<span id="cb5-73"><a href="#cb5-73" aria-hidden="true" tabindex="-1"></a>      S.bar.inv              <span class="ot">=</span> <span class="fu">solve</span>(S.bar)</span>
+<span id="cb5-74"><a href="#cb5-74" aria-hidden="true" tabindex="-1"></a>      <span class="co"># S.bar.inv              = 0.5 * (t(S.bar.inv) + S.bar.inv) # positive-definite</span></span>
+<span id="cb5-75"><a href="#cb5-75" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-76"><a href="#cb5-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-77"><a href="#cb5-77" aria-hidden="true" tabindex="-1"></a>    <span class="co"># posterior draws for A and Sigma</span></span>
+<span id="cb5-78"><a href="#cb5-78" aria-hidden="true" tabindex="-1"></a>      Sigma.posterior.IW     <span class="ot">=</span> <span class="fu">rWishart</span>(<span class="dv">1</span>, <span class="at">df=</span>nu.bar, <span class="at">Sigma=</span>S.bar.inv)</span>
+<span id="cb5-79"><a href="#cb5-79" aria-hidden="true" tabindex="-1"></a>      Sigma.posterior.draw   <span class="ot">=</span> <span class="fu">apply</span>(Sigma.posterior.IW, <span class="dv">3</span> ,solve)</span>
+<span id="cb5-80"><a href="#cb5-80" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>Sigma              <span class="ot">=</span> <span class="fu">array</span>(Sigma.posterior.draw,<span class="fu">c</span>(N,N,<span class="dv">1</span>))</span>
+<span id="cb5-81"><a href="#cb5-81" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-82"><a href="#cb5-82" aria-hidden="true" tabindex="-1"></a>      <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">dim</span>(aux<span class="sc">$</span>Sigma)[<span class="dv">3</span>]) {</span>
+<span id="cb5-83"><a href="#cb5-83" aria-hidden="true" tabindex="-1"></a>          eigen_decomp <span class="ot">&lt;-</span> <span class="fu">eigen</span>(aux<span class="sc">$</span>Sigma[, , i], <span class="at">symmetric =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb5-84"><a href="#cb5-84" aria-hidden="true" tabindex="-1"></a>          eigen_decomp<span class="sc">$</span>values[eigen_decomp<span class="sc">$</span>values <span class="sc">&lt;=</span> <span class="dv">0</span>] <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb5-85"><a href="#cb5-85" aria-hidden="true" tabindex="-1"></a>          aux<span class="sc">$</span>Sigma[, , i] <span class="ot">&lt;-</span> eigen_decomp<span class="sc">$</span>vectors <span class="sc">%*%</span> <span class="fu">diag</span>(eigen_decomp<span class="sc">$</span>values) <span class="sc">%*%</span> <span class="fu">t</span>(eigen_decomp<span class="sc">$</span>vectors)</span>
+<span id="cb5-86"><a href="#cb5-86" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb5-87"><a href="#cb5-87" aria-hidden="true" tabindex="-1"></a>      A.norm                 <span class="ot">=</span> <span class="fu">array</span>(<span class="fu">rnorm</span>(<span class="fu">prod</span>(<span class="fu">c</span>(K,N,<span class="dv">1</span>))),<span class="fu">c</span>(K,N,<span class="dv">1</span>))</span>
+<span id="cb5-88"><a href="#cb5-88" aria-hidden="true" tabindex="-1"></a>      L                      <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">chol</span>(V.bar))      </span>
+<span id="cb5-89"><a href="#cb5-89" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>A                  <span class="ot">=</span> A.bar <span class="sc">+</span> L<span class="sc">%*%</span>A.norm[,,<span class="dv">1</span>]<span class="sc">%*%</span><span class="fu">chol</span>(aux<span class="sc">$</span>Sigma[,,<span class="dv">1</span>])</span>
+<span id="cb5-90"><a href="#cb5-90" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-91"><a href="#cb5-91" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-92"><a href="#cb5-92" aria-hidden="true" tabindex="-1"></a>    <span class="co"># posterior draws for lambda</span></span>
+<span id="cb5-93"><a href="#cb5-93" aria-hidden="true" tabindex="-1"></a>      lambda.p <span class="ot">=</span> lambda.priors<span class="sc">$</span>k <span class="sc">-</span> (K <span class="sc">*</span> N) <span class="sc">/</span> <span class="dv">2</span></span>
+<span id="cb5-94"><a href="#cb5-94" aria-hidden="true" tabindex="-1"></a>      diff_A <span class="ot">=</span> aux<span class="sc">$</span>A <span class="sc">-</span> A.prior</span>
+<span id="cb5-95"><a href="#cb5-95" aria-hidden="true" tabindex="-1"></a>      product <span class="ot">=</span> <span class="fu">t</span>(diff_A) <span class="sc">%*%</span> <span class="fu">solve</span>(V.prior) <span class="sc">%*%</span> diff_A</span>
+<span id="cb5-96"><a href="#cb5-96" aria-hidden="true" tabindex="-1"></a>      chi.b <span class="ot">=</span> <span class="fu">sum</span>(<span class="fu">diag</span>(aux<span class="sc">$</span>Sigma[,,<span class="dv">1</span>] <span class="sc">%*%</span> product))</span>
+<span id="cb5-97"><a href="#cb5-97" aria-hidden="true" tabindex="-1"></a>      psi.a <span class="ot">=</span> <span class="dv">2</span> <span class="sc">/</span> lambda.priors<span class="sc">$</span>theta</span>
+<span id="cb5-98"><a href="#cb5-98" aria-hidden="true" tabindex="-1"></a>      lambda.draw <span class="ot">=</span> GIGrvg<span class="sc">::</span><span class="fu">rgig</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">lambda =</span> lambda.p, <span class="at">chi =</span> chi.b, <span class="at">psi =</span> psi.a)</span>
+<span id="cb5-99"><a href="#cb5-99" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>lambda <span class="ot">=</span> lambda.draw</span>
+<span id="cb5-100"><a href="#cb5-100" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-101"><a href="#cb5-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-102"><a href="#cb5-102" aria-hidden="true" tabindex="-1"></a>      <span class="co"># posterior draw for sigma2   </span></span>
+<span id="cb5-103"><a href="#cb5-103" aria-hidden="true" tabindex="-1"></a>      N             <span class="ot">=</span> <span class="fu">dim</span>(aux<span class="sc">$</span>Y)[<span class="dv">2</span>] <span class="co"># 10</span></span>
+<span id="cb5-104"><a href="#cb5-104" aria-hidden="true" tabindex="-1"></a>      alpha.st      <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">1.92677</span>,<span class="fl">1.34744</span>,<span class="fl">0.73504</span>,<span class="fl">0.02266</span>,<span class="dv">0</span><span class="fl">-0.85173</span>,<span class="sc">-</span><span class="fl">1.97278</span>,<span class="sc">-</span><span class="fl">3.46788</span>,<span class="sc">-</span><span class="fl">5.55246</span>,<span class="sc">-</span><span class="fl">8.68384</span>,<span class="sc">-</span><span class="fl">14.65000</span>)</span>
+<span id="cb5-105"><a href="#cb5-105" aria-hidden="true" tabindex="-1"></a>      sigma.st      <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.11265</span>,<span class="fl">0.17788</span>,<span class="fl">0.26768</span>,<span class="fl">0.40611</span>,<span class="fl">0.62699</span>,<span class="fl">0.98583</span>,<span class="fl">1.57469</span>,<span class="fl">2.54498</span>,<span class="fl">4.16591</span>,<span class="fl">7.33342</span>)</span>
+<span id="cb5-106"><a href="#cb5-106" aria-hidden="true" tabindex="-1"></a>      pi.st         <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.00609</span>,<span class="fl">0.04775</span>,<span class="fl">0.13057</span>,<span class="fl">0.20674</span>,<span class="fl">0.22715</span>,<span class="fl">0.18842</span>,<span class="fl">0.12047</span>,<span class="fl">0.05591</span>,<span class="fl">0.01575</span>,<span class="fl">0.00115</span>)</span>
+<span id="cb5-107"><a href="#cb5-107" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-108"><a href="#cb5-108" aria-hidden="true" tabindex="-1"></a>      Lambda        <span class="ot">=</span> <span class="fu">solve</span>(<span class="fu">chol</span>(aux<span class="sc">$</span>Sigma[,,<span class="dv">1</span>]))</span>
+<span id="cb5-109"><a href="#cb5-109" aria-hidden="true" tabindex="-1"></a>      Z             <span class="ot">=</span> <span class="fu">rowSums</span>( ( aux<span class="sc">$</span>Y <span class="sc">-</span> aux<span class="sc">$</span>X <span class="sc">%*%</span> aux<span class="sc">$</span>A ) <span class="sc">%*%</span> Lambda ) <span class="sc">/</span> <span class="fu">sqrt</span>(N)</span>
+<span id="cb5-110"><a href="#cb5-110" aria-hidden="true" tabindex="-1"></a>      Y.tilde       <span class="ot">=</span> <span class="fu">as.vector</span>(<span class="fu">log</span>((Z <span class="sc">+</span> <span class="fl">0.0000001</span>)<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb5-111"><a href="#cb5-111" aria-hidden="true" tabindex="-1"></a>      Ytilde.alpha  <span class="ot">=</span> <span class="fu">as.matrix</span>(Y.tilde <span class="sc">-</span> alpha.st[<span class="fu">as.vector</span>(aux<span class="sc">$</span>s)])</span>
+<span id="cb5-112"><a href="#cb5-112" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-113"><a href="#cb5-113" aria-hidden="true" tabindex="-1"></a>      <span class="co"># sampling initial condition</span></span>
+<span id="cb5-114"><a href="#cb5-114" aria-hidden="true" tabindex="-1"></a>      V.h0.bar      <span class="ot">=</span> <span class="dv">1</span><span class="sc">/</span>((<span class="dv">1</span> <span class="sc">/</span> h0.v) <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">/</span> aux<span class="sc">$</span>sigma.v2))</span>
+<span id="cb5-115"><a href="#cb5-115" aria-hidden="true" tabindex="-1"></a>      m.h0.bar      <span class="ot">=</span> V.h0.bar<span class="sc">*</span>((h0.m <span class="sc">/</span> h0.v) <span class="sc">+</span> (aux<span class="sc">$</span>H[<span class="dv">1</span>] <span class="sc">/</span> aux<span class="sc">$</span>sigma.v2))</span>
+<span id="cb5-116"><a href="#cb5-116" aria-hidden="true" tabindex="-1"></a>      h0.draw       <span class="ot">=</span> <span class="fu">rnorm</span>(<span class="dv">1</span>, <span class="at">mean =</span> m.h0.bar, <span class="at">sd =</span> <span class="fu">sqrt</span>(V.h0.bar))</span>
+<span id="cb5-117"><a href="#cb5-117" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>h0        <span class="ot">=</span> h0.draw</span>
+<span id="cb5-118"><a href="#cb5-118" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-119"><a href="#cb5-119" aria-hidden="true" tabindex="-1"></a>      <span class="co"># sampling sigma.v2</span></span>
+<span id="cb5-120"><a href="#cb5-120" aria-hidden="true" tabindex="-1"></a>      sigma.v2.s    <span class="ot">=</span> sigmav.s <span class="sc">+</span> <span class="fu">sum</span>(<span class="fu">c</span>(aux<span class="sc">$</span>H[<span class="dv">1</span>] <span class="sc">-</span> aux<span class="sc">$</span>h0, <span class="fu">diff</span>(aux<span class="sc">$</span>H))<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb5-121"><a href="#cb5-121" aria-hidden="true" tabindex="-1"></a>      sigma.v2.draw <span class="ot">=</span> sigma.v2.s <span class="sc">/</span> <span class="fu">rchisq</span>(<span class="dv">1</span>, sigmav.nu <span class="sc">+</span> T)</span>
+<span id="cb5-122"><a href="#cb5-122" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>sigma.v2  <span class="ot">=</span> sigma.v2.draw</span>
+<span id="cb5-123"><a href="#cb5-123" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-124"><a href="#cb5-124" aria-hidden="true" tabindex="-1"></a>      <span class="co"># sampling auxiliary states</span></span>
+<span id="cb5-125"><a href="#cb5-125" aria-hidden="true" tabindex="-1"></a>      Pr.tmp        <span class="ot">=</span> <span class="fu">simplify2array</span>(<span class="fu">lapply</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>,<span class="cf">function</span>(x){</span>
+<span id="cb5-126"><a href="#cb5-126" aria-hidden="true" tabindex="-1"></a>        <span class="fu">dnorm</span>(Y.tilde, <span class="at">mean =</span> <span class="fu">as.vector</span>(aux<span class="sc">$</span>H <span class="sc">+</span> alpha.st[x]), <span class="at">sd =</span> <span class="fu">sqrt</span>(sigma.st[x]), <span class="at">log =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">log</span>(pi.st[x])</span>
+<span id="cb5-127"><a href="#cb5-127" aria-hidden="true" tabindex="-1"></a>      }))</span>
+<span id="cb5-128"><a href="#cb5-128" aria-hidden="true" tabindex="-1"></a>      Pr            <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">apply</span>(Pr.tmp, <span class="dv">1</span>, <span class="cf">function</span>(x){<span class="fu">exp</span>(x <span class="sc">-</span> <span class="fu">max</span>(x)) <span class="sc">/</span> <span class="fu">sum</span>(<span class="fu">exp</span>(x <span class="sc">-</span> <span class="fu">max</span>(x)))}))</span>
+<span id="cb5-129"><a href="#cb5-129" aria-hidden="true" tabindex="-1"></a>      s.cum         <span class="ot">=</span> <span class="fu">t</span>(<span class="fu">apply</span>(Pr, <span class="dv">1</span>, cumsum))</span>
+<span id="cb5-130"><a href="#cb5-130" aria-hidden="true" tabindex="-1"></a>      r             <span class="ot">=</span> <span class="fu">matrix</span>(<span class="fu">rep</span>(<span class="fu">runif</span>(T), <span class="dv">10</span>), <span class="at">ncol =</span> <span class="dv">10</span>)</span>
+<span id="cb5-131"><a href="#cb5-131" aria-hidden="true" tabindex="-1"></a>      ss            <span class="ot">=</span> <span class="fu">apply</span>(s.cum <span class="sc">&lt;</span> r, <span class="dv">1</span>, sum) <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb5-132"><a href="#cb5-132" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>s         <span class="ot">=</span> <span class="fu">as.matrix</span>(ss)</span>
+<span id="cb5-133"><a href="#cb5-133" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-134"><a href="#cb5-134" aria-hidden="true" tabindex="-1"></a>      <span class="co"># sampling log-volatilities using functions for tridiagonal precision matrix</span></span>
+<span id="cb5-135"><a href="#cb5-135" aria-hidden="true" tabindex="-1"></a>      Sigma.s.inv   <span class="ot">=</span> <span class="fu">diag</span>(<span class="dv">1</span> <span class="sc">/</span> sigma.st[<span class="fu">as.vector</span>(aux<span class="sc">$</span>s)])</span>
+<span id="cb5-136"><a href="#cb5-136" aria-hidden="true" tabindex="-1"></a>      D.inv         <span class="ot">=</span> Sigma.s.inv <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">/</span> aux<span class="sc">$</span>sigma.v2) <span class="sc">*</span> HH</span>
+<span id="cb5-137"><a href="#cb5-137" aria-hidden="true" tabindex="-1"></a>      b             <span class="ot">=</span> <span class="fu">as.matrix</span>(Ytilde.alpha <span class="sc">/</span> sigma.st[<span class="fu">as.vector</span>(aux<span class="sc">$</span>s)] <span class="sc">+</span> (aux<span class="sc">$</span>h0<span class="sc">/</span>aux<span class="sc">$</span>sigma.v2)<span class="sc">*</span><span class="fu">diag</span>(T)[,<span class="dv">1</span>])</span>
+<span id="cb5-138"><a href="#cb5-138" aria-hidden="true" tabindex="-1"></a>      lead.diag     <span class="ot">=</span> <span class="fu">diag</span>(D.inv)</span>
+<span id="cb5-139"><a href="#cb5-139" aria-hidden="true" tabindex="-1"></a>      sub.diag      <span class="ot">=</span> mgcv<span class="sc">::</span><span class="fu">sdiag</span>(D.inv, <span class="sc">-</span><span class="dv">1</span>)</span>
+<span id="cb5-140"><a href="#cb5-140" aria-hidden="true" tabindex="-1"></a>      D.chol        <span class="ot">=</span> mgcv<span class="sc">::</span><span class="fu">trichol</span>(<span class="at">ld =</span> lead.diag, <span class="at">sd =</span> sub.diag)</span>
+<span id="cb5-141"><a href="#cb5-141" aria-hidden="true" tabindex="-1"></a>      D.L           <span class="ot">=</span> <span class="fu">diag</span>(D.chol<span class="sc">$</span>ld)</span>
+<span id="cb5-142"><a href="#cb5-142" aria-hidden="true" tabindex="-1"></a>      mgcv<span class="sc">::</span><span class="fu">sdiag</span>(D.L,<span class="sc">-</span><span class="dv">1</span>) <span class="ot">=</span> D.chol<span class="sc">$</span>sd</span>
+<span id="cb5-143"><a href="#cb5-143" aria-hidden="true" tabindex="-1"></a>      x             <span class="ot">=</span> <span class="fu">as.matrix</span>(<span class="fu">rnorm</span>(T))</span>
+<span id="cb5-144"><a href="#cb5-144" aria-hidden="true" tabindex="-1"></a>      a             <span class="ot">=</span> <span class="fu">forwardsolve</span>(D.L, b)</span>
+<span id="cb5-145"><a href="#cb5-145" aria-hidden="true" tabindex="-1"></a>      draw          <span class="ot">=</span> <span class="fu">backsolve</span>(<span class="fu">t</span>(D.L), a <span class="sc">+</span> x)</span>
+<span id="cb5-146"><a href="#cb5-146" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>H         <span class="ot">=</span> <span class="fu">as.matrix</span>(draw)</span>
+<span id="cb5-147"><a href="#cb5-147" aria-hidden="true" tabindex="-1"></a>      aux<span class="sc">$</span>sigma2    <span class="ot">=</span> <span class="fu">as.matrix</span>(<span class="fu">exp</span>(draw))</span>
+<span id="cb5-148"><a href="#cb5-148" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-149"><a href="#cb5-149" aria-hidden="true" tabindex="-1"></a>      <span class="co"># output list</span></span>
+<span id="cb5-150"><a href="#cb5-150" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>H[,s]             <span class="ot">=</span> aux<span class="sc">$</span>H</span>
+<span id="cb5-151"><a href="#cb5-151" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>sigma2[,s]        <span class="ot">=</span> aux<span class="sc">$</span>sigma2</span>
+<span id="cb5-152"><a href="#cb5-152" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>s[,s]             <span class="ot">=</span> aux<span class="sc">$</span>s</span>
+<span id="cb5-153"><a href="#cb5-153" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>h0[s]             <span class="ot">=</span> aux<span class="sc">$</span>h0</span>
+<span id="cb5-154"><a href="#cb5-154" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>sigma.v2[s]       <span class="ot">=</span> aux<span class="sc">$</span>sigma.v2</span>
+<span id="cb5-155"><a href="#cb5-155" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>A[,,s]            <span class="ot">=</span> aux<span class="sc">$</span>A</span>
+<span id="cb5-156"><a href="#cb5-156" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>Sigma[,,s]        <span class="ot">=</span> aux<span class="sc">$</span>Sigma</span>
+<span id="cb5-157"><a href="#cb5-157" aria-hidden="true" tabindex="-1"></a>      posteriors<span class="sc">$</span>lambda[s]         <span class="ot">=</span> aux<span class="sc">$</span>lambda</span>
+<span id="cb5-158"><a href="#cb5-158" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-159"><a href="#cb5-159" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-160"><a href="#cb5-160" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb5-161"><a href="#cb5-161" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(posteriors)</span>
+<span id="cb5-162"><a href="#cb5-162" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb5-163"><a href="#cb5-163" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<caption>Table 12 Mean Values of A.posterior.ext.het.simu (head 11) </caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.000252</td>
+<td style="text-align: center;">-0.007865</td>
+<td style="text-align: center;">0.000212</td>
+<td style="text-align: center;">0.027115</td>
+<td style="text-align: center;">-0.012747</td>
+<td style="text-align: center;">-0.000052</td>
+<td style="text-align: center;">-0.000221</td>
+<td style="text-align: center;">-0.001247</td>
+<td style="text-align: center;">0.002027</td>
+<td style="text-align: center;">0.002272</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1.000001</td>
+<td style="text-align: center;">-0.000366</td>
+<td style="text-align: center;">-0.000020</td>
+<td style="text-align: center;">-0.000876</td>
+<td style="text-align: center;">0.000513</td>
+<td style="text-align: center;">0.000011</td>
+<td style="text-align: center;">0.000107</td>
+<td style="text-align: center;">0.000106</td>
+<td style="text-align: center;">0.000033</td>
+<td style="text-align: center;">0.000016</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000098</td>
+<td style="text-align: center;">0.986538</td>
+<td style="text-align: center;">0.000009</td>
+<td style="text-align: center;">0.005141</td>
+<td style="text-align: center;">-0.000005</td>
+<td style="text-align: center;">0.000045</td>
+<td style="text-align: center;">0.000092</td>
+<td style="text-align: center;">0.000025</td>
+<td style="text-align: center;">-0.000095</td>
+<td style="text-align: center;">-0.000162</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000025</td>
+<td style="text-align: center;">-0.001978</td>
+<td style="text-align: center;">1.000008</td>
+<td style="text-align: center;">0.002028</td>
+<td style="text-align: center;">-0.000801</td>
+<td style="text-align: center;">0.000011</td>
+<td style="text-align: center;">-0.000078</td>
+<td style="text-align: center;">-0.000100</td>
+<td style="text-align: center;">0.000271</td>
+<td style="text-align: center;">0.000182</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000015</td>
+<td style="text-align: center;">0.001287</td>
+<td style="text-align: center;">0.000004</td>
+<td style="text-align: center;">0.997608</td>
+<td style="text-align: center;">-0.000298</td>
+<td style="text-align: center;">0.000056</td>
+<td style="text-align: center;">0.000173</td>
+<td style="text-align: center;">0.000187</td>
+<td style="text-align: center;">0.000091</td>
+<td style="text-align: center;">-0.000070</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.000014</td>
+<td style="text-align: center;">-0.000792</td>
+<td style="text-align: center;">0.000007</td>
+<td style="text-align: center;">-0.003017</td>
+<td style="text-align: center;">0.999020</td>
+<td style="text-align: center;">0.000015</td>
+<td style="text-align: center;">0.000079</td>
+<td style="text-align: center;">0.000121</td>
+<td style="text-align: center;">0.000035</td>
+<td style="text-align: center;">-0.000247</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000003</td>
+<td style="text-align: center;">-0.000512</td>
+<td style="text-align: center;">-0.000049</td>
+<td style="text-align: center;">-0.003216</td>
+<td style="text-align: center;">0.002092</td>
+<td style="text-align: center;">0.999965</td>
+<td style="text-align: center;">0.000109</td>
+<td style="text-align: center;">0.000448</td>
+<td style="text-align: center;">0.000071</td>
+<td style="text-align: center;">-0.000158</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000013</td>
+<td style="text-align: center;">0.001064</td>
+<td style="text-align: center;">0.000004</td>
+<td style="text-align: center;">-0.000501</td>
+<td style="text-align: center;">-0.000473</td>
+<td style="text-align: center;">0.000063</td>
+<td style="text-align: center;">0.999444</td>
+<td style="text-align: center;">0.000047</td>
+<td style="text-align: center;">-0.000228</td>
+<td style="text-align: center;">-0.000015</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000005</td>
+<td style="text-align: center;">0.003131</td>
+<td style="text-align: center;">-0.000011</td>
+<td style="text-align: center;">-0.000572</td>
+<td style="text-align: center;">0.001112</td>
+<td style="text-align: center;">0.000002</td>
+<td style="text-align: center;">0.000075</td>
+<td style="text-align: center;">0.999049</td>
+<td style="text-align: center;">0.000380</td>
+<td style="text-align: center;">0.000389</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.000003</td>
+<td style="text-align: center;">0.002141</td>
+<td style="text-align: center;">0.000056</td>
+<td style="text-align: center;">0.001817</td>
+<td style="text-align: center;">-0.002415</td>
+<td style="text-align: center;">0.000078</td>
+<td style="text-align: center;">0.000401</td>
+<td style="text-align: center;">0.000702</td>
+<td style="text-align: center;">0.999398</td>
+<td style="text-align: center;">-0.000297</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.000021</td>
+<td style="text-align: center;">0.000206</td>
+<td style="text-align: center;">-0.000002</td>
+<td style="text-align: center;">-0.001143</td>
+<td style="text-align: center;">0.000835</td>
+<td style="text-align: center;">0.000076</td>
+<td style="text-align: center;">0.000157</td>
+<td style="text-align: center;">0.000360</td>
+<td style="text-align: center;">-0.000684</td>
+<td style="text-align: center;">0.999405</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="table-responsive">
+<table class="table table-striped table-hover table-bordered table-sm small" data-quarto-postprocess="true">
+<caption>Table 13 Mean Values of Sigma.posterior.ext.het.simu </caption>
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+<th data-quarto-table-cell-role="th" style="text-align: center; position: sticky; top: 0; background-color: #FFFFFF;"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.275540</td>
+<td style="text-align: center;">-0.041653</td>
+<td style="text-align: center;">0.001046</td>
+<td style="text-align: center;">0.012248</td>
+<td style="text-align: center;">-0.018893</td>
+<td style="text-align: center;">-0.018474</td>
+<td style="text-align: center;">-0.010136</td>
+<td style="text-align: center;">-0.017104</td>
+<td style="text-align: center;">-0.018711</td>
+<td style="text-align: center;">-0.000970</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.041653</td>
+<td style="text-align: center;">10.975668</td>
+<td style="text-align: center;">-0.007855</td>
+<td style="text-align: center;">0.222756</td>
+<td style="text-align: center;">-0.093862</td>
+<td style="text-align: center;">-0.049361</td>
+<td style="text-align: center;">0.024519</td>
+<td style="text-align: center;">0.054310</td>
+<td style="text-align: center;">-0.042337</td>
+<td style="text-align: center;">-0.094923</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.001046</td>
+<td style="text-align: center;">-0.007855</td>
+<td style="text-align: center;">0.255115</td>
+<td style="text-align: center;">-0.006483</td>
+<td style="text-align: center;">-0.034965</td>
+<td style="text-align: center;">-0.014513</td>
+<td style="text-align: center;">-0.030686</td>
+<td style="text-align: center;">-0.031307</td>
+<td style="text-align: center;">-0.007830</td>
+<td style="text-align: center;">0.007857</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.012248</td>
+<td style="text-align: center;">0.222756</td>
+<td style="text-align: center;">-0.006483</td>
+<td style="text-align: center;">3.867807</td>
+<td style="text-align: center;">-0.635111</td>
+<td style="text-align: center;">-0.021468</td>
+<td style="text-align: center;">-0.013437</td>
+<td style="text-align: center;">-0.035502</td>
+<td style="text-align: center;">-0.103880</td>
+<td style="text-align: center;">0.056191</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.018893</td>
+<td style="text-align: center;">-0.093862</td>
+<td style="text-align: center;">-0.034965</td>
+<td style="text-align: center;">-0.635111</td>
+<td style="text-align: center;">1.741754</td>
+<td style="text-align: center;">-0.030176</td>
+<td style="text-align: center;">-0.078000</td>
+<td style="text-align: center;">-0.103964</td>
+<td style="text-align: center;">-0.006168</td>
+<td style="text-align: center;">-0.051384</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.018474</td>
+<td style="text-align: center;">-0.049361</td>
+<td style="text-align: center;">-0.014513</td>
+<td style="text-align: center;">-0.021468</td>
+<td style="text-align: center;">-0.030176</td>
+<td style="text-align: center;">0.270740</td>
+<td style="text-align: center;">-0.021698</td>
+<td style="text-align: center;">-0.040671</td>
+<td style="text-align: center;">-0.001876</td>
+<td style="text-align: center;">-0.013299</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.010136</td>
+<td style="text-align: center;">0.024519</td>
+<td style="text-align: center;">-0.030686</td>
+<td style="text-align: center;">-0.013437</td>
+<td style="text-align: center;">-0.078000</td>
+<td style="text-align: center;">-0.021698</td>
+<td style="text-align: center;">0.300222</td>
+<td style="text-align: center;">-0.019059</td>
+<td style="text-align: center;">-0.027454</td>
+<td style="text-align: center;">-0.004833</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.017104</td>
+<td style="text-align: center;">0.054310</td>
+<td style="text-align: center;">-0.031307</td>
+<td style="text-align: center;">-0.035502</td>
+<td style="text-align: center;">-0.103964</td>
+<td style="text-align: center;">-0.040671</td>
+<td style="text-align: center;">-0.019059</td>
+<td style="text-align: center;">0.368813</td>
+<td style="text-align: center;">-0.080267</td>
+<td style="text-align: center;">-0.031458</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">-0.018711</td>
+<td style="text-align: center;">-0.042337</td>
+<td style="text-align: center;">-0.007830</td>
+<td style="text-align: center;">-0.103880</td>
+<td style="text-align: center;">-0.006168</td>
+<td style="text-align: center;">-0.001876</td>
+<td style="text-align: center;">-0.027454</td>
+<td style="text-align: center;">-0.080267</td>
+<td style="text-align: center;">0.400136</td>
+<td style="text-align: center;">0.032739</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">-0.000970</td>
+<td style="text-align: center;">-0.094923</td>
+<td style="text-align: center;">0.007857</td>
+<td style="text-align: center;">0.056191</td>
+<td style="text-align: center;">-0.051384</td>
+<td style="text-align: center;">-0.013299</td>
+<td style="text-align: center;">-0.004833</td>
+<td style="text-align: center;">-0.031458</td>
+<td style="text-align: center;">0.032739</td>
+<td style="text-align: center;">0.310357</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Histograms Trace Plots Extended Hetero-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 16 Histograms and trace plots on key variables using extended hetero model</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Applying heteroscedasticity to the expanded model, we observe markedly aggressive results (similar to the comparison between the expanded and standard models). Figure 17 illustrates that under the extended model, the forecast for the next eight periods of inflation again shows negative inflation, with an even greater degree of deflation. Although the model’s predictions of ‘people’s expectations of inflation’ remain relatively stable, these results are not acceptable considering our understanding.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Extended Model with hetero Key Data Plot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 17 Extended model with heteroskedasticity key data plot</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="heteroskadasticity-analysis" class="level3" data-number="6.3">
+<h3 data-number="6.3" class="anchored" data-anchor-id="heteroskadasticity-analysis"><span class="header-section-number">6.3</span> Heteroskadasticity Analysis</h3>
+<p>Notably, in Figure 18 both models exhibit signs of heteroscedasticity around the time point 120 (Year 2020), where there is a sharp increase in sigma squared values.</p>
+<p>More specifically, the “sigma2.basic” model (black line) shows a more pronounced increase in sigma squared values around time point 120 compared to the “sigma2.heter” model (blue line). This suggests that the basic model may be more sensitive or effective in capturing the variance anomalies at this juncture. This enhanced sensitivity could be attributed to differences in the internal parameter settings or data handling methodologies of the models. Thus, it can be inferred that although both models are capable of detecting heteroscedasticity within the data, the “sigma2.basic” model may exhibit superior performance in accommodating periods of high volatility. This observation might indicate that the settings of the basic model are better suited for capturing extreme fluctuations, thereby suggesting that the “sigma2.basic” model is potentially more robust in such scenarios.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="index_files/figure-html/Sigma2Plot-1.png" class="img-fluid figure-img" width="672"></p>
+<p></p><figcaption class="figure-caption">Figure 18 Sigma2 time series plot</figcaption><p></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="conclusion" class="level2" data-number="7">
+<h2 data-number="7" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">7</span> Conclusion</h2>
+<p>In this research, we analyzed four Bayesian Vector Autoregression (VAR) models aimed at forecasting inflation and people’s expectations of inflation. Beginning with a basic model featuring a simple Minnesota prior to capture the characteristics and dynamic relationships observed in the variables, we constructed a hierarchical model by implementing the Minnesota shrinkage hyperparameter <span class="math inline">\(\lambda\)</span>. Building on the basic model, we introduced stochastic volatility to enhance the model’s performance. We conducted an 8-step ahead forecast for each model and compared the results.</p>
+<p>Overall, all four models predicted a downward trend in Australia’s inflation rate. The decline was quite pronounced without considering heteroscedasticity; however, with heteroscedasticity accounted for, the basic model’s smooth decline to 2-3% was most in line with expectations. In contrast, the application of heteroscedasticity in the extended model did not perform as well.</p>
 </section>
 <section id="references" class="level2 unnumbered">
 

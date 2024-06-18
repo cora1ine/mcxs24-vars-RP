@@ -170,6 +170,7 @@ div.csl-indent {
   <ul class="collapse">
   <li><a href="#basic-model-1" id="toc-basic-model-1" class="nav-link" data-scroll-target="#basic-model-1"><span class="header-section-number">5.1</span> Basic Model</a></li>
   <li><a href="#extended-model-1" id="toc-extended-model-1" class="nav-link" data-scroll-target="#extended-model-1"><span class="header-section-number">5.2</span> Extended Model</a></li>
+  <li><a href="#asides---different-priors-and-assumptions" id="toc-asides---different-priors-and-assumptions" class="nav-link" data-scroll-target="#asides---different-priors-and-assumptions"><span class="header-section-number">5.3</span> Asides - Different Priors and Assumptions</a></li>
   </ul></li>
   <li><a href="#stochastic-volatility-conditional-heteroskedasticity" id="toc-stochastic-volatility-conditional-heteroskedasticity" class="nav-link" data-scroll-target="#stochastic-volatility-conditional-heteroskedasticity"><span class="header-section-number">6</span> Stochastic Volatility Conditional Heteroskedasticity</a>
   <ul class="collapse">
@@ -1341,7 +1342,7 @@ p(x|a,b,p) \propto x^{p-1} \mathrm{exp} \left\{\frac{-(ax+\frac{b}{x})}{2} \righ
 </div>
 </div>
 </div>
-<p>Figure 6 presents a 3D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.</p>
+<p>Figure 7 presents a 3D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1352,7 +1353,7 @@ p(x|a,b,p) \propto x^{p-1} \mathrm{exp} \left\{\frac{-(ax+\frac{b}{x})}{2} \righ
 </div>
 </div>
 </div>
-<p>After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 7), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA’s target range for a while, they are expected to fall below 2% after 2025. As for people’s inflation expectations, the forecast indicates a fluctuating decline.</p>
+<p>After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 8), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA’s target range for a while, they are expected to fall below 2% after 2025. As for people’s inflation expectations, the forecast indicates a fluctuating decline.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1704,6 +1705,9 @@ p(x|a,b,p) \propto x^{p-1} \mathrm{exp} \left\{\frac{-(ax+\frac{b}{x})}{2} \righ
 </div>
 </div>
 </div>
+</section>
+<section id="asides---different-priors-and-assumptions" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="asides---different-priors-and-assumptions"><span class="header-section-number">5.3</span> Asides - Different Priors and Assumptions</h3>
 <p>Until here, we realized that the extended model is more radical, and we decided to rethink the prior settings in the extended model and compare: In the extended model, consider the coefficient <span class="math inline">\(\lambda\)</span>(follow gamma distribution.)</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -1835,17 +1839,15 @@ p\left( {A},{\Sigma} |Y,X\right)
 \end{align}
 \]</span></p>
 <p><strong>Step 3</strong>:</p>
-<p>As <span class="math inline">\(\overline{A}\)</span>, <span class="math inline">\(\overline{V}\)</span>, <span class="math inline">\(\overline{S}\)</span> and <span class="math inline">\(\overline{v}\)</span> are specified:</p>
+<p>According to Bayesian Autoregressions website <span class="citation" data-cites="wozniak2023">(<a href="#ref-wozniak2023" role="doc-biblioref">WOZNIAK 2023</a>)</span>, as <span class="math inline">\(\overline{A}\)</span>, <span class="math inline">\(\overline{V}\)</span>, <span class="math inline">\(\overline{S}\)</span> and <span class="math inline">\(\overline{v}\)</span> are specified:</p>
 <p>To obtain a sample of <span class="math inline">\(S\)</span> draws from the posterior distribution:</p>
 <ol type="1">
 <li><p>Sample <span class="math inline">\(S\)</span> draws from the marginal posterior distribution for <span class="math inline">\(\Sigma^{(s)}\)</span> given by <span class="math inline">\(\mathcal{IW}_{10}(\overline{S}, \overline{v})\)</span>, and collect the draws in <span class="math inline">\(\{\Sigma^{(s)}\}_{s=1}^{S}\)</span></p></li>
 <li><p>For each draw <span class="math inline">\(\Sigma^{(s)}\)</span> for <span class="math inline">\(s=1,\dots,S\)</span> sample the corresponding draw of <span class="math inline">\(A^{(s)}\)</span> from <span class="math inline">\(\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma^{(s)},\overline{V})\)</span></p></li>
 <li><p>Draw the logarithmic volatilities <span class="math inline">\(H\)</span> using a function designed to handle tridiagonal precision matrices, incorporating both the prior on <span class="math inline">\(h_0\)</span> and the conditional distributions of the log-volatilities</p></li>
 <li><p>Compute <span class="math inline">\(\sigma^2\)</span> from the exponential transformation of the drawn logarithmic volatilities <span class="math inline">\(H\)</span>.</p></li>
-</ol>
-<p>5.Draw <span class="math inline">\(\sigma_v^2\)</span> from the inverse gamma distribution, considering the sum of squared differences between successive <span class="math inline">\(H\)</span> values and <span class="math inline">\(h0\)</span></p>
-<ol start="6" type="1">
-<li>Update the State Variable <span class="math inline">\(s\)</span>:</li>
+<li><p>Draw <span class="math inline">\(\sigma_v^2\)</span> from the inverse gamma distribution, considering the sum of squared differences between successive <span class="math inline">\(H\)</span> values and <span class="math inline">\(h_0\)</span></p></li>
+<li><p>Update the State Variable <span class="math inline">\(s\)</span>:</p></li>
 </ol>
 <p>Output is the sample draws from the joint posterior distribution <span class="math inline">\(\left\{ {A^{(s)}, \Sigma^{(s)}},H^{(s)}, \sigma^{2(s)},h_0^{(s)}, \sigma_v^{2(s)}, s^{(s)} \right\}^{S}_{s=1}\)</span>.</p>
 <p>Function below is <code>posterior.draws.hetero</code>:</p>
@@ -2301,7 +2303,7 @@ p\left( {A},{\Sigma} |Y,X\right)
 </div>
 </div>
 </div>
-<p>Figure 11 displays a 3D visualization that, as anticipated, exhibits confidence intervals expanding from narrow to wide. Furthermore, the confidence intervals appear narrower than those in the model without heteroscedasticity, suggesting that incorporating heteroscedasticity is efficacious.</p>
+<p>Figure 15 displays a 3D visualization that, as anticipated, exhibits confidence intervals expanding from narrow to wide. Furthermore, the confidence intervals appear narrower than those in the model without heteroscedasticity, suggesting that incorporating heteroscedasticity is efficacious.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2312,7 +2314,7 @@ p\left( {A},{\Sigma} |Y,X\right)
 </div>
 </div>
 </div>
-<p>As analyzed above, Figure 12 also shows improved forecasts, with the predicted inflation rate gradually declining to 2-3% over the next eight periods. Additionally, people’s expectations of inflation are also decreasing in sync, aligning with the initial inquiry.</p>
+<p>As analyzed above, Figure 16 also shows improved forecasts, with the predicted inflation rate gradually declining to 2-3% over the next eight periods. Additionally, people’s expectations of inflation are also decreasing in sync, aligning with the initial inquiry.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2920,6 +2922,9 @@ Kalemli-Ozcan, Sebnem, Pierre-Olivier Gourinchas, Veronika Penciakova, and Nick 
 </div>
 <div id="ref-stock2001" class="csl-entry" role="listitem">
 Stock, James H, and Mark W Watson. 2001. <span>“Vector Autoregressions.”</span> <em>Journal of Economic Perspectives</em> 15 (4): 101–15. <a href="https://doi.org/10.1257/jep.15.4.101">https://doi.org/10.1257/jep.15.4.101</a>.
+</div>
+<div id="ref-wozniak2023" class="csl-entry" role="listitem">
+WOZNIAK, TOMASZ. 2023. <span>“Bayesian Autoregression.”</span> <a href="https://doi.org/10.26188/23255657">https://doi.org/10.26188/23255657</a>.
 </div>
 <div id="ref-wozniak2016" class="csl-entry" role="listitem">
 Woźniak, Tomasz. 2016. <span>“Bayesian Vector Autoregressions.”</span> <em>Australian Economic Review</em> 49 (3): 365–80. <a href="https://doi.org/10.1111/1467-8462.12179">https://doi.org/10.1111/1467-8462.12179</a>.

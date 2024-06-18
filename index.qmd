@@ -13,7 +13,7 @@ execute:
 bibliography: references.bib
 ---
 
-> **Abstract.** The purpose of this research is to explore the trend in Australia's inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model. This study aims to provide a comprehensive analysis of inflation dynamics using advanced econometric techniques to forecast future trends. By applying the BVAR model, which incorporates both Bayesian statistical methods and vector auto-regression, evaluates various specifications of the BVAR model, including different priors and assumptions about the volatility of economic indicators. 
+> **Abstract.** The purpose of this research is to explore the trend in Australia's inflation rate over the next two years using the Bayesian Vector Auto-regression (BVAR) model. This study aims to provide a comprehensive analysis of inflation dynamics using advanced econometric techniques to forecast future trends. By applying the BVAR model, which incorporates both Bayesian statistical methods and vector auto-regression, evaluates various specifications of the BVAR model, including different priors and assumptions about the volatility of economic indicators.
 
 > **Keywords.** bsvars, quarto, R, Australia inflation rate
 
@@ -316,7 +316,6 @@ corrplot(cor_matrix, method = "color",
          cl.ratio = 0.1
 )
 ```
-
 
 In summary, the dataset included data from 1990Q2 to 2024Q1, total 137 observation points with 10 variables.
 
@@ -1274,7 +1273,6 @@ Sigma.posterior.simu   = posterior.sample.draws$Sigma.posterior
 
 ```
 
-
 ```{r Mean Sigma of Basic Model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1283,7 +1281,6 @@ Sigma.posterior.simu   = posterior.sample.draws$Sigma.posterior
 A.posterior.simu.mean = head(round(apply(A.posterior.simu, 1:2, mean), 6),11)
 Sigma.posterior.simu.mean = round(apply(Sigma.posterior.simu, 1:2, mean),6)      
 ```
-
 
 ```{r Mean Sigma of Basic Model Output1, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1315,7 +1312,6 @@ kable(Sigma.posterior.simu.mean, align = "c") %>%
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 ```
 
-
 ```{r Histograms Trace Plots Basic, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1329,8 +1325,6 @@ plot.ts(A.posterior.simu[2,2,], xlab = "Simulation times S", ylab = "infexp", co
 hist(A.posterior.simu[2,2,], xlab = "infexp", col = green3, main = '')
 
 ```
-
-
 
 ```{r Basic Model Forecasting, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1371,7 +1365,7 @@ Y.h       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.simu,
 
 ```
 
-Figure 6 presents a 3D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.
+Figure 7 presents a 3D visualization of the density intervals for the log CPI and inflation expectations. Inflation expectations show some fluctuations, while the log CPI exhibits a stable increase. as indicated by the narrow bounded confidence intervals (light blue for CPI and light green for inflation expectations). The varying heights of the intervals reflect the level of prediction certainty; as we project further into the future, the intervals become wider and more dispersed due to increased uncertainty.
 
 ```{r 3d Forecasting Graph on Basic, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1540,7 +1534,7 @@ data.trans = function(Y.h){
 key.data.h = data.trans(Y.h = Y.h)
 ```
 
-After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 7), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
+After an in-depth examination of key variables and converting the log CPI to CPI to calculate the inflation rate for the next eight periods (Figure 8), we found contrary results. Both the inflation rate and inflation expectations show a downward trend. Although they will remain within the RBA's target range for a while, they are expected to fall below 2% after 2025. As for people's inflation expectations, the forecast indicates a fluctuating decline.
 
 ```{r Basic Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1606,7 +1600,6 @@ Sigma.posterior.ext.simu   = posterior.extend.draws[["Sigma.posterior.exten"]]
 
 ```
 
-
 ```{r Mean Sigma of Extended Model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -1616,7 +1609,6 @@ Sigma.posterior.ext.simu   = posterior.extend.draws[["Sigma.posterior.exten"]]
 A.posterior.ext.simu.mean = head(round(apply(A.posterior.ext.simu, 1:2, mean), 6),11)
 Sigma.posterior.ext.simu.mean = round(apply(Sigma.posterior.ext.simu, 1:2, mean),6)      
 ```
-
 
 ```{r Mean Sigma of Extended Model Output1, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1647,7 +1639,6 @@ kable(Sigma.posterior.ext.simu.mean, align = "c") %>%
                 latex_options = c("HOLD_position"),
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 ```
-
 
 ```{r Histograms Trace Plots Extended, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -1682,8 +1673,6 @@ Y.h.ext       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.e
                                                 Sigma.posterior.simu = Sigma.posterior.ext.simu,
                                                 S = S) 
 ```
-
-
 
 Figure 10 presents a 3D visualization of the density intervals for the log CPI and inflation expectations calculated by the extension model. The results are generally similar to those of the basic model, with the only difference being that the log CPI shows a downward trend instead of an upward one.
 
@@ -1727,6 +1716,8 @@ For the analysis of key data, we can see that the extension model presents a mor
 
 key.data.ext.graph = key.data.plot(key.data.h.ext)
 ```
+
+### Asides - Different Priors and Assumptions
 
 Until here, we realized that the extended model is more radical, and we decided to rethink the prior settings in the extended model and compare: In the extended model, consider the coefficient $\lambda$(follow gamma distribution.)
 
@@ -1954,7 +1945,7 @@ $$
 
 **Step 3**:
 
-As $\overline{A}$, $\overline{V}$, $\overline{S}$ and $\overline{v}$ are specified:
+According to Bayesian Autoregressions website [@wozniak2023], as $\overline{A}$, $\overline{V}$, $\overline{S}$ and $\overline{v}$ are specified:
 
 To obtain a sample of $S$ draws from the posterior distribution:
 
@@ -1962,13 +1953,13 @@ To obtain a sample of $S$ draws from the posterior distribution:
 
 2.  For each draw $\Sigma^{(s)}$ for $s=1,\dots,S$ sample the corresponding draw of $A^{(s)}$ from $\mathcal{MN}_{K\times 10}(\overline{A}, \Sigma^{(s)},\overline{V})$
 
-3. Draw the logarithmic volatilities $H$ using a function designed to handle tridiagonal precision matrices, incorporating both the prior on $h_0$ and the conditional distributions of the log-volatilities
+3.  Draw the logarithmic volatilities $H$ using a function designed to handle tridiagonal precision matrices, incorporating both the prior on $h_0$ and the conditional distributions of the log-volatilities
 
-4. Compute $\sigma^2$ from the exponential transformation of the drawn logarithmic volatilities $H$.
+4.  Compute $\sigma^2$ from the exponential transformation of the drawn logarithmic volatilities $H$.
 
-5.Draw $\sigma_v^2$ from the inverse gamma distribution, considering the sum of squared differences between successive $H$ values and $h0$
+5.  Draw $\sigma_v^2$ from the inverse gamma distribution, considering the sum of squared differences between successive $H$ values and $h_0$
 
-6. Update the State Variable $s$:
+6.  Update the State Variable $s$:
 
 Output is the sample draws from the joint posterior distribution $\left\{ {A^{(s)}, \Sigma^{(s)}},H^{(s)}, \sigma^{2(s)},h_0^{(s)}, \sigma_v^{2(s)}, s^{(s)} \right\}^{S}_{s=1}$.
 
@@ -2115,7 +2106,6 @@ posterior.draws.hetero = function (S, Y, X){
 }
 ```
 
-
 ```{r Heteroskedasticity Function Applying, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -2134,7 +2124,6 @@ Sigma.posterior.het.simu   = posterior.hetero[["Sigma"]]
 Sigma2.posterior.het.simu  = posterior.hetero[["sigma2"]]
 ```
 
-
 ```{r Mean Sigma of Basic SV Model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -2146,7 +2135,6 @@ Sigma.posterior.het.simu.mean = round(apply(Sigma.posterior.het.simu, 1:2, mean)
 
 
 ```
-
 
 ```{r Mean Sigma of Basic SV Model Output1, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -2212,9 +2200,7 @@ Y.h       = sampling.predictive.density.fun(A.posterior.simu = A.posterior.het.s
 
 ```
 
-
-Figure 11 displays a 3D visualization that, as anticipated, exhibits confidence intervals expanding from narrow to wide. Furthermore, the confidence intervals appear narrower than those in the model without heteroscedasticity, suggesting that incorporating heteroscedasticity is efficacious.
-
+Figure 15 displays a 3D visualization that, as anticipated, exhibits confidence intervals expanding from narrow to wide. Furthermore, the confidence intervals appear narrower than those in the model without heteroscedasticity, suggesting that incorporating heteroscedasticity is efficacious.
 
 ```{r 3d Forecasting Graph on Basic Hetero, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -2245,7 +2231,7 @@ threed.basic.hetero.graph = threed.graph(Y.h = Y.h)
 key.data.h = data.trans(Y.h = Y.h)
 ```
 
-As analyzed above, Figure 12 also shows improved forecasts, with the predicted inflation rate gradually declining to 2-3% over the next eight periods. Additionally, people's expectations of inflation are also decreasing in sync, aligning with the initial inquiry.
+As analyzed above, Figure 16 also shows improved forecasts, with the predicted inflation rate gradually declining to 2-3% over the next eight periods. Additionally, people's expectations of inflation are also decreasing in sync, aligning with the initial inquiry.
 
 ```{r Basic Model with hetero Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -2256,10 +2242,9 @@ As analyzed above, Figure 12 also shows improved forecasts, with the predicted i
 key.data.basic.hetero.graph = key.data.plot(key.data.h = key.data.h)
 ```
 
-
 ### Extended Model with Heteroskedasticity
 
-Similar like before, the model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda $\lambda$ is introduced to adjust $V$. 
+Similar like before, the model extension base on a hierarchical model. The gamma distribution on the Minnesota shrinkage parameter lambda $\lambda$ is introduced to adjust $V$.
 
 **Step 1**: Prior distribution is presented below. $\underline{A}$, $\underline{V}$, $\underline{S}$, $\underline{\nu}$ by Minnesota shrinkage parameter lambda $\lambda$ will be simplified.
 
@@ -2332,7 +2317,6 @@ eigen_decomp <- eigen(inv, symmetric = TRUE)
       inv <- eigen_decomp$vectors %*% diag(eigen_decomp$values) %*% t(eigen_decomp$vectors)
 }
 ```
-
 
 Function below is `posterior.draws.exten.hetero`:
 
@@ -2527,7 +2511,6 @@ Sigma.posterior.ext.het.simu   = posterior.exten.hetero[["Sigma"]][,,(S1+1):S]
 Sigma2.posterior.ext.het.simu  = posterior.exten.hetero[["sigma2"]][,(S1+1):S]
 ```
 
-
 ```{r Mean Sigma of Extended SV Model, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -2537,7 +2520,6 @@ Sigma2.posterior.ext.het.simu  = posterior.exten.hetero[["sigma2"]][,(S1+1):S]
 A.posterior.ext.het.simu.mean = head(round(apply(A.posterior.ext.het.simu, 1:2, mean), 6),11)
 Sigma.posterior.ext.het.simu.mean = round(apply(Sigma.posterior.ext.het.simu, 1:2, mean),6)      
 ```
-
 
 ```{r Mean Sigma of Extended SV Model Output1, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -2569,7 +2551,6 @@ kable(Sigma.posterior.ext.het.simu.mean, align = "c") %>%
                 bootstrap_options = c("striped", "hover", "bordered", "responsive", "dark"))
 ```
 
-
 ```{r Histograms Trace Plots Extended Hetero, fig.align='center',fig.pos='H'}
 #| echo: false
 #| message: false
@@ -2583,7 +2564,6 @@ plot.ts(A.posterior.ext.het.simu[2,2,], xlab = "Simulation times S", ylab = "inf
 hist(A.posterior.ext.het.simu[2,2,], xlab = "infexp", col = green3, main = '')
 
 ```
-
 
 ```{r Extend Model with Hetero Forecasting, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -2634,9 +2614,7 @@ Y.h.ext   = sampling.predictive.density.fun(A.posterior.simu = A.posterior.ext.h
 key.data.h = data.trans(Y.h = Y.h.ext)
 ```
 
-
 Applying heteroscedasticity to the expanded model, we observe markedly aggressive results (similar to the comparison between the expanded and standard models). Figure 17 illustrates that under the extended model, the forecast for the next eight periods of inflation again shows negative inflation, with an even greater degree of deflation. Although the model's predictions of 'people's expectations of inflation' remain relatively stable, these results are not acceptable considering our understanding.
-
 
 ```{r Extended Model with hetero Key Data Plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -2652,8 +2630,7 @@ key.data.exten.hetero.graph = key.data.plot(key.data.h = key.data.h)
 
 Notably, in Figure 18 both models exhibit signs of heteroscedasticity around the time point 120 (Year 2020), where there is a sharp increase in sigma squared values.
 
-More specifically, the "sigma2.basic" model (black line) shows a more pronounced increase in sigma squared values around time point 120 compared to the "sigma2.heter" model (blue line). This suggests that the basic model may be more sensitive or effective in capturing the variance anomalies at this juncture. This enhanced sensitivity could be attributed to differences in the internal parameter settings or data handling methodologies of the models.
-Thus, it can be inferred that although both models are capable of detecting heteroscedasticity within the data, the "sigma2.basic" model may exhibit superior performance in accommodating periods of high volatility. This observation might indicate that the settings of the basic model are better suited for capturing extreme fluctuations, thereby suggesting that the "sigma2.basic" model is potentially more robust in such scenarios.
+More specifically, the "sigma2.basic" model (black line) shows a more pronounced increase in sigma squared values around time point 120 compared to the "sigma2.heter" model (blue line). This suggests that the basic model may be more sensitive or effective in capturing the variance anomalies at this juncture. This enhanced sensitivity could be attributed to differences in the internal parameter settings or data handling methodologies of the models. Thus, it can be inferred that although both models are capable of detecting heteroscedasticity within the data, the "sigma2.basic" model may exhibit superior performance in accommodating periods of high volatility. This observation might indicate that the settings of the basic model are better suited for capturing extreme fluctuations, thereby suggesting that the "sigma2.basic" model is potentially more robust in such scenarios.
 
 ```{r Sigma2Plot, fig.align='center',fig.pos='H'}
 #| echo: false
@@ -2673,19 +2650,10 @@ legend("topleft", legend = c("sigma2.ext.heter", "sigma2.basic.heter"), col = c(
 
 ```
 
+## Conclusion
 
-
-## Conclusion 
-
-In this research, we analyzed four Bayesian Vector Autoregression (VAR) models aimed at forecasting inflation and people's expectations of inflation. Beginning with a basic model featuring a simple Minnesota prior to capture the characteristics and dynamic relationships observed in the variables, we constructed a hierarchical model by implementing the Minnesota shrinkage hyperparameter $\lambda$. Building on the basic model, we introduced stochastic volatility to enhance the model's performance. We conducted an 8-step ahead forecast for each model and compared the results. 
+In this research, we analyzed four Bayesian Vector Autoregression (VAR) models aimed at forecasting inflation and people's expectations of inflation. Beginning with a basic model featuring a simple Minnesota prior to capture the characteristics and dynamic relationships observed in the variables, we constructed a hierarchical model by implementing the Minnesota shrinkage hyperparameter $\lambda$. Building on the basic model, we introduced stochastic volatility to enhance the model's performance. We conducted an 8-step ahead forecast for each model and compared the results.
 
 Overall, all four models predicted a downward trend in Australia's inflation rate. The decline was quite pronounced without considering heteroscedasticity; however, with heteroscedasticity accounted for, the basic model's smooth decline to 2-3% was most in line with expectations. In contrast, the application of heteroscedasticity in the extended model did not perform as well.
-
-
-
-
-
-
-
 
 ## References {.unnumbered}
